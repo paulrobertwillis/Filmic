@@ -99,13 +99,11 @@
 		695D8EA628562032008B583A /* MovieApp */ = {
 			isa = PBXGroup;
 			children = (
-				695D8EA728562032008B583A /* AppDelegate.swift */,
-				695D8EA928562032008B583A /* SceneDelegate.swift */,
+				695D8ED728562062008B583A /* AppDelegate */,
+				695D8ED82856207B008B583A /* Resources */,
 				695D8EAB28562032008B583A /* ViewController.swift */,
 				695D8EAD28562032008B583A /* Main.storyboard */,
-				695D8EB028562034008B583A /* Assets.xcassets */,
 				695D8EB228562034008B583A /* LaunchScreen.storyboard */,
-				695D8EB528562034008B583A /* Info.plist */,
 			);
 			path = MovieApp;
 			sourceTree = "<group>";
@@ -125,6 +123,24 @@
 				695D8ECA28562034008B583A /* MovieAppUITestsLaunchTests.swift */,
 			);
 			path = MovieAppUITests;
+			sourceTree = "<group>";
+		};
+		695D8ED728562062008B583A /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				695D8EA728562032008B583A /* AppDelegate.swift */,
+				695D8EA928562032008B583A /* SceneDelegate.swift */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		695D8ED82856207B008B583A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				695D8EB028562034008B583A /* Assets.xcassets */,
+				695D8EB528562034008B583A /* Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -439,7 +455,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VNRW7375YF;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = MovieApp/Info.plist;
+				INFOPLIST_FILE = "MovieApp//Resources/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -467,7 +483,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VNRW7375YF;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = MovieApp/Info.plist;
+				INFOPLIST_FILE = "MovieApp//Resources/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
