@@ -16,6 +16,8 @@
 		695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8EBE28562034008B583A /* MovieAppTests.swift */; };
 		695D8EC928562034008B583A /* MovieAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8EC828562034008B583A /* MovieAppUITests.swift */; };
 		695D8ECB28562034008B583A /* MovieAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8ECA28562034008B583A /* MovieAppUITestsLaunchTests.swift */; };
+		695D8EDE285641C2008B583A /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8EDD285641C2008B583A /* CollectionViewController.swift */; };
+		695D8EE028564387008B583A /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 695D8EDF28564387008B583A /* CollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		695D8EC428562034008B583A /* MovieAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		695D8EC828562034008B583A /* MovieAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAppUITests.swift; sourceTree = "<group>"; };
 		695D8ECA28562034008B583A /* MovieAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		695D8EDD285641C2008B583A /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		695D8EDF28564387008B583A /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,11 +103,12 @@
 		695D8EA628562032008B583A /* MovieApp */ = {
 			isa = PBXGroup;
 			children = (
-				695D8ED728562062008B583A /* AppDelegate */,
+				695D8ED728562062008B583A /* Application */,
 				695D8ED82856207B008B583A /* Resources */,
 				695D8EAB28562032008B583A /* ViewController.swift */,
+				695D8EDD285641C2008B583A /* CollectionViewController.swift */,
+				695D8EDF28564387008B583A /* CollectionViewCell.xib */,
 				695D8EAD28562032008B583A /* Main.storyboard */,
-				695D8EB228562034008B583A /* LaunchScreen.storyboard */,
 			);
 			path = MovieApp;
 			sourceTree = "<group>";
@@ -125,22 +130,31 @@
 			path = MovieAppUITests;
 			sourceTree = "<group>";
 		};
-		695D8ED728562062008B583A /* AppDelegate */ = {
+		695D8ED728562062008B583A /* Application */ = {
 			isa = PBXGroup;
 			children = (
 				695D8EA728562032008B583A /* AppDelegate.swift */,
 				695D8EA928562032008B583A /* SceneDelegate.swift */,
 			);
-			path = AppDelegate;
+			path = Application;
 			sourceTree = "<group>";
 		};
 		695D8ED82856207B008B583A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				695D8ED928563974008B583A /* Preview Content */,
+				695D8EB228562034008B583A /* LaunchScreen.storyboard */,
 				695D8EB028562034008B583A /* Assets.xcassets */,
 				695D8EB528562034008B583A /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		695D8ED928563974008B583A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +263,7 @@
 			files = (
 				695D8EB428562034008B583A /* LaunchScreen.storyboard in Resources */,
 				695D8EB128562034008B583A /* Assets.xcassets in Resources */,
+				695D8EE028564387008B583A /* CollectionViewCell.xib in Resources */,
 				695D8EAF28562032008B583A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				695D8EDE285641C2008B583A /* CollectionViewController.swift in Sources */,
 				695D8EAC28562032008B583A /* ViewController.swift in Sources */,
 				695D8EA828562032008B583A /* AppDelegate.swift in Sources */,
 				695D8EAA28562032008B583A /* SceneDelegate.swift in Sources */,
