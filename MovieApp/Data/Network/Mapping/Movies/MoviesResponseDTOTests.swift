@@ -21,7 +21,7 @@ class MoviesResponseDTOTests: XCTestCase {
         XCTAssertEqual(actual, expected)
     }
     
-    var movies = [
+    let movies = [
         MoviesResponseDTO.MovieDTO(
             posterPath: "/posterpath1.jpg",
             overview: "movie1 overview",
@@ -40,7 +40,7 @@ class MoviesResponseDTOTests: XCTestCase {
         )
     ]
     
-    var moviesResponseDTO = """
+    let moviesResponseDTO = """
         {
             "page": 1,
             "results": [
