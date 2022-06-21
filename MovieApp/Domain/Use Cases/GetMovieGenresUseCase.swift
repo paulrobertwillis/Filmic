@@ -7,6 +7,22 @@
 
 import Foundation
 
+protocol MoviesRepositoryProtocol {
+    func getMovies() -> [Movie]
+}
+
+protocol GetMoviesGenresUseCaseProtocol {
+}
+
 class GetMovieGenresUseCase {
+    private let repository: MoviesRepositoryProtocol
     
+    init(repository: MoviesRepositoryProtocol) {
+        self.repository = repository
+    }
+    
+    @discardableResult
+    func execute() -> [Movie] {
+        self.repository.getMovies()
+    }
 }
