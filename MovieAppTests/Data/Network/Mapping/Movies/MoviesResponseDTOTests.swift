@@ -23,20 +23,18 @@ class MoviesResponseDTOTests: XCTestCase {
     
     let movies = [
         MoviesResponseDTO.MovieDTO(
+            id: 50,
+            title: "movie1",
             posterPath: "/posterpath1.jpg",
             overview: "movie1 overview",
-            releaseDate: "2001-01-01",
-            genreIds: [1, 2, 3],
-            id: 50,
-            title: "movie1"
+            releaseDate: "2001-01-01"
         ),
         MoviesResponseDTO.MovieDTO(
+            id: 200,
+            title: "movie2",
             posterPath: "/posterpath2.jpg",
             overview: "movie2 overview",
-            releaseDate: "2002-01-01",
-            genreIds: [4, 5, 6],
-            id: 200,
-            title: "movie2"
+            releaseDate: "2002-01-01"
         )
     ]
     
