@@ -24,6 +24,8 @@
 		695D8EDE285641C2008B583A /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8EDD285641C2008B583A /* CollectionViewController.swift */; };
 		695D8EE028564387008B583A /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 695D8EDF28564387008B583A /* CollectionViewCell.xib */; };
 		69D844182861E09F00A651F1 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D844172861E09F00A651F1 /* Movie.swift */; };
+		69D8441D2862052100A651F1 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8441C2862052100A651F1 /* AppConfiguration.swift */; };
+		69D8441F2862158100A651F1 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8441E2862158100A651F1 /* Configuration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		695D8EDD285641C2008B583A /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		695D8EDF28564387008B583A /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		69D844172861E09F00A651F1 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		69D8441C2862052100A651F1 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		69D8441E2862158100A651F1 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,7 @@
 		692F0920285A687D00780F72 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				69D844192861E52900A651F1 /* Use Cases */,
 				692F0922285A697900780F72 /* Entities */,
 			);
 			path = Domain;
@@ -135,6 +140,7 @@
 		692F0924285A69C600780F72 /* Mapping */ = {
 			isa = PBXGroup;
 			children = (
+				69D8441E2862158100A651F1 /* Configuration.swift */,
 				692F0925285A69CC00780F72 /* Movies */,
 			);
 			path = Mapping;
@@ -265,6 +271,7 @@
 			children = (
 				695D8EA728562032008B583A /* AppDelegate.swift */,
 				695D8EA928562032008B583A /* SceneDelegate.swift */,
+				69D8441C2862052100A651F1 /* AppConfiguration.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -285,6 +292,13 @@
 			children = (
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		69D844192861E52900A651F1 /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Use Cases";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -419,8 +433,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69D8441D2862052100A651F1 /* AppConfiguration.swift in Sources */,
 				69D844182861E09F00A651F1 /* Movie.swift in Sources */,
 				692F0927285A69DB00780F72 /* MoviesResponseDTO.swift in Sources */,
+				69D8441F2862158100A651F1 /* Configuration.swift in Sources */,
 				695D8EDE285641C2008B583A /* CollectionViewController.swift in Sources */,
 				695D8EAC28562032008B583A /* ViewController.swift in Sources */,
 				695D8EA828562032008B583A /* AppDelegate.swift in Sources */,
@@ -623,6 +639,8 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TMDB_API_KEY = 87c18a6eca3e6995e82fab7f60b9a8a7;
+				TMDB_BASE_URL = "https://api.themoviedb.org";
 			};
 			name = Debug;
 		};
@@ -651,6 +669,8 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TMDB_API_KEY = 87c18a6eca3e6995e82fab7f60b9a8a7;
+				TMDB_BASE_URL = "https://api.themoviedb.org";
 			};
 			name = Release;
 		};
