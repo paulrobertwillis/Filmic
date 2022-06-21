@@ -21,18 +21,38 @@ struct MoviesResponseDTO: Decodable, Equatable {
 extension MoviesResponseDTO {
     struct MovieDTO: Decodable, Equatable {
         private enum CodingKeys: String, CodingKey {
+            case id
+            case title
             case posterPath = "poster_path"
             case overview
             case releaseDate = "release_date"
-            case genreIds = "genre_ids"
-            case id
-            case title
         }
+        let id: Int
+        let title: String
         let posterPath: String?
         let overview: String
         let releaseDate: String
-        let genreIds: [Int]
-        let id: Int
-        let title: String
+    }
+}
+
+extension MoviesResponseDTO {
+    func toDomain() -> MoviesPage {
+        return .init(
+            page: self.page,
+            totalPages: self.totalPages,
+            movies: self.movies.map { $0.toDomain() }
+        )
+    }
+}
+
+extension MoviesResponseDTO.MovieDTO {
+    func toDomain() -> Movie {
+        return .init(
+            id: Movie.Identifier(id),
+            title: self.title,
+            posterPath: self.posterPath,
+            overview: self.overview,
+            releaseDate: self.releaseDate
+        )
     }
 }
