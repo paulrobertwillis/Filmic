@@ -10,27 +10,43 @@ import XCTest
 @testable import MovieApp
 
 class GetMovieGenresUseCaseTests: XCTestCase {
+    var repository: MoviesRepositoryMock?
+    var sut: GetMovieGenresUseCase?
+    var returnedMovies: [Movie]?
     
+    override func tearDown() {
+        self.repository = nil
+        self.sut = nil
+        self.returnedMovies = nil
+    }
     
-    func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepository() {
-        let repository = MoviesRepositorySpy()
-        let sut = GetMovieGenresUseCase(repository: repository)
+    // MARK: - Tests
+    
+    func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepositoryOnce() {
+        // given
+        givenMoviesToBeFetched(movies: [])
+        givenUseCaseIsInitialised()
         
-        sut.execute()
-        
-        XCTAssertEqual(repository.getMoviesCallsCount, 1)
+        // when
+        whenUseCaseRequestsMovies()
+
+        // then
+        thenEnsureRepositoryIsCalledExactlyOnce()
     }
     
     func test_GetMovieGenresUseCase_shouldGetMoviesFromRepository() {
-        let repository = MoviesRepositorySpy()
-        let sut = GetMovieGenresUseCase(repository: repository)
+        // given
+        givenMoviesToBeFetched(movies: self.movies)
+        givenUseCaseIsInitialised()
+             
+        // when
+        whenUseCaseRequestsMovies()
         
-        let returnedMovies = sut.execute()
-        
-        XCTAssertEqual(movies, returnedMovies)
+        // then
+        thenEnsureMoviesAreFetched()
     }
     
-    let movies = [
+    private let movies = [
         Movie(
             id: Movie.Identifier(50),
             title: "movie1",
@@ -47,33 +63,45 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         )
     ]
 
+    // MARK: - Given
     
-    class MoviesRepositorySpy: MoviesRepositoryProtocol {
-        
-        // MARK: - getMovies
-        
-        var getMoviesCallsCount = 0
-        
-        func getMovies() -> [Movie] {
-            self.getMoviesCallsCount += 1
-            return []
-        }
+    private func givenMoviesToBeFetched(movies: [Movie]) {
+        self.repository = MoviesRepositoryMock()
+        self.repository?.getMoviesReturnValue = movies
+    }
+    
+    private func givenUseCaseIsInitialised() {
+        self.sut = GetMovieGenresUseCase(repository: repository!)
+    }
+    
+    // MARK: - When
+    
+    private func whenUseCaseRequestsMovies() {
+        self.returnedMovies = self.sut?.execute()
+    }
+    
+    // MARK: - Then
+    
+    private func thenEnsureRepositoryIsCalledExactlyOnce() {
+        XCTAssertEqual(self.repository?.getMoviesCallsCount, 1)
+    }
+    
+    private func thenEnsureMoviesAreFetched() {
+        XCTAssertEqual(self.movies, self.returnedMovies)
     }
 }
 
-//    var <#noParam#>CallsCount = 0
-//    var <#noParam#>Called: Bool {
-//        return <#noParam#>CallsCount > 0
-//    }
-//
-//    /// Create a stubbed return value for the function
-//    var <#noParam#>ReturnValue: Int!
-//    /// Create a mock implementation of the function
-//    var <#noParam#>Closure: (() -> Int)?
-//
-//    func <#noParam#>() -> Int {
-//        <#noParam#>CallsCount += 1
-//
-//        return <#noParam#>Closure.map({ $0() }) ?? <#noParam#>ReturnValue
-//    }
+class MoviesRepositoryMock: MoviesRepositoryProtocol {
+    
+    // MARK: - getMovies
+    
+    var getMoviesCallsCount = 0
+    var getMoviesReturnValue: [Movie]!
+    var getMoviesClosure: (() -> [Movie])?
 
+    func getMovies() -> [Movie] {
+        self.getMoviesCallsCount += 1
+
+        return getMoviesClosure.map({ $0() }) ?? getMoviesReturnValue
+    }
+}

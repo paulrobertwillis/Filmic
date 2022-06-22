@@ -11,10 +11,10 @@ protocol MoviesRepositoryProtocol {
     func getMovies() -> [Movie]
 }
 
-protocol GetMoviesGenresUseCaseProtocol {
+protocol GetMovieGenresUseCaseProtocol {
 }
 
-class GetMovieGenresUseCase {
+class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
     private let repository: MoviesRepositoryProtocol
     
     init(repository: MoviesRepositoryProtocol) {
