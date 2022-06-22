@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol MoviesRepositoryProtocol {
-    func getMovies() -> [Movie]
-}
-
 protocol GetMovieGenresUseCaseProtocol {
 }
 
