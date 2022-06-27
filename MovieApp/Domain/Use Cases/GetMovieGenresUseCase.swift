@@ -11,14 +11,14 @@ protocol GetMovieGenresUseCaseProtocol {
 }
 
 class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
-    private let repository: MoviesRepositoryProtocol
+    private let repository: GenresRepositoryProtocol
     
-    init(repository: MoviesRepositoryProtocol) {
+    init(repository: GenresRepositoryProtocol) {
         self.repository = repository
     }
     
     @discardableResult
-    func execute() -> [Movie] {
-        self.repository.getMovies()
+    func execute() -> [Genre] {
+        self.repository.getMovieGenres()
     }
 }

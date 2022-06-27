@@ -10,64 +10,54 @@ import XCTest
 @testable import MovieApp
 
 class GetMovieGenresUseCaseTests: XCTestCase {
-    var repository: MoviesRepositoryMock?
-    var sut: GetMovieGenresUseCase?
-    var returnedMovies: [Movie]?
+    private var repository: GenresRepositoryMock?
+    private var sut: GetMovieGenresUseCase?
+    private var returnedGenres: [Genre]?
+    
+    private let genres = [
+        Genre(id: Genre.Identifier(50), name: "Genre1"),
+        Genre(id: Genre.Identifier(100), name: "Genre2"),
+    ]
+    
+    // MARK: - Setup
     
     override func tearDown() {
         self.repository = nil
         self.sut = nil
-        self.returnedMovies = nil
+        self.returnedGenres = nil
     }
-    
+
     // MARK: - Tests
     
     func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepositoryOnce() {
         // given
-        givenMoviesToBeFetched(movies: [])
+        givenGenresToBeFetched(genres: [])
         givenUseCaseIsInitialised()
         
         // when
-        whenUseCaseRequestsMovies()
+        whenUseCaseRequestsGenres()
 
         // then
         thenEnsureRepositoryIsCalledExactlyOnce()
     }
     
-    func test_GetMovieGenresUseCase_shouldGetMoviesFromRepository() {
+    func test_GetTopRatedMoviesUseCase_whenExecutes_shouldGetGenresFromRepository() {
         // given
-        givenMoviesToBeFetched(movies: self.movies)
+        givenGenresToBeFetched(genres: self.genres)
         givenUseCaseIsInitialised()
              
         // when
-        whenUseCaseRequestsMovies()
+        whenUseCaseRequestsGenres()
         
         // then
-        thenEnsureMoviesAreFetched()
+        thenEnsureGenresAreFetched()
     }
     
-    private let movies = [
-        Movie(
-            id: Movie.Identifier(50),
-            title: "movie1",
-            posterPath: "/posterpath1.jpg",
-            overview: "movie1 overview",
-            releaseDate: "2001-01-01"
-        ),
-        Movie(
-            id: Movie.Identifier(100),
-            title: "movie2",
-            posterPath: "/posterpath2.jpg",
-            overview: "movie2 overview",
-            releaseDate: "2002-01-01"
-        )
-    ]
-
     // MARK: - Given
     
-    private func givenMoviesToBeFetched(movies: [Movie]) {
-        self.repository = MoviesRepositoryMock()
-        self.repository?.getMoviesReturnValue = movies
+    private func givenGenresToBeFetched(genres: [Genre]) {
+        self.repository = GenresRepositoryMock()
+        self.repository?.getMovieGenresReturnValue = genres
     }
     
     private func givenUseCaseIsInitialised() {
@@ -76,32 +66,32 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     
     // MARK: - When
     
-    private func whenUseCaseRequestsMovies() {
-        self.returnedMovies = self.sut?.execute()
+    private func whenUseCaseRequestsGenres() {
+        self.returnedGenres = self.sut?.execute()
     }
     
     // MARK: - Then
     
     private func thenEnsureRepositoryIsCalledExactlyOnce() {
-        XCTAssertEqual(self.repository?.getMoviesCallsCount, 1)
+        XCTAssertEqual(self.repository?.getMovieGenresCallsCount, 1)
     }
     
-    private func thenEnsureMoviesAreFetched() {
-        XCTAssertEqual(self.movies, self.returnedMovies)
+    private func thenEnsureGenresAreFetched() {
+        XCTAssertEqual(self.genres, self.returnedGenres)
     }
 }
 
-class MoviesRepositoryMock: MoviesRepositoryProtocol {
+private class GenresRepositoryMock: GenresRepositoryProtocol {
     
-    // MARK: - getMovies
+    // MARK: - getMovieGenres
     
-    var getMoviesCallsCount = 0
-    var getMoviesReturnValue: [Movie]!
-    var getMoviesClosure: (() -> [Movie])?
+    var getMovieGenresCallsCount = 0
+    var getMovieGenresReturnValue: [Genre]! = []
+    var getMovieGenresClosure: (() -> [Genre])?
 
-    func getMovies() -> [Movie] {
-        self.getMoviesCallsCount += 1
+    func getMovieGenres() -> [Genre] {
+        self.getMovieGenresCallsCount += 1
 
-        return getMoviesClosure.map({ $0() }) ?? getMoviesReturnValue
+        return getMovieGenresClosure.map({ $0() }) ?? getMovieGenresReturnValue
     }
 }
