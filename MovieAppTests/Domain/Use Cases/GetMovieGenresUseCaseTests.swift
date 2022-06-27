@@ -89,7 +89,10 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - When
     
     private func whenUseCaseRequestsGenres() {
-        self.resultValue = self.sut?.execute()
+        self.sut?.execute { result in
+            self.resultValue = result
+        }
+//        self.resultValue = self.sut?.execute()
     }
     
     // MARK: - Then

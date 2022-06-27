@@ -8,6 +8,8 @@
 import Foundation
 
 protocol GetMovieGenresUseCaseProtocol {
+    @discardableResult
+    func execute(completion: (Result<[Genre], Error>) -> Void) -> URLSessionTask?
 }
 
 class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
@@ -18,7 +20,8 @@ class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
     }
     
     @discardableResult
-    func execute() -> Result<[Genre], Error> {
-        self.repository.getMovieGenres()
+    func execute(completion: (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
+        completion(self.repository.getMovieGenres())
+        return nil
     }
 }
