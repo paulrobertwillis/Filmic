@@ -49,7 +49,7 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureNetworkCalledExactlyOnce()
     }
     
-    func test_GenresRepository_whenSuccessfullyGetsMovieGenres_shouldReturnGenres() {
+    func test_GenresRepository_whenSuccessfullyGetsMovieGenres_shouldReturnGenresWithSuccess() {
         // given
         givenExpectedSuccess()
         givenGenresRepositoryIsInitialised()
@@ -61,7 +61,7 @@ class GenresRepositoryTests: XCTestCase {
         thenReturnExpectedGenres()
     }
     
-    func test_GenresRepository_whenFailsToGetMovieGenres_shouldHandleFailure() {
+    func test_GenresRepository_whenFailsToGetMovieGenres_shouldReturnErrorWithFailure() {
         // given
         givenExpectedFailure()
         givenGenresRepositoryIsInitialised()
@@ -76,11 +76,11 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Given
         
     private func givenExpectedSuccess() {
-        self.networkService?.resultValue = .success(self.genres)
+        self.networkService?.requestReturnValue = .success(self.genres)
     }
     
     private func givenExpectedFailure() {
-        self.networkService?.resultValue = .failure(GenresRepositorySuccessTestError.failedFetching)
+        self.networkService?.requestReturnValue = .failure(GenresRepositorySuccessTestError.failedFetching)
     }
     
     private func givenGenresRepositoryIsInitialised() {
@@ -118,12 +118,16 @@ class GenresRepositoryTests: XCTestCase {
 }
 
 private class NetworkServiceMock: NetworkServiceProtocol {
-    var resultValue: Result<[Genre], Error>? = .success([])
+    
+    // MARK: - request
     
     var requestCallsCount = 0
+    var requestReturnValue: Result<[Genre], Error> = .success([])
+    var requestClosure: (() -> Result<[Genre], Error>)?
     
     func request() -> Result<[Genre], Error> {
         self.requestCallsCount += 1
-        return resultValue!
+        
+        return requestClosure.map({ $0() }) ?? requestReturnValue
     }
 }
