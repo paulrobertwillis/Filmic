@@ -37,7 +37,10 @@ class GenresRepositoryTests: XCTestCase {
         super.tearDown()
     }
     
-    // should call network once when requesting genres
+    // MARK: - Tests
+    
+    // TODO: Returns success without caring about genres; returns task; can return nil for task
+
     func test_GenresRepository_whenGetsMovieGenres_shouldCallNetworkOnce() {
         // given
         givenGenresRepositoryIsInitialised()
