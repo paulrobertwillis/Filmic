@@ -18,7 +18,7 @@ class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
     }
     
     @discardableResult
-    func execute() -> [Genre] {
+    func execute() -> Result<[Genre], Error> {
         self.repository.getMovieGenres()
     }
 }

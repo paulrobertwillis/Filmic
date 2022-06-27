@@ -10,34 +10,49 @@ import XCTest
 @testable import MovieApp
 
 class GenresRepositoryTests: XCTestCase {
+    
+    enum GenresRepositorySuccessTestError: Error {
+        case failedFetching
+    }
         
-    func test_GenresRepository_whenGetMovieGenres_shouldReturnGenres() {
+    func test_GenresRepository_whenSuccessfullyGetsMovieGenres_shouldReturnGenres() {
         // given
         let networkService = NetworkServiceMock()
         let expectedGenres = [
             Genre(id: Genre.Identifier(50), name: "Genre1"),
             Genre(id: Genre.Identifier(100), name: "Genre2"),
         ]
-        networkService.returnValue = expectedGenres
+        networkService.resultValue = .success(expectedGenres)
         
         let sut = GenresRepository(networkService: networkService)
         
         // when
-        let returnedGenres = sut.getMovieGenres()
+        let returnedGenres = try? sut.getMovieGenres().get()
         
         // then
         XCTAssertEqual(returnedGenres, expectedGenres)
     }
     
-    
-}
-
-private class NetworkServiceMock: NetworkServiceProtocol {
-    var returnValue: [Genre] = []
-    
-    func request() -> [Genre] {
-        returnValue
+    func test_GenresRepository_whenFailsToGetMovieGenres_shouldHandleFailure() {
+        // given
+        let networkService = NetworkServiceMock()
+        let expectedResult: Result<[Genre], Error> = .failure(GenresRepositorySuccessTestError.failedFetching)
+        networkService.resultValue = expectedResult
+        
+        let sut = GenresRepository(networkService: networkService)
+                
+        // then
+        XCTAssertThrowsError(try sut.getMovieGenres().get(), "A GenresRepositorySuccessTestError should have been thrown but no Error was thrown") { error in
+            XCTAssertEqual(error as? GenresRepositorySuccessTestError, GenresRepositorySuccessTestError.failedFetching)
+        }
+        
     }
 }
 
-
+private class NetworkServiceMock: NetworkServiceProtocol {
+    var resultValue: Result<[Genre], Error>?
+    
+    func request() -> Result<[Genre], Error> {
+        return resultValue!
+    }
+}

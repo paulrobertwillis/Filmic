@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GenresRepositoryProtocol {
-    func getMovieGenres() -> [Genre]
+    func getMovieGenres() -> Result<[Genre], Error>
 }

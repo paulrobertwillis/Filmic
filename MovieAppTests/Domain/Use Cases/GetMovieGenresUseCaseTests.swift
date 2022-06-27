@@ -67,7 +67,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - When
     
     private func whenUseCaseRequestsGenres() {
-        self.returnedGenres = self.sut?.execute()
+        self.returnedGenres = try? self.sut?.execute().get()
     }
     
     // MARK: - Then
@@ -89,9 +89,9 @@ private class GenresRepositoryMock: GenresRepositoryProtocol {
     var getMovieGenresReturnValue: [Genre]! = []
     var getMovieGenresClosure: (() -> [Genre])?
 
-    func getMovieGenres() -> [Genre] {
+    func getMovieGenres() -> Result<[Genre], Error> {
         self.getMovieGenresCallsCount += 1
-
-        return getMovieGenresClosure.map({ $0() }) ?? getMovieGenresReturnValue
+        
+        return.success(getMovieGenresClosure.map({ $0() }) ?? getMovieGenresReturnValue)
     }
 }

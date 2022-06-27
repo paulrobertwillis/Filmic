@@ -8,12 +8,18 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func request() -> [Genre]
+    func request() -> Result<[Genre], Error>
 }
 
 class NetworkService: NetworkServiceProtocol {
     
-    func request() -> [Genre] {
-        return []
+    func request() -> Result<[Genre], Error> {
+//        let url = URL(string: "example.com")!
+//        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+//            // Parse the data in the response and use it
+//        }
+//        task.resume()
+        
+        return .success([])
     }
 }

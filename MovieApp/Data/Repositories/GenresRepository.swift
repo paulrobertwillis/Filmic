@@ -16,7 +16,7 @@ class GenresRepository {
 }
 
 extension GenresRepository: GenresRepositoryProtocol {
-    func getMovieGenres() -> [Genre] {
+    func getMovieGenres() -> Result<[Genre], Error> {
         networkService.request()
     }
 }
