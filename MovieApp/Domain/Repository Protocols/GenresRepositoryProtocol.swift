@@ -8,5 +8,9 @@
 import Foundation
 
 protocol GenresRepositoryProtocol {
-    func getMovieGenres() -> Result<[Genre], Error>
+    typealias ResultValue = (Result<[Genre], Error>)
+    typealias GenresRepositoryCompletionHandler = (ResultValue) -> Void
+    
+    @discardableResult
+    func getMovieGenres(completion: @escaping GenresRepositoryCompletionHandler) -> URLSessionTask?
 }

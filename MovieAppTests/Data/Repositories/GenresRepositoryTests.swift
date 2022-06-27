@@ -90,7 +90,9 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - When
     
     func whenGenresRepositoryRequestsGenres() {
-        self.resultValue = self.sut?.getMovieGenres()
+        self.sut?.getMovieGenres { result in
+            self.resultValue = result
+        }
     }
     
     // MARK: - Then

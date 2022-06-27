@@ -16,7 +16,9 @@ class GenresRepository {
 }
 
 extension GenresRepository: GenresRepositoryProtocol {
-    func getMovieGenres() -> Result<[Genre], Error> {
-        networkService.request()
+    @discardableResult
+    func getMovieGenres(completion: (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
+        completion(self.networkService.request())
+        return nil
     }
 }

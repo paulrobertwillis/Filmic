@@ -17,7 +17,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     
     private var repository: GenresRepositoryMock?
     private var sut: GetMovieGenresUseCase?
-    private var resultValue: Result<[Genre], Error>?
+    private var resultValue: GenresRepositoryProtocol.ResultValue?
     
     private let genres = [
         Genre(id: Genre.Identifier(50), name: "Genre1"),
@@ -36,6 +36,8 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     }
 
     // MARK: - Tests
+    
+    // TODO: Returns success without caring about genres; returns task; can return nil for task
     
     func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepositoryOnce() {
         // given
@@ -75,11 +77,15 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - Given
 
     private func givenExpectedSuccess() {
-        self.repository?.getMovieGenresReturnValue = .success(self.genres)
+        self.repository?.getMovieGenresCompletionResultValue = .success(self.genres)
+        
+//        self.repository?.getMovieGenresReturnValue = .success(self.genres)
     }
     
     private func givenExpectedFailure() {
-        self.repository?.getMovieGenresReturnValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
+        self.repository?.getMovieGenresCompletionResultValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
+        
+//        self.repository?.getMovieGenresReturnValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
     }
 
     private func givenUseCaseIsInitialised() {
@@ -92,7 +98,6 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         self.sut?.execute { result in
             self.resultValue = result
         }
-//        self.resultValue = self.sut?.execute()
     }
     
     // MARK: - Then
@@ -124,12 +129,19 @@ private class GenresRepositoryMock: GenresRepositoryProtocol {
     // MARK: - getMovieGenres
     
     var getMovieGenresCallsCount = 0
-    var getMovieGenresReturnValue: Result<[Genre], Error> = .success([])
-    var getMovieGenresClosure: (() -> Result<[Genre], Error>)?
-
-    func getMovieGenres() -> Result<[Genre], Error> {
+    var getMovieGenresReturnValue: URLSessionTask?
+    var getMovieGenresClosure: ((GenresRepositoryCompletionHandler) -> URLSessionTask)?
+    
+    // completion parameter
+    var getMovieGenresCompletionResultValue: ResultValue? = .success([])
+    var getMovieGenresReceivedCompletion: GenresRepositoryCompletionHandler? = { _ in }
+    
+    func getMovieGenres(completion: @escaping GenresRepositoryCompletionHandler) -> URLSessionTask? {
         self.getMovieGenresCallsCount += 1
+
+        self.getMovieGenresReceivedCompletion = completion
+        completion(getMovieGenresCompletionResultValue!)
         
-        return getMovieGenresClosure.map({ $0() }) ?? getMovieGenresReturnValue
+        return getMovieGenresClosure.map({ $0(completion) }) ?? getMovieGenresReturnValue
     }
 }
