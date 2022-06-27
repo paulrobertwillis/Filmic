@@ -58,7 +58,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryRequestsGenres()
         
         // then
-        thenReturnExpectedGenres()
+        thenEnsureGenresAreFetched()
     }
     
     func test_GenresRepository_whenFailsToGetMovieGenres_shouldReturnErrorWithFailure() {
@@ -70,7 +70,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryRequestsGenres()
                 
         // then
-        thenReturnFailureResult()
+        thenEnsureFailureResultIsReturned()
     }
     
     // MARK: - Given
@@ -99,12 +99,12 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertEqual(self.networkService?.requestCallsCount, 1)
     }
     
-    private func thenReturnExpectedGenres() {
+    private func thenEnsureGenresAreFetched() {
         let returnedGenres = try? unwrapResult()
         XCTAssertEqual(self.genres, returnedGenres)
     }
     
-    private func thenReturnFailureResult() {
+    private func thenEnsureFailureResultIsReturned() {
         XCTAssertThrowsError(try unwrapResult(), "A GenresRepositorySuccessTestError should have been thrown but no Error was thrown") { error in
             XCTAssertEqual(error as? GenresRepositorySuccessTestError, GenresRepositorySuccessTestError.failedFetching)
         }

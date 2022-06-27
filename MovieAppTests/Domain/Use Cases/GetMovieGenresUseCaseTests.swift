@@ -10,9 +10,14 @@ import XCTest
 @testable import MovieApp
 
 class GetMovieGenresUseCaseTests: XCTestCase {
+    
+    enum GetMovieGenresUseCaseSuccessTestError: Error {
+        case failedFetching
+    }
+    
     private var repository: GenresRepositoryMock?
     private var sut: GetMovieGenresUseCase?
-    private var returnedGenres: [Genre]?
+    private var resultValue: Result<[Genre], Error>?
     
     private let genres = [
         Genre(id: Genre.Identifier(50), name: "Genre1"),
@@ -20,18 +25,20 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     ]
     
     // MARK: - Setup
+    override func setUp() {
+        self.repository = GenresRepositoryMock()
+    }
     
     override func tearDown() {
         self.repository = nil
         self.sut = nil
-        self.returnedGenres = nil
+        self.resultValue = nil
     }
 
     // MARK: - Tests
     
     func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepositoryOnce() {
         // given
-        givenGenresToBeFetched(genres: [])
         givenUseCaseIsInitialised()
         
         // when
@@ -41,9 +48,9 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         thenEnsureRepositoryIsCalledExactlyOnce()
     }
     
-    func test_GetTopRatedMoviesUseCase_whenExecutes_shouldGetGenresFromRepository() {
+    func test_GetMovieGenresUseCase_whenSuccessfullyGetsMovieGenres_shouldReturnGenresWithSuccess() {
         // given
-        givenGenresToBeFetched(genres: self.genres)
+        givenExpectedSuccess()
         givenUseCaseIsInitialised()
              
         // when
@@ -53,13 +60,28 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         thenEnsureGenresAreFetched()
     }
     
-    // MARK: - Given
-    
-    private func givenGenresToBeFetched(genres: [Genre]) {
-        self.repository = GenresRepositoryMock()
-        self.repository?.getMovieGenresReturnValue = genres
+    func test_GetMovieGenresUseCase_whenFailsToGetMovieGenres_shouldReturnErrorWithFailure() {
+        // given
+        givenExpectedFailure()
+        givenUseCaseIsInitialised()
+        
+        // when
+        whenUseCaseRequestsGenres()
+        
+        // then
+        thenEnsureFailureResultIsReturned()
     }
     
+    // MARK: - Given
+
+    private func givenExpectedSuccess() {
+        self.repository?.getMovieGenresReturnValue = .success(self.genres)
+    }
+    
+    private func givenExpectedFailure() {
+        self.repository?.getMovieGenresReturnValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
+    }
+
     private func givenUseCaseIsInitialised() {
         self.sut = GetMovieGenresUseCase(repository: repository!)
     }
@@ -67,7 +89,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - When
     
     private func whenUseCaseRequestsGenres() {
-        self.returnedGenres = try? self.sut?.execute().get()
+        self.resultValue = self.sut?.execute()
     }
     
     // MARK: - Then
@@ -77,7 +99,20 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     }
     
     private func thenEnsureGenresAreFetched() {
-        XCTAssertEqual(self.genres, self.returnedGenres)
+        let returnedGenres = try? unwrapResult()
+        XCTAssertEqual(self.genres, returnedGenres)
+    }
+    
+    private func thenEnsureFailureResultIsReturned() {
+        XCTAssertThrowsError(try unwrapResult(), "A GenresRepositorySuccessTestError should have been thrown but no Error was thrown") { error in
+            XCTAssertEqual(error as? GetMovieGenresUseCaseSuccessTestError, GetMovieGenresUseCaseSuccessTestError.failedFetching)
+        }
+    }
+
+    // MARK: - Helpers
+    
+    private func unwrapResult() throws -> [Genre]? {
+        return try self.resultValue?.get()
     }
 }
 
@@ -86,12 +121,12 @@ private class GenresRepositoryMock: GenresRepositoryProtocol {
     // MARK: - getMovieGenres
     
     var getMovieGenresCallsCount = 0
-    var getMovieGenresReturnValue: [Genre]! = []
-    var getMovieGenresClosure: (() -> [Genre])?
+    var getMovieGenresReturnValue: Result<[Genre], Error> = .success([])
+    var getMovieGenresClosure: (() -> Result<[Genre], Error>)?
 
     func getMovieGenres() -> Result<[Genre], Error> {
         self.getMovieGenresCallsCount += 1
         
-        return.success(getMovieGenresClosure.map({ $0() }) ?? getMovieGenresReturnValue)
+        return getMovieGenresClosure.map({ $0() }) ?? getMovieGenresReturnValue
     }
 }
