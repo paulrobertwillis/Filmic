@@ -8,12 +8,15 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func request() -> Result<[Genre], Error>
+    typealias ResultValue = (Result<[Genre], Error>)
+    typealias CompletionHandler = (ResultValue) -> Void
+
+    func request() -> ResultValue
 }
 
 class NetworkService: NetworkServiceProtocol {
     
-    func request() -> Result<[Genre], Error> {
+    func request() -> ResultValue {
 //        let url = URL(string: "example.com")!
 //        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 //            // Parse the data in the response and use it

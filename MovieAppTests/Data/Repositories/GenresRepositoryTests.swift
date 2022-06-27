@@ -127,10 +127,10 @@ private class NetworkServiceMock: NetworkServiceProtocol {
     // MARK: - request
     
     var requestCallsCount = 0
-    var requestReturnValue: Result<[Genre], Error> = .success([])
-    var requestClosure: (() -> Result<[Genre], Error>)?
+    var requestReturnValue: ResultValue = .success([])
+    var requestClosure: (() -> ResultValue)?
     
-    func request() -> Result<[Genre], Error> {
+    func request() -> ResultValue {
         self.requestCallsCount += 1
         
         return requestClosure.map({ $0() }) ?? requestReturnValue
