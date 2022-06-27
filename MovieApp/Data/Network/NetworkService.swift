@@ -7,6 +7,13 @@
 
 import Foundation
 
-class NetworkService {
+protocol NetworkServiceProtocol {
+    func request() -> [Genre]
+}
+
+class NetworkService: NetworkServiceProtocol {
     
+    func request() -> [Genre] {
+        return []
+    }
 }

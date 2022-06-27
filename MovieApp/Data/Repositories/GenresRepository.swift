@@ -7,8 +7,16 @@
 
 import Foundation
 
-private class GenresRepository: GenresRepositoryProtocol {
+class GenresRepository {
+    private let networkService: NetworkServiceProtocol
+    
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
+    }
+}
+
+extension GenresRepository: GenresRepositoryProtocol {
     func getMovieGenres() -> [Genre] {
-        return []
+        networkService.request()
     }
 }
