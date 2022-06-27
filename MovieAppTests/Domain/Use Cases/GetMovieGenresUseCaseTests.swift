@@ -18,6 +18,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     private var repository: GenresRepositoryMock?
     private var sut: GetMovieGenresUseCase?
     private var resultValue: GenresRepositoryProtocol.ResultValue?
+    private var task: URLSessionTask?
     
     private let genres = [
         Genre(id: Genre.Identifier(50), name: "Genre1"),
@@ -33,6 +34,8 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         self.repository = nil
         self.sut = nil
         self.resultValue = nil
+        self.task = nil
+        super.tearDown()
     }
 
     // MARK: - Tests
@@ -74,18 +77,25 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         thenEnsureFailureResultIsReturned()
     }
     
+    func test_GetMovieGenresUseCase_whenGetsMovieGenres_shouldReturnTask() {
+        // given
+        givenUseCaseIsInitialised()
+        
+        // when
+        whenUseCaseRequestsGenres()
+        
+        // then
+        thenEnsureTaskIsReturned()
+    }
+
     // MARK: - Given
 
     private func givenExpectedSuccess() {
         self.repository?.getMovieGenresCompletionResultValue = .success(self.genres)
-        
-//        self.repository?.getMovieGenresReturnValue = .success(self.genres)
     }
     
     private func givenExpectedFailure() {
         self.repository?.getMovieGenresCompletionResultValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
-        
-//        self.repository?.getMovieGenresReturnValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
     }
 
     private func givenUseCaseIsInitialised() {
@@ -95,7 +105,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - When
     
     private func whenUseCaseRequestsGenres() {
-        self.sut?.execute { result in
+        self.task = self.sut?.execute { result in
             self.resultValue = result
         }
     }
@@ -115,6 +125,10 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         XCTAssertThrowsError(try unwrapResult(), "A GenresRepositorySuccessTestError should have been thrown but no Error was thrown") { error in
             XCTAssertEqual(error as? GetMovieGenresUseCaseSuccessTestError, GetMovieGenresUseCaseSuccessTestError.failedFetching)
         }
+    }
+    
+    private func thenEnsureTaskIsReturned() {
+        XCTAssertNotNil(self.task)
     }
 
     // MARK: - Helpers

@@ -18,6 +18,7 @@ class GenresRepositoryTests: XCTestCase {
     private var networkService: NetworkServiceMock?
     private var sut: GenresRepository?
     private var resultValue: Result<[Genre], Error>?
+    private var task: URLSessionTask?
     
     private let genres = [
         Genre(id: Genre.Identifier(50), name: "Genre1"),
@@ -34,13 +35,14 @@ class GenresRepositoryTests: XCTestCase {
         self.networkService = nil
         self.sut = nil
         self.resultValue = nil
+        self.task = nil
         super.tearDown()
     }
     
     // MARK: - Tests
     
-    // TODO: Returns success without caring about genres; returns task; can return nil for task
-
+    // TODO: returns task; can return nil for task
+    
     func test_GenresRepository_whenGetsMovieGenres_shouldCallNetworkOnce() {
         // given
         givenGenresRepositoryIsInitialised()
@@ -76,6 +78,16 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureFailureResultIsReturned()
     }
     
+    func test_GenresRepository_whenGetsMovieGenres_shouldReturnTask() {
+        givenGenresRepositoryIsInitialised()
+        
+        // when
+        whenGenresRepositoryRequestsGenres()
+                
+        // then
+        thenEnsureTaskIsReturned()
+    }
+    
     // MARK: - Given
         
     private func givenExpectedSuccess() {
@@ -93,7 +105,7 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - When
     
     func whenGenresRepositoryRequestsGenres() {
-        self.sut?.getMovieGenres { result in
+        self.task = self.sut?.getMovieGenres { result in
             self.resultValue = result
         }
     }
@@ -113,6 +125,10 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertThrowsError(try unwrapResult(), "A GenresRepositorySuccessTestError should have been thrown but no Error was thrown") { error in
             XCTAssertEqual(error as? GenresRepositorySuccessTestError, GenresRepositorySuccessTestError.failedFetching)
         }
+    }
+    
+    private func thenEnsureTaskIsReturned() {
+        XCTAssertNotNil(self.task)
     }
     
     // MARK: - Helpers

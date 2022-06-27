@@ -24,8 +24,9 @@ class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
     
     @discardableResult
     func execute(completion: @escaping CompletionHandler) -> URLSessionTask? {
-        return self.repository.getMovieGenres { result in
+        self.repository.getMovieGenres { result in
             completion(result)
         }
+        return URLSessionTask()
     }
 }
