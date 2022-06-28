@@ -7,22 +7,37 @@
 
 import Foundation
 
+enum NetworkError: Error {
+    case error
+}
+
+struct NetworkRequest {
+    let success: Bool
+}
+
 protocol NetworkServiceProtocol {
     typealias ResultValue = (Result<[Genre], Error>)
     typealias CompletionHandler = (ResultValue) -> Void
 
-    func request() -> ResultValue
+    @discardableResult
+    func request(_ request: NetworkRequest, completion: CompletionHandler) -> ResultValue
 }
 
 class NetworkService: NetworkServiceProtocol {
     
-    func request() -> ResultValue {
+    @discardableResult
+    func request(_ request: NetworkRequest, completion: CompletionHandler) -> ResultValue {
 //        let url = URL(string: "example.com")!
 //        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 //            // Parse the data in the response and use it
 //        }
 //        task.resume()
-        
-        return .success([])
+        if request.success {
+            completion(.success([]))
+            return .success([])
+        } else {
+            completion(.failure(NetworkError.error))
+            return .failure(NetworkError.error)
+        }
     }
 }

@@ -41,8 +41,6 @@ class GenresRepositoryTests: XCTestCase {
     
     // MARK: - Tests
     
-    // TODO: returns task; can return nil for task
-    
     func test_GenresRepository_whenGetsMovieGenres_shouldCallNetworkOnce() {
         // given
         givenGenresRepositoryIsInitialised()
@@ -146,7 +144,7 @@ private class NetworkServiceMock: NetworkServiceProtocol {
     var requestReturnValue: ResultValue = .success([])
     var requestClosure: (() -> ResultValue)?
     
-    func request() -> ResultValue {
+    func request(_ request: NetworkRequest, completion: CompletionHandler) -> ResultValue {
         self.requestCallsCount += 1
         
         return requestClosure.map({ $0() }) ?? requestReturnValue

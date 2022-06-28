@@ -39,9 +39,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     }
 
     // MARK: - Tests
-    
-    // TODO: Returns success without caring about genres; returns task; can return nil for task
-    
+        
     func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepositoryOnce() {
         // given
         givenUseCaseIsInitialised()
