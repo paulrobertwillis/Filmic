@@ -33,6 +33,7 @@
 		69D8442228621E4400A651F1 /* GetMovieGenresUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8442128621E4400A651F1 /* GetMovieGenresUseCase.swift */; };
 		69D8442628621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8442528621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift */; };
 		69D844292863188400A651F1 /* MoviesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D844282863188400A651F1 /* MoviesRepositoryProtocol.swift */; };
+		69F83F06286CADF7001A5FAF /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F83F05286CADF7001A5FAF /* NetworkServiceMock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		69D8442128621E4400A651F1 /* GetMovieGenresUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMovieGenresUseCase.swift; sourceTree = "<group>"; };
 		69D8442528621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMovieGenresUseCaseTests.swift; sourceTree = "<group>"; };
 		69D844282863188400A651F1 /* MoviesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesRepositoryProtocol.swift; sourceTree = "<group>"; };
+		69F83F05286CADF7001A5FAF /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +254,7 @@
 		695D8EBD28562034008B583A /* MovieAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				69F83F04286CADE9001A5FAF /* Mocks */,
 				692F092A285A6D0400780F72 /* Domain */,
 				692F0929285A6D0000780F72 /* Data */,
 				692F0928285A6CFA00780F72 /* Presentation */,
@@ -344,6 +347,14 @@
 				6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */,
 			);
 			path = "Repository Protocols";
+			sourceTree = "<group>";
+		};
+		69F83F04286CADE9001A5FAF /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				69F83F05286CADF7001A5FAF /* NetworkServiceMock.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -470,6 +481,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69F83F06286CADF7001A5FAF /* NetworkServiceMock.swift in Sources */,
 				6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */,
 				6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */,
 				695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */,

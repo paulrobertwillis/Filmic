@@ -89,11 +89,11 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - Given
 
     private func givenExpectedSuccess() {
-        self.repository?.getMovieGenresCompletionResultValue = .success(self.genres)
+        self.repository?.getMovieGenresCompletionReturnValue = .success(self.genres)
     }
     
     private func givenExpectedFailure() {
-        self.repository?.getMovieGenresCompletionResultValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
+        self.repository?.getMovieGenresCompletionReturnValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
     }
 
     private func givenUseCaseIsInitialised() {
@@ -145,14 +145,14 @@ private class GenresRepositoryMock: GenresRepositoryProtocol {
     var getMovieGenresClosure: ((CompletionHandler) -> URLSessionTask)?
     
     // completion parameter
-    var getMovieGenresCompletionResultValue: ResultValue? = .success([])
+    var getMovieGenresCompletionReturnValue: ResultValue? = .success([])
     var getMovieGenresReceivedCompletion: CompletionHandler? = { _ in }
     
     func getMovieGenres(completion: @escaping CompletionHandler) -> URLSessionTask? {
         self.getMovieGenresCallsCount += 1
 
         self.getMovieGenresReceivedCompletion = completion
-        completion(getMovieGenresCompletionResultValue!)
+        completion(getMovieGenresCompletionReturnValue!)
         
         return getMovieGenresClosure.map({ $0(completion) }) ?? getMovieGenresReturnValue
     }
