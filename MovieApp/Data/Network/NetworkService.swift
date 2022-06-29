@@ -20,13 +20,13 @@ protocol NetworkServiceProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(_ request: NetworkRequest, completion: CompletionHandler) -> ResultValue
+    func request(_ request: NetworkRequest, completion: CompletionHandler) -> URLSessionTask?
 }
 
 class NetworkService: NetworkServiceProtocol {
     
     @discardableResult
-    func request(_ request: NetworkRequest, completion: CompletionHandler) -> ResultValue {
+    func request(_ request: NetworkRequest, completion: CompletionHandler) -> URLSessionTask? {
 //        let url = URL(string: "example.com")!
 //        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 //            // Parse the data in the response and use it
@@ -34,10 +34,10 @@ class NetworkService: NetworkServiceProtocol {
 //        task.resume()
         if request.success {
             completion(.success([]))
-            return .success([])
         } else {
             completion(.failure(NetworkError.error))
-            return .failure(NetworkError.error)
         }
+        
+        return URLSessionTask()
     }
 }

@@ -43,31 +43,7 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertNotNil(self.sut)
     }
     
-    func test_NetworkService_whenPerformSuccessfulRequest_shouldReturnSuccess() {
-        // given
-        let request = NetworkRequest(success: true)
-        
-        // when
-        
-        
-        // then
-        
-        
-        XCTAssertNotNil(try self.sut?.request(request, completion: completion).get())
-    }
-    
-    func test_NetworkService_whenPerformFailingRequest_shouldReturnFailure() {
-        // given
-        let request = NetworkRequest(success: false)
-
-        // when
-        
-        
-        // then
-        XCTAssertThrowsError(try self.sut?.request(request, completion: completion).get())
-    }
-
-    func test_NetworkService_whenPerformSuccessfulRequest_shouldReturnSuccessfulRequestInCompletionHandler() {
+    func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnSuccessfulResultInCompletionHandler() {
         // given
         let request = NetworkRequest(success: true)
         var requestResponse = "no response"
@@ -85,6 +61,27 @@ class NetworkServiceTests: XCTestCase {
         
         // then
         XCTAssertEqual(requestResponse, "success")
+    }
+    
+    func test_NetworkService_whenFailsToPerformRequest_shouldReturnFailedResultInCompletionHandler() {
+        // given
+        let request = NetworkRequest(success: false)
+        var requestResponse = "no response"
+        
+        let successCompletion: NetworkServiceProtocol.CompletionHandler = { result in
+            switch result {
+            case .success(_):
+                requestResponse = "success"
+            case .failure(_):
+                requestResponse = "failure"
+            }
+        }
+        
+        // when
+        self.sut?.request(request, completion: successCompletion)
+        
+        // then
+        XCTAssertEqual(requestResponse, "failure")
     }
     
     // should return failure in completion handler

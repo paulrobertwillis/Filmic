@@ -89,11 +89,11 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Given
         
     private func givenExpectedSuccess() {
-        self.networkService?.requestReturnValue = .success(self.genres)
+        self.networkService?.requestCompletionReturnValue = .success(self.genres)
     }
     
     private func givenExpectedFailure() {
-        self.networkService?.requestReturnValue = .failure(GenresRepositorySuccessTestError.failedFetching)
+        self.networkService?.requestCompletionReturnValue = .failure(GenresRepositorySuccessTestError.failedFetching)
     }
     
     private func givenGenresRepositoryIsInitialised() {
@@ -141,12 +141,16 @@ private class NetworkServiceMock: NetworkServiceProtocol {
     // MARK: - request
     
     var requestCallsCount = 0
-    var requestReturnValue: ResultValue = .success([])
-    var requestClosure: (() -> ResultValue)?
-    
-    func request(_ request: NetworkRequest, completion: CompletionHandler) -> ResultValue {
+    var requestReturnValue: URLSessionTask? = URLSessionTask()
+        
+    // completion
+    var requestCompletionReturnValue: ResultValue = .success([])
+
+    func request(_ request: NetworkRequest, completion: CompletionHandler) -> URLSessionTask? {
         self.requestCallsCount += 1
         
-        return requestClosure.map({ $0() }) ?? requestReturnValue
+        completion(requestCompletionReturnValue)
+        
+        return requestReturnValue
     }
 }
