@@ -173,3 +173,27 @@ class DataTransferServiceTests: XCTestCase {
     }
     
 }
+
+// TODO: Tests
+
+// Add completion handler
+
+// should return success/failure to completion handler
+
+// should take data from NetworkService and decode it
+
+// decoding should belong to a separate object, a DataUnwrapperService
+
+// DataUnwrapperService should have its own tests
+
+// DataTransferService should keep logs of failures to unwrap
+
+// DataTransferService should have a logger
+
+// DataTransferLogger should have its own tests
+
+// GenreRepository should instead go to DataTransferService for [Genre]
+
+// Networking should become more generic to handle decoding of greater range of objects
+
+// Generic network should be extensively tested to ensure it can decode objects of all types implemented in the Domain layer
