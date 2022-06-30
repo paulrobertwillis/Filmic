@@ -147,35 +147,22 @@ class NetworkServiceTests: XCTestCase {
     // MARK: - Given
     
     private func givenRequestIsReceived() {
-        self.request = URLRequest(url: URL(string: "www.example.com")!)
+        self.request = URLRequest(url: URL(string: "www.test.com")!)
     }
     
     private func givenRequestWillSucceed() {
-        let response = HTTPURLResponse(url: URL(string: "test_url")!,
-                                       statusCode: 200,
-                                       httpVersion: "1.1",
-                                       headerFields: [:])
-        
         self.networkRequestPerformer = NetworkRequestPerformerMock(data: nil,
-                                                                   response: response,
+                                                                   response: successResponse(),
                                                                    error: nil)
-        
-        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
+        createNetworkService()
     }
     
     private func givenRequestWillFail() {
         self.expectedError = NetworkErrorMock.someError
-
-        let response = HTTPURLResponse(url: URL(string: "test_url")!,
-                                       statusCode: 500,
-                                       httpVersion: "1.1",
-                                       headerFields: [:])
-
         self.networkRequestPerformer = NetworkRequestPerformerMock(data: nil,
-                                                                   response: response,
+                                                                   response: failureResponse(),
                                                                    error: NetworkErrorMock.someError)
-
-        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
+        createNetworkService()
     }
     
     // MARK: - When
@@ -218,9 +205,23 @@ class NetworkServiceTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private func createNetworkService() {
+        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
+    }
         
-    private func create() {
-        
+    private func successResponse() -> HTTPURLResponse? {
+        HTTPURLResponse(url: URL(string: "test_url")!,
+                                       statusCode: 200,
+                                       httpVersion: "1.1",
+                                       headerFields: [:])
+    }
+    
+    private func failureResponse() -> HTTPURLResponse? {
+        HTTPURLResponse(url: URL(string: "test_url")!,
+                                       statusCode: 500,
+                                       httpVersion: "1.1",
+                                       headerFields: [:])
     }
 }
 
