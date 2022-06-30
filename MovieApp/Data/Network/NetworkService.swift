@@ -8,8 +8,8 @@
 import Foundation
 
 enum NetworkError: Error {
-    case error
-    case expectedError
+    case error(statusCode: Int)
+    case generic(Error)
 }
 
 struct NetworkRequest {
@@ -50,9 +50,18 @@ extension NetworkService: NetworkServiceProtocol {
 //        task.resume()
 //        return task
         
-        let sessionDataTest = self.networkRequestPerformer.request(request) { _, _, requestError in
-            if let requestError = requestError {
-                completion (.failure(requestError))
+        _ = self.networkRequestPerformer.request(request) { _, response, error in
+            
+            if let error = error {
+                var errorToBeReturned: NetworkError
+                
+                if let response = response as? HTTPURLResponse {
+                    errorToBeReturned = .error(statusCode: response.statusCode)
+                } else {
+                    errorToBeReturned = .generic(error)
+                }
+                
+                completion (.failure(error))
             } else {
                 completion(.success([]))
             }

@@ -14,16 +14,21 @@ class NetworkServiceTests: XCTestCase {
         case success
         case failure
     }
+    
+    private enum NetworkServiceSuccessTestError: Error {
+        case failedRequest
+        case expectedError
+    }
 
     private var networkRequestPerformer: NetworkRequestPerformerMock?
     private var sut: NetworkService?
     private var request: NetworkRequest?
     
-    private var expectedError: NetworkError?
+    private var expectedError: NetworkServiceSuccessTestError?
         
     private var returnedResult: ReturnedResult?
     private var returnedValue: [Genre]?
-    private var returnedError: NetworkError?
+    private var returnedError: NetworkServiceSuccessTestError?
     
     private func completion(_ result: NetworkServiceProtocol.ResultValue) {
         switch result {
@@ -32,7 +37,7 @@ class NetworkServiceTests: XCTestCase {
             self.returnedValue = returnedValue
         case .failure(let returnedError):
             self.returnedResult = .failure
-            self.returnedError = returnedError as? NetworkError
+            self.returnedError = returnedError as? NetworkServiceSuccessTestError
         }
     }
         
@@ -104,12 +109,12 @@ class NetworkServiceTests: XCTestCase {
         whenNetworkRequestIsPerformed()
 
         // then
-        thenEnsureAnErrorIsReturnedInFailedResult()
+        thenEnsureAnyErrorIsReturnedInFailedResult()
     }
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnSpecificNetworkErrorInFailedResult() {
         // given
-        self.expectedError = NetworkError.expectedError
+        self.expectedError = NetworkServiceSuccessTestError.expectedError
         givenRequestWillFail(with: self.expectedError!)
         
         // when
@@ -119,15 +124,15 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureSpecificNetworkErrorIsReturnedInFailedResult()
     }
         
-    func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnURLResponseInSuccessfulResult() {
+    func test_NetworkService_whenPerformsFailedRequest_shouldReturnURLResponseInFailedResult() {
         // given
-        givenRequestWillSucceed()
+        givenRequestWillFail()
         
         // when
         whenNetworkRequestIsPerformed()
         
         // then
-        thenEnsureURLResponseIsReturnedInSuccessfulResult()
+        thenEnsureURLResponseIsReturnedInFailedResult()
     }
     
     // should return data
@@ -144,9 +149,12 @@ class NetworkServiceTests: XCTestCase {
         self.networkRequestPerformer?.request_CompletionParameterReturnValue = (nil, nil, nil)
     }
     
-    private func givenRequestWillFail(with error: Error = NetworkError.error) {
+    private func givenRequestWillFail(with error: Error = NetworkServiceSuccessTestError.failedRequest) {
         self.request = NetworkRequest(success: false)
-        self.networkRequestPerformer?.request_CompletionParameterReturnValue = (nil, nil, error)
+        let url = URL(string: "www.example.com")!
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 400, httpVersion: nil, headerFields: nil)
+        
+        self.networkRequestPerformer?.request_CompletionParameterReturnValue = (nil, urlResponse, error)
     }
     
     // MARK: - When
@@ -167,7 +175,7 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(self.returnedResult, .failure)
     }
     
-    private func thenEnsureAnErrorIsReturnedInFailedResult() {
+    private func thenEnsureAnyErrorIsReturnedInFailedResult() {
         XCTAssertNotNil(self.returnedError)
     }
     
@@ -175,8 +183,14 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(self.expectedError, self.returnedError)
     }
     
-    private func thenEnsureURLResponseIsReturnedInSuccessfulResult() {
+    private func thenEnsureURLResponseIsReturnedInFailedResult() {
         XCTFail()
+    }
+    
+    // MARK: - Helpers
+    
+    private func createNetworkRequestMock(willSucceed: Bool) {
+        self.request = NetworkRequest(success: willSucceed)
     }
 }
 
