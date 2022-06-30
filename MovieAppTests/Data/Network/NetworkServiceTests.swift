@@ -190,18 +190,27 @@ class NetworkServiceTests: XCTestCase {
     }
     
     private func thenEnsureSpecificNetworkErrorIsReturnedInFailedResult() {
-        guard let error = returnedError else {
+        guard let returnedError = returnedError else {
             XCTFail("Should always be non-nil value at this point")
             return
         }
 
-        if case NetworkError.error(let statusCode) = error {
-            XCTAssertEqual(statusCode, 500)
+        if case NetworkError.error(let statusCode) = returnedError {
+            XCTAssertEqual(statusCode, self.failureResponse()?.statusCode)
         }
     }
     
     private func thenEnsureURLResponseIsReturnedInFailedResult() {
-//        XCTFail()
+        guard let returnedError = returnedError else {
+            XCTFail("Should always be non-nil value at this point")
+            return
+        }
+        
+        if case NetworkError.error(let statusCode) = returnedError {
+            XCTAssertNotNil(statusCode)
+        }
+
+
     }
     
     // MARK: - Helpers
