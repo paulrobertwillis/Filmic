@@ -19,8 +19,8 @@ extension GenresRepository: GenresRepositoryProtocol {
     @discardableResult
     func getMovieGenres(completion: @escaping CompletionHandler) -> URLSessionTask? {
         
-        let request = NetworkRequest(success: true)
-        return self.networkService.request(request, completion: { result in
+        let request = URLRequest(url: URL(string: "www.example.com")!)
+        return self.networkService.request(request: request, completion: { result in
             completion(result)
         })
     }

@@ -21,7 +21,7 @@ protocol NetworkServiceProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
 class NetworkService {
@@ -36,7 +36,7 @@ class NetworkService {
 extension NetworkService: NetworkServiceProtocol {
     
     @discardableResult
-    func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
 //        let url = URL(string: "example.com")!
 //        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 //            // Parse the data in the response and use it
@@ -50,7 +50,7 @@ extension NetworkService: NetworkServiceProtocol {
 //        task.resume()
 //        return task
         
-        _ = self.networkRequestPerformer.request(request) { _, response, error in
+        _ = self.networkRequestPerformer.request(request: request) { _, response, error in
             
             if let error = error {
                 var errorToBeReturned: NetworkError
@@ -61,7 +61,7 @@ extension NetworkService: NetworkServiceProtocol {
                     errorToBeReturned = .generic(error)
                 }
                 
-                completion (.failure(error))
+                completion (.failure(errorToBeReturned))
             } else {
                 completion(.success([]))
             }
@@ -75,7 +75,7 @@ protocol NetworkRequestPerformerProtocol {
     typealias ResultValue = (Data?, URLResponse?, Error?)
     typealias CompletionHandler = (ResultValue) -> Void
     
-    func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask
 }
 
 //private class NetworkRequestPerformer: NetworkRequestPerformerProtocol {

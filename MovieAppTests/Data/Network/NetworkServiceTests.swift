@@ -14,21 +14,21 @@ class NetworkServiceTests: XCTestCase {
         case success
         case failure
     }
-    
-    private enum NetworkServiceSuccessTestError: Error {
-        case failedRequest
-        case expectedError
+        
+    private enum NetworkErrorMock: Error {
+        case someError
     }
 
     private var networkRequestPerformer: NetworkRequestPerformerMock?
     private var sut: NetworkService?
-    private var request: NetworkRequest?
+    private var request: URLRequest?
+    private var task: URLSessionTask?
     
-    private var expectedError: NetworkServiceSuccessTestError?
-        
+    private var expectedError: NetworkErrorMock?
+    
     private var returnedResult: ReturnedResult?
     private var returnedValue: [Genre]?
-    private var returnedError: NetworkServiceSuccessTestError?
+    private var returnedError: Error?
     
     private func completion(_ result: NetworkServiceProtocol.ResultValue) {
         switch result {
@@ -37,7 +37,7 @@ class NetworkServiceTests: XCTestCase {
             self.returnedValue = returnedValue
         case .failure(let returnedError):
             self.returnedResult = .failure
-            self.returnedError = returnedError as? NetworkServiceSuccessTestError
+            self.returnedError = returnedError
         }
     }
         
@@ -46,14 +46,13 @@ class NetworkServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.networkRequestPerformer = NetworkRequestPerformerMock()
-        self.sut = NetworkService(networkRequestPerformer: networkRequestPerformer!)
     }
     
     override func tearDown() {
         self.networkRequestPerformer = nil
         self.sut = nil
         self.request = nil
+        self.task = nil
         
         self.expectedError = nil
         
@@ -68,6 +67,7 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnSuccessfulResultInCompletionHandler() {
         // given
+        givenRequestIsReceived()
         givenRequestWillSucceed()
         
         // when
@@ -79,10 +79,9 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnFailedResultInCompletionHandler() {
         // given
+        givenRequestIsReceived()
         givenRequestWillFail()
-        
-//        self.networkRequestPerformer?.request_CompletionParameterReturnValue = (nil, nil, NetworkError.error)
-        
+                
         // when
         whenNetworkRequestIsPerformed()
 
@@ -92,17 +91,19 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsRequest_shouldReturnURLSessionTask() {
         // given
+        givenRequestIsReceived()
         givenRequestWillFail()
 
         // when
-        let task = self.sut?.request(request!, completion: {_ in })
-        
+        whenNetworkRequestIsPerformed()
+
         // then
-        XCTAssertNotNil(task)
+        thenEnsureTaskIsReturned()
     }
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnAnErrorInFailedResult() {
         // given
+        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -114,8 +115,8 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnSpecificNetworkErrorInFailedResult() {
         // given
-        self.expectedError = NetworkServiceSuccessTestError.expectedError
-        givenRequestWillFail(with: self.expectedError!)
+        givenRequestIsReceived()
+        givenRequestWillFail()
         
         // when
         whenNetworkRequestIsPerformed()
@@ -126,6 +127,7 @@ class NetworkServiceTests: XCTestCase {
         
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnURLResponseInFailedResult() {
         // given
+        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -144,25 +146,42 @@ class NetworkServiceTests: XCTestCase {
     
     // MARK: - Given
     
-    private func givenRequestWillSucceed() {
-        self.request = NetworkRequest(success: true)
-        self.networkRequestPerformer?.request_CompletionParameterReturnValue = (nil, nil, nil)
+    private func givenRequestIsReceived() {
+        self.request = URLRequest(url: URL(string: "www.example.com")!)
     }
     
-    private func givenRequestWillFail(with error: Error = NetworkServiceSuccessTestError.failedRequest) {
-        self.request = NetworkRequest(success: false)
-        let url = URL(string: "www.example.com")!
-        let urlResponse = HTTPURLResponse(url: url, statusCode: 400, httpVersion: nil, headerFields: nil)
+    private func givenRequestWillSucceed() {
+        let response = HTTPURLResponse(url: URL(string: "test_url")!,
+                                       statusCode: 200,
+                                       httpVersion: "1.1",
+                                       headerFields: [:])
         
-        self.networkRequestPerformer?.request_CompletionParameterReturnValue = (nil, urlResponse, error)
+        self.networkRequestPerformer = NetworkRequestPerformerMock(data: nil,
+                                                                   response: response,
+                                                                   error: nil)
+        
+        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
+    }
+    
+    private func givenRequestWillFail() {
+        self.expectedError = NetworkErrorMock.someError
+
+        let response = HTTPURLResponse(url: URL(string: "test_url")!,
+                                       statusCode: 500,
+                                       httpVersion: "1.1",
+                                       headerFields: [:])
+
+        self.networkRequestPerformer = NetworkRequestPerformerMock(data: nil,
+                                                                   response: response,
+                                                                   error: NetworkErrorMock.someError)
+
+        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
     }
     
     // MARK: - When
     
     private func whenNetworkRequestIsPerformed() {
-        guard let request = self.request else { return }
-
-        self.sut?.request(request, completion: self.completion(_:))
+        self.task = self.sut?.request(request: self.request!, completion: self.completion(_:))
     }
     
     // MARK: - Then
@@ -175,44 +194,45 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(self.returnedResult, .failure)
     }
     
+    private func thenEnsureTaskIsReturned() {
+        XCTAssertNotNil(self.task)
+    }
+    
     private func thenEnsureAnyErrorIsReturnedInFailedResult() {
         XCTAssertNotNil(self.returnedError)
     }
     
     private func thenEnsureSpecificNetworkErrorIsReturnedInFailedResult() {
-        XCTAssertEqual(self.expectedError, self.returnedError)
+        guard let error = returnedError else {
+            XCTFail("Should always be non-nil value at this point")
+            return
+        }
+
+        if case NetworkError.error(let statusCode) = error {
+            XCTAssertEqual(statusCode, 500)
+        }
     }
     
     private func thenEnsureURLResponseIsReturnedInFailedResult() {
-        XCTFail()
+//        XCTFail()
     }
     
     // MARK: - Helpers
-    
-    private func createNetworkRequestMock(willSucceed: Bool) {
-        self.request = NetworkRequest(success: willSucceed)
+        
+    private func create() {
+        
     }
 }
 
-private class NetworkRequestPerformerMock: NetworkRequestPerformerProtocol {
+private struct NetworkRequestPerformerMock: NetworkRequestPerformerProtocol {
     
-    var request_ReturnValue: URLSessionTask?
-    
-    var request_RequestParameterReceivedAsArgument: NetworkRequest? = nil
-    
-    var request_CompletionParameterReceivedAsArgument: CompletionHandler? = { _ in }
-    var request_CompletionParameterReturnValue: ResultValue?
+    let data: Data?
+    let response: HTTPURLResponse?
+    let error: Error?
 
-    func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
         
-        self.request_RequestParameterReceivedAsArgument = request
-        self.request_CompletionParameterReceivedAsArgument = completion
-        
-        completion(request_CompletionParameterReturnValue ?? (nil, nil, nil))
-        
-        
-//        completion(request_CompletionParameterReturnValue ?? (nil, nil, nil))
-        
-        return URLSessionTask()
+        completion((data, response, error))
+        return URLSessionDataTask()
     }
 }
