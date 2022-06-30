@@ -27,7 +27,6 @@ protocol NetworkServiceProtocol {
 class NetworkService {
     private let networkRequestPerformer: NetworkRequestPerformerProtocol
     
-    
     init(networkRequestPerformer: NetworkRequestPerformerProtocol) {
         self.networkRequestPerformer = networkRequestPerformer
     }
@@ -50,7 +49,7 @@ extension NetworkService: NetworkServiceProtocol {
 //        task.resume()
 //        return task
         
-        _ = self.networkRequestPerformer.request(request: request) { _, response, error in
+        _ = self.networkRequestPerformer.request(request: request) { data, response, error in
             
             if let error = error {
                 var errorToBeReturned: NetworkError
@@ -63,7 +62,13 @@ extension NetworkService: NetworkServiceProtocol {
                 
                 completion (.failure(errorToBeReturned))
             } else {
-                completion(.success([]))
+                guard let data = data else { return }
+                let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
+                let genres = genresResponseDTO?.genres.map { $0.toDomain() }
+                
+                guard let genres = genres else { return }
+                
+                completion(.success(genres))
             }
         }
         

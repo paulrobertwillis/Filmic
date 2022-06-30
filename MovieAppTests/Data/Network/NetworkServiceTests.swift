@@ -28,6 +28,7 @@ class NetworkServiceTests: XCTestCase {
     
     private var returnedResult: ReturnedResult?
     private var returnedValue: [Genre]?
+    private var returnedData: Data?
     private var returnedError: Error?
     
     private func completion(_ result: NetworkServiceProtocol.ResultValue) {
@@ -189,7 +190,8 @@ class NetworkServiceTests: XCTestCase {
         whenNetworkRequestIsPerformed()
         
         // then
-        
+//        thenEnsureDataIsReturnedInCompletionHandler()
+        XCTAssertNotNil(self.returnedData)
     }
     
     
@@ -242,14 +244,14 @@ class NetworkServiceTests: XCTestCase {
         
     private func givenRequestWillSucceed() {
         createRequestStub()
-        initialiseNetworkRequestPerformer(data: nil, response: successResponse(), error: nil)
+        initialiseNetworkRequestPerformer(data: createDataStub(), response: createSuccessResponseStub(), error: nil)
         initialiseNetworkService()
     }
     
     private func givenRequestWillFail() {
         createRequestStub()
         self.expectedError = NetworkErrorMock.someError
-        initialiseNetworkRequestPerformer(data: nil, response: failureResponse(), error: NetworkErrorMock.someError)
+        initialiseNetworkRequestPerformer(data: nil, response: createFailureResponseStub(), error: NetworkErrorMock.someError)
         initialiseNetworkService()
     }
         
@@ -294,7 +296,7 @@ class NetworkServiceTests: XCTestCase {
         }
 
         if case NetworkError.error(let statusCode) = returnedError {
-            XCTAssertEqual(statusCode, self.failureResponse()?.statusCode)
+            XCTAssertEqual(statusCode, self.createFailureResponseStub()?.statusCode)
         }
     }
     
@@ -313,7 +315,6 @@ class NetworkServiceTests: XCTestCase {
         let actualCalls = self.networkRequestPerformer?.requestCallsCount
         XCTAssertEqual(expectedCalls, actualCalls)
     }
-
     
     // MARK: - Helpers
     
@@ -333,18 +334,31 @@ class NetworkServiceTests: XCTestCase {
         self.request = URLRequest(url: URL(string: "www.test.com")!)
     }
 
-    private func successResponse() -> HTTPURLResponse? {
+    private func createSuccessResponseStub() -> HTTPURLResponse? {
         HTTPURLResponse(url: URL(string: "test_url")!,
                                        statusCode: 200,
                                        httpVersion: "1.1",
                                        headerFields: [:])
     }
     
-    private func failureResponse() -> HTTPURLResponse? {
+    private func createFailureResponseStub() -> HTTPURLResponse? {
         HTTPURLResponse(url: URL(string: "test_url")!,
                                        statusCode: 500,
                                        httpVersion: "1.1",
                                        headerFields: [:])
+    }
+    
+    private func createDataStub() -> Data? {
+        """
+        {
+          "genres": [
+            {
+              "id": 28,
+              "name": "Action"
+            }
+          ]
+        }
+        """.data(using: .utf8)
     }
 }
 
