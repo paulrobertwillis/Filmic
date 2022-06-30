@@ -11,6 +11,11 @@ import XCTest
 
 class DataTransferServiceTests: XCTestCase {
     
+    private enum ReturnedResult {
+        case success
+        case failure
+    }
+
     private var networkService: NetworkServiceMock?
     private var sut: DataTransferService?
     
@@ -20,6 +25,21 @@ class DataTransferServiceTests: XCTestCase {
     private var sentURLRequest: URLRequest?
     private var urlRequestReceivedByNetworkService: URLRequest?
     
+    private var returnedResult: ReturnedResult?
+    private var returnedGenres: [Genre]?
+    private var returnedError: Error?
+
+    private func completion(_ result: DataTransferServiceProtocol.ResultValue) {
+        switch result {
+        case .success(let returnedGenres):
+            self.returnedResult = .success
+            self.returnedGenres = returnedGenres
+        case .failure(let returnedError):
+            self.returnedResult = .failure
+            self.returnedError = returnedError
+        }
+    }
+
     // MARK: - Setup
     
     override func setUp() {
@@ -37,6 +57,8 @@ class DataTransferServiceTests: XCTestCase {
         
         self.sentURLRequest = nil
         self.urlRequestReceivedByNetworkService = nil
+        
+        self.returnedResult = nil
         
         super.tearDown()
     }
@@ -88,6 +110,17 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureRequestIsPassedToNetworkService()
     }
     
+    func test_DataTransferService_whenPerformRequest_shouldReturnResult() {
+        // given
+        givenDataTransferServiceInitialised()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertNotNil(self.returnedResult)
+    }
+    
     // MARK: - Given
     
     private func givenDataTransferServiceInitialised() {
@@ -104,7 +137,7 @@ class DataTransferServiceTests: XCTestCase {
     // MARK: - When
     
     private func whenNetworkRequestIsPerformed() {
-        self.returnedURLSessionTask = sut?.request(request: self.urlRequest()!)
+        self.returnedURLSessionTask = sut?.request(request: self.urlRequest()!, completion: self.completion(_:))
     }
     
     // MARK: - Then

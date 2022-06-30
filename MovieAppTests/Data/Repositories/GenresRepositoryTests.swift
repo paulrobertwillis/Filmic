@@ -155,7 +155,7 @@ class GenresRepositoryTests: XCTestCase {
 }
 
 private class DataTransferServiceMock: DataTransferServiceProtocol {
-    func request(request: URLRequest) -> URLSessionTask? {
+    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
         URLSessionTask()
     }
 }

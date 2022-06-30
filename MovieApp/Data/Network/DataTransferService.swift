@@ -12,7 +12,7 @@ protocol DataTransferServiceProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(request: URLRequest) -> URLSessionTask?
+    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask?
 //    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
@@ -30,7 +30,7 @@ class DataTransferService: DataTransferServiceProtocol {
 //        return URLSessionTask()
 //    }
     
-    func request(request: URLRequest) -> URLSessionTask? {
+    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
         return self.networkService.request(request: request, completion: { _ in })
     }
 }
