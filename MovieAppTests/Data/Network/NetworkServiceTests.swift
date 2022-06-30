@@ -99,7 +99,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureTaskIsReturned()
     }
     
-    func test_NetworkService_whenPerformsFailedRequest_shouldReturnAnErrorInFailedResult() {
+    func test_NetworkService_whenPerformsFailedRequest_shouldReturnAnErrorInFailedResultInCompletionHandler() {
         // given
         givenRequestWillFail()
         
@@ -110,7 +110,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureAnyErrorIsReturnedInFailedResult()
     }
     
-    func test_NetworkService_whenPerformsFailedRequest_shouldReturnSpecificNetworkErrorInFailedResult() {
+    func test_NetworkService_whenPerformsFailedRequest_shouldReturnSpecificNetworkErrorInFailedResultInCompletionHandler() {
         // given
         givenRequestWillFail()
         
@@ -121,7 +121,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureSpecificNetworkErrorIsReturnedInFailedResult()
     }
         
-    func test_NetworkService_whenPerformsFailedRequest_shouldReturnURLResponseInFailedResult() {
+    func test_NetworkService_whenPerformsFailedRequest_shouldReturnURLResponseInFailedResultInCompletionHandler() {
         // given
         givenRequestWillFail()
         
@@ -181,7 +181,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureRequestPerformerCalled(numberOfTimes: 5)
     }
     
-    func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnData() {
+    func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnDataInCompletionHandler() {
         // given
         createRequestStub()
         givenRequestWillSucceed()

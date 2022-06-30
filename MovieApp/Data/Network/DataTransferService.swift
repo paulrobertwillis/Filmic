@@ -7,12 +7,16 @@
 
 import Foundation
 
+enum DataTransferError: Error {
+    case parsingFailure(Error)
+}
+
 protocol DataTransferServiceProtocol {
     typealias ResultValue = (Result<[Genre], Error>)
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask?
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 //    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
@@ -30,7 +34,17 @@ class DataTransferService: DataTransferServiceProtocol {
 //        return URLSessionTask()
 //    }
     
-    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
-        return self.networkService.request(request: request, completion: { _ in })
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+        
+        let dataSessionTask = self.networkService.request(request: request) { result in
+            switch result {
+            case .success(_):
+                completion(.success([]))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+                
+        return dataSessionTask
     }
 }

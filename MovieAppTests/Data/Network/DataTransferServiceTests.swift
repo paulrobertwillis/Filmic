@@ -15,6 +15,11 @@ class DataTransferServiceTests: XCTestCase {
         case success
         case failure
     }
+    
+    private enum DataTransferErrorMock: Error {
+        case someError
+    }
+
 
     private var networkService: NetworkServiceMock?
     private var sut: DataTransferService?
@@ -59,6 +64,8 @@ class DataTransferServiceTests: XCTestCase {
         self.urlRequestReceivedByNetworkService = nil
         
         self.returnedResult = nil
+        self.returnedGenres = nil
+        self.returnedError = nil
         
         super.tearDown()
     }
@@ -120,6 +127,85 @@ class DataTransferServiceTests: XCTestCase {
         // then
         XCTAssertNotNil(self.returnedResult)
     }
+    
+    func test_DataTransferService_whenPerformSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .success(nil)
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertEqual(self.returnedResult, .success)
+    }
+    
+    func test_DataTransferService_whenPerformFailedRequest_shouldReturnFailureResultInCompletionHandler() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .failure(DataTransferErrorMock.someError)
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertEqual(self.returnedResult, .failure)
+    }
+    
+    func test_DataTransferService_whenPerformSuccessfulRequest_shouldReturnGenres() {
+        // given
+        givenDataTransferServiceInitialised()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertEqual(self.returnedGenres, [])
+    }
+    
+    func test_DataTransferService_whenPerformSuccessfulRequest_shouldReturnURLSessionTask() {
+        // given
+        givenDataTransferServiceInitialised()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertNotNil(self.returnedURLSessionTask)
+    }
+    
+    func test_DataTransferService_whenPerformFailedRequest_shouldReturnErrorInFailureResult() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .failure(DataTransferErrorMock.someError)
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertNotNil(self.returnedError)
+    }
+    
+    func test_DataTransferService_whenPerformFailedRequest_shouldReturnSpecificDataTransferErrorInFailureResult() {
+        // given
+        givenDataTransferServiceInitialised()
+        let expectedError = DataTransferErrorMock.someError
+        self.networkService?.requestCompletionReturnValue = .failure(expectedError)
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        guard let returnedError = self.returnedError else {
+            XCTFail("Should always be non-nil value at this point")
+            return
+        }
+
+        if case DataTransferErrorMock.someError = returnedError {
+            XCTAssertEqual(expectedError, returnedError as? DataTransferServiceTests.DataTransferErrorMock)
+        }
+    }
+
     
     // MARK: - Given
     
