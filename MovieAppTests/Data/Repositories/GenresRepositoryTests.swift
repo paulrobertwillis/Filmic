@@ -89,7 +89,7 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Given
         
     private func givenExpectedSuccess() {
-        self.networkService?.requestCompletionReturnValue = .success(self.genres)
+        self.networkService?.requestCompletionReturnValue = .success(createGenresData())
     }
     
     private func givenExpectedFailure() {
@@ -133,5 +133,22 @@ class GenresRepositoryTests: XCTestCase {
     
     private func unwrapResult() throws -> [Genre]? {
         return try self.resultValue?.get()
+    }
+    
+    private func createGenresData() -> Data? {
+        """
+        {
+          "genres": [
+            {
+              "id": 50,
+              "name": "Genre1"
+            },
+            {
+              "id": 100,
+              "name": "Genre2"
+            }
+          ]
+        }
+        """.data(using: .utf8)
     }
 }

@@ -17,7 +17,7 @@ struct NetworkRequest {
 }
 
 protocol NetworkServiceProtocol {
-    typealias ResultValue = (Result<[Genre], Error>)
+    typealias ResultValue = (Result<Data?, Error>)
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
@@ -62,13 +62,13 @@ extension NetworkService: NetworkServiceProtocol {
                 
                 completion (.failure(errorToBeReturned))
             } else {
-                guard let data = data else { return }
-                let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
-                let genres = genresResponseDTO?.genres.map { $0.toDomain() }
+//                guard let data = data else { return }
+//                let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
+//                let genres = genresResponseDTO?.genres.map { $0.toDomain() }
+//
+//                guard let genres = genres else { return }
                 
-                guard let genres = genres else { return }
-                
-                completion(.success(genres))
+                completion(.success(data))
             }
         }
         

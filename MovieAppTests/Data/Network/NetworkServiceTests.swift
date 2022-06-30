@@ -33,9 +33,9 @@ class NetworkServiceTests: XCTestCase {
     
     private func completion(_ result: NetworkServiceProtocol.ResultValue) {
         switch result {
-        case .success(let returnedValue):
+        case .success(let returnedData):
             self.returnedResult = .success
-            self.returnedValue = returnedValue
+            self.returnedData = returnedData
         case .failure(let returnedError):
             self.returnedResult = .failure
             self.returnedError = returnedError

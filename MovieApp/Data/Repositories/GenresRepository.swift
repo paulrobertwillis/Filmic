@@ -15,13 +15,35 @@ class GenresRepository {
     }
 }
 
+enum GenresError: Error {
+    case failedDecode
+}
+
 extension GenresRepository: GenresRepositoryProtocol {
     @discardableResult
     func getMovieGenres(completion: @escaping CompletionHandler) -> URLSessionTask? {
         
         let request = URLRequest(url: URL(string: "www.example.com")!)
         return self.networkService.request(request: request, completion: { result in
-            completion(result)
+            
+            switch result {
+            case .success(let data):
+                guard let genres = self.decode(data: data) else {
+                    completion(.failure(GenresError.failedDecode))
+                    break
+                }
+                completion(.success(genres))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         })
+    }
+    
+    private func decode(data: Data?) -> [Genre]? {
+        guard let data = data else { return nil }
+        let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
+        let genres = genresResponseDTO?.genres.map { $0.toDomain() }
+        
+        return genres
     }
 }
