@@ -9,9 +9,11 @@ import Foundation
 
 class GenresRepository {
     private let networkService: NetworkServiceProtocol
+    private let dataTransferService: DataTransferServiceProtocol
     
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkServiceProtocol, dataTransferService: DataTransferServiceProtocol) {
         self.networkService = networkService
+        self.dataTransferService = dataTransferService
     }
 }
 

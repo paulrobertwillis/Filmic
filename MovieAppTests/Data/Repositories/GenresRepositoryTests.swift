@@ -97,7 +97,8 @@ class GenresRepositoryTests: XCTestCase {
     }
     
     private func givenGenresRepositoryIsInitialised() {
-        self.sut = GenresRepository(networkService: self.networkService!)
+        self.sut = GenresRepository(networkService: self.networkService!,
+                                    dataTransferService: DataTransferServiceMock())
     }
     
     // MARK: - When
@@ -150,5 +151,11 @@ class GenresRepositoryTests: XCTestCase {
           ]
         }
         """.data(using: .utf8)
+    }
+}
+
+private class DataTransferServiceMock: DataTransferServiceProtocol {
+    func request(request: URLRequest) -> URLSessionTask? {
+        URLSessionTask()
     }
 }

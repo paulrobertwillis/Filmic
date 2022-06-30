@@ -28,6 +28,8 @@
 		6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA32286A0AB800844047 /* GenresRepositoryTests.swift */; };
 		6964BA35286A0AE900844047 /* GenresRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA34286A0AE900844047 /* GenresRepository.swift */; };
 		69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */; };
+		69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7319286E02A4009C5F3E /* DataTransferService.swift */; };
+		69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */; };
 		69D844182861E09F00A651F1 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D844172861E09F00A651F1 /* Movie.swift */; };
 		69D8441D2862052100A651F1 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8441C2862052100A651F1 /* AppConfiguration.swift */; };
 		69D8441F2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8441E2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift */; };
@@ -72,6 +74,8 @@
 		6964BA32286A0AB800844047 /* GenresRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepositoryTests.swift; sourceTree = "<group>"; };
 		6964BA34286A0AE900844047 /* GenresRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepository.swift; sourceTree = "<group>"; };
 		69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
+		69AD7319286E02A4009C5F3E /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
+		69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferServiceTests.swift; sourceTree = "<group>"; };
 		69D844172861E09F00A651F1 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		69D8441C2862052100A651F1 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		69D8441E2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBConfigurationResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
@@ -139,6 +143,7 @@
 			children = (
 				692F0924285A69C600780F72 /* Mapping */,
 				692F0936285A7DCB00780F72 /* NetworkService.swift */,
+				69AD7319286E02A4009C5F3E /* DataTransferService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -192,6 +197,7 @@
 				692F0932285A6F0F00780F72 /* JSON Mocks */,
 				692F092E285A6E5C00780F72 /* Mapping */,
 				692F0938285A7DEB00780F72 /* NetworkServiceTests.swift */,
+				69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -486,6 +492,7 @@
 				692F0937285A7DCB00780F72 /* NetworkService.swift in Sources */,
 				695D8EAA28562032008B583A /* SceneDelegate.swift in Sources */,
 				6964BA312869EC5F00844047 /* Genre.swift in Sources */,
+				69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,6 +502,7 @@
 			files = (
 				69F83F06286CADF7001A5FAF /* NetworkServiceMock.swift in Sources */,
 				6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */,
+				69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */,
 				6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */,
 				695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */,
 				692F0935285A6F8C00780F72 /* MoviesResponseDTOTests.swift in Sources */,
