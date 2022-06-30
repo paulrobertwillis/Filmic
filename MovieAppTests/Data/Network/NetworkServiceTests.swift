@@ -67,7 +67,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnSuccessfulResultInCompletionHandler() {
         // given
-        givenRequestIsReceived()
         givenRequestWillSucceed()
         
         // when
@@ -79,7 +78,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnFailedResultInCompletionHandler() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
                 
         // when
@@ -91,7 +89,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsRequest_shouldReturnURLSessionTask() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
 
         // when
@@ -103,7 +100,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnAnErrorInFailedResult() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -115,7 +111,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnSpecificNetworkErrorInFailedResult() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -127,7 +122,6 @@ class NetworkServiceTests: XCTestCase {
         
     func test_NetworkService_whenPerformsFailedRequest_shouldReturnURLResponseInFailedResult() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -139,7 +133,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsSuccessfulRequest_shouldCallRequestPerformerExactlyOnce() {
         // given
-        givenRequestIsReceived()
         givenRequestWillSucceed()
         
         // when
@@ -151,7 +144,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsFailedRequest_shouldCallRequestPerformerExactlyOnce() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -163,7 +155,6 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsMultipleRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
         // given
-        givenRequestIsReceived()
         givenRequestWillFail()
         
         // when
@@ -176,7 +167,7 @@ class NetworkServiceTests: XCTestCase {
     
     func test_NetworkService_whenPerformsChainOfFailingAndSucceedingRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
         // given
-        givenRequestIsReceived()
+        createRequestStub()
         
         // when
         whenFailedNetworkRequestIsPerformed()
@@ -188,6 +179,20 @@ class NetworkServiceTests: XCTestCase {
         // then
         thenEnsureRequestPerformerCalled(numberOfTimes: 5)
     }
+    
+    func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnData() {
+        // given
+        createRequestStub()
+        givenRequestWillSucceed()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        
+    }
+    
+    
     
     // URLResponse should match expectations:
     /*
@@ -234,17 +239,15 @@ class NetworkServiceTests: XCTestCase {
     // unsuccessful response should log as above, plus a description of status code e.g. 404 Resource not found
     
     // MARK: - Given
-    
-    private func givenRequestIsReceived() {
-        self.request = URLRequest(url: URL(string: "www.test.com")!)
-    }
-    
+        
     private func givenRequestWillSucceed() {
+        createRequestStub()
         initialiseNetworkRequestPerformer(data: nil, response: successResponse(), error: nil)
         initialiseNetworkService()
     }
     
     private func givenRequestWillFail() {
+        createRequestStub()
         self.expectedError = NetworkErrorMock.someError
         initialiseNetworkRequestPerformer(data: nil, response: failureResponse(), error: NetworkErrorMock.someError)
         initialiseNetworkService()
@@ -325,7 +328,11 @@ class NetworkServiceTests: XCTestCase {
                                                                    response: response,
                                                                    error: error)
     }
-        
+    
+    private func createRequestStub() {
+        self.request = URLRequest(url: URL(string: "www.test.com")!)
+    }
+
     private func successResponse() -> HTTPURLResponse? {
         HTTPURLResponse(url: URL(string: "test_url")!,
                                        statusCode: 200,
