@@ -137,12 +137,101 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureURLResponseIsReturnedInFailedResult()
     }
     
-    // should return data
+    func test_NetworkService_whenPerformsSuccessfulRequest_shouldCallRequestPerformerExactlyOnce() {
+        // given
+        givenRequestIsReceived()
+        givenRequestWillSucceed()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        thenEnsureRequestPerformerCalled(numberOfTimes: 1)
+    }
     
-    // should return http code
+    func test_NetworkService_whenPerformsFailedRequest_shouldCallRequestPerformerExactlyOnce() {
+        // given
+        givenRequestIsReceived()
+        givenRequestWillFail()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        thenEnsureRequestPerformerCalled(numberOfTimes: 1)
+    }
+    
+    func test_NetworkService_whenPerformsMultipleRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
+        // given
+        givenRequestIsReceived()
+        givenRequestWillFail()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        thenEnsureRequestPerformerCalled(numberOfTimes: 2)
+    }
+    
+    func test_NetworkService_whenPerformsChainOfFailingAndSucceedingRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
+        // given
+        givenRequestIsReceived()
+        
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureRequestPerformerCalled(numberOfTimes: 5)
+    }
+    
+    // URLResponse should match expectations:
+    /*
+     200: Success
+     401: Unauthorised
+     404: Resource not found
+     */
+        
+    // should include data in error code
+    
+    // data in an error should be logged to console for now
     
     // should contain services for logging, error handling, decoding, etc.
     
+    // data in an error should eventually be saved to file somewhere
+    
+    
+    // TODO: Network Logger
+    // successful request should log time request made
+    
+    // successful request should log request type
+    
+    // successful request should log method type (.get, .post etc.)
+    
+    // successful request should log headers
+    
+    // successful request should log body
+    
+    
+    // successful response should log time received
+
+    // successful response should log request type
+    
+    // successful response should log url response received from
+    
+    // successful response should log status and whether success
+    
+    // successful response should log whether data was successfully parsed
+    
+    // successful response should log headers
+    
+    // successful response should log body
+    
+    // unsuccessful response should log as above, plus a description of status code e.g. 404 Resource not found
     
     // MARK: - Given
     
@@ -151,24 +240,30 @@ class NetworkServiceTests: XCTestCase {
     }
     
     private func givenRequestWillSucceed() {
-        self.networkRequestPerformer = NetworkRequestPerformerMock(data: nil,
-                                                                   response: successResponse(),
-                                                                   error: nil)
-        createNetworkService()
+        initialiseNetworkRequestPerformer(data: nil, response: successResponse(), error: nil)
+        initialiseNetworkService()
     }
     
     private func givenRequestWillFail() {
         self.expectedError = NetworkErrorMock.someError
-        self.networkRequestPerformer = NetworkRequestPerformerMock(data: nil,
-                                                                   response: failureResponse(),
-                                                                   error: NetworkErrorMock.someError)
-        createNetworkService()
+        initialiseNetworkRequestPerformer(data: nil, response: failureResponse(), error: NetworkErrorMock.someError)
+        initialiseNetworkService()
     }
-    
+        
     // MARK: - When
     
     private func whenNetworkRequestIsPerformed() {
         self.task = self.sut?.request(request: self.request!, completion: self.completion(_:))
+    }
+    
+    private func whenSuccessfulNetworkRequestIsPerformed() {
+        givenRequestWillSucceed()
+        whenNetworkRequestIsPerformed()
+    }
+    
+    private func whenFailedNetworkRequestIsPerformed() {
+        givenRequestWillFail()
+        whenNetworkRequestIsPerformed()
     }
     
     // MARK: - Then
@@ -209,14 +304,26 @@ class NetworkServiceTests: XCTestCase {
         if case NetworkError.error(let statusCode) = returnedError {
             XCTAssertNotNil(statusCode)
         }
-
-
     }
+        
+    private func thenEnsureRequestPerformerCalled(numberOfTimes expectedCalls: Int) {
+        let actualCalls = self.networkRequestPerformer?.requestCallsCount
+        XCTAssertEqual(expectedCalls, actualCalls)
+    }
+
     
     // MARK: - Helpers
     
-    private func createNetworkService() {
+    private func initialiseNetworkService() {
         self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
+    }
+    
+    private func initialiseNetworkRequestPerformer(data: Data?, response: HTTPURLResponse?, error: Error?) {
+        if self.networkRequestPerformer != nil { return }
+        
+        self.networkRequestPerformer = NetworkRequestPerformerMock(data: data,
+                                                                   response: response,
+                                                                   error: error)
     }
         
     private func successResponse() -> HTTPURLResponse? {
@@ -234,13 +341,22 @@ class NetworkServiceTests: XCTestCase {
     }
 }
 
-private struct NetworkRequestPerformerMock: NetworkRequestPerformerProtocol {
+private class NetworkRequestPerformerMock: NetworkRequestPerformerProtocol {
     
     let data: Data?
     let response: HTTPURLResponse?
     let error: Error?
+    
+    var requestCallsCount: Int = 0
+    
+    init(data: Data?, response: HTTPURLResponse?, error: Error?) {
+        self.data = data
+        self.response = response
+        self.error = error
+    }
 
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
+        self.requestCallsCount += 1
         
         completion((data, response, error))
         return URLSessionDataTask()
