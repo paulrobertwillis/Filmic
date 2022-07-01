@@ -8,11 +8,9 @@
 import Foundation
 
 class GenresRepository {
-    private let networkService: NetworkServiceProtocol
     private let dataTransferService: DataTransferServiceProtocol
     
-    init(networkService: NetworkServiceProtocol, dataTransferService: DataTransferServiceProtocol) {
-        self.networkService = networkService
+    init(dataTransferService: DataTransferServiceProtocol) {
         self.dataTransferService = dataTransferService
     }
 }
@@ -26,26 +24,14 @@ extension GenresRepository: GenresRepositoryProtocol {
     func getMovieGenres(completion: @escaping CompletionHandler) -> URLSessionTask? {
         
         let request = URLRequest(url: URL(string: "www.example.com")!)
-        return self.networkService.request(request: request, completion: { result in
+        return self.dataTransferService.request(request: request, completion: { result in
             
             switch result {
-            case .success(let data):
-                guard let genres = self.decode(data: data) else {
-                    completion(.failure(GenresError.failedDecode))
-                    break
-                }
-                completion(.success(genres))
+            case .success(let response):
+                completion(.success(response))
             case .failure(let error):
                 completion(.failure(error))
             }
         })
-    }
-    
-    private func decode(data: Data?) -> [Genre]? {
-        guard let data = data else { return nil }
-        let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
-        let genres = genresResponseDTO?.genres.map { $0.toDomain() }
-        
-        return genres
     }
 }

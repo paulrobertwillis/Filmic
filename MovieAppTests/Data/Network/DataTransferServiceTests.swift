@@ -131,7 +131,7 @@ class DataTransferServiceTests: XCTestCase {
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(nil)
+        self.networkService?.requestCompletionReturnValue = .success(self.createDataStub())
         
         // when
         whenNetworkRequestIsPerformed()
@@ -155,13 +155,13 @@ class DataTransferServiceTests: XCTestCase {
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnGenres() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(nil)
+        self.networkService?.requestCompletionReturnValue = .success(self.createDataStub())
 
         // when
         whenNetworkRequestIsPerformed()
         
         // then
-        XCTAssertEqual(self.returnedGenres, [])
+        XCTAssertNotNil(self.returnedGenres)
     }
     
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnURLSessionTask() {
@@ -273,6 +273,50 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertEqual(2, actualCalls)
     }
     
+    
+    // TODO: Tests
+    func test_DataTransferService_whenPerformSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .success(createDataStub())
+
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertEqual(genres, self.returnedGenres)
+    }
+    
+    
+    
+    // should take data from NetworkService and decode it
+
+    // decoding should belong to a separate object, a DataUnwrapperService
+
+    // DataUnwrapperService should have its own tests
+
+    // URLRequests should in some cases be replaced by a protocol-driven Endpoint
+
+    // should resolve errors
+
+    // errors should be resolved by dedicated DataTransferErrorResolver
+
+    // DataTransferErrorResolver should have its own tests
+
+    // DataTransferService should keep logs of failures to unwrap
+
+    // DataTransferService should have a logger
+
+    // DataTransferErrorLogger should have its own tests
+
+    // GenreRepository should instead go to DataTransferService for [Genre]
+
+    // Networking should become more generic to handle decoding of greater range of objects
+
+    // Generic network should be extensively tested to ensure it can decode objects of all types implemented in the Domain layer
+
+    
     // MARK: - Given
     
     private func givenDataTransferServiceInitialised() {
@@ -324,28 +368,21 @@ class DataTransferServiceTests: XCTestCase {
         URLRequest(url: URL(string: "www.expectedReturnValue.com")!)
     }
     
+    private func createDataStub() -> Data? {
+        """
+        {
+          "genres": [
+            {
+              "id": 28,
+              "name": "Action"
+            }
+          ]
+        }
+        """.data(using: .utf8)
+    }
+    
+    private let genres: [Genre] = [
+        Genre(id: Genre.Identifier(28), name: "Action")
+    ]
+
 }
-
-// TODO: Tests
-
-// Add completion handler
-
-// should return success/failure to completion handler
-
-// should take data from NetworkService and decode it
-
-// decoding should belong to a separate object, a DataUnwrapperService
-
-// DataUnwrapperService should have its own tests
-
-// DataTransferService should keep logs of failures to unwrap
-
-// DataTransferService should have a logger
-
-// DataTransferLogger should have its own tests
-
-// GenreRepository should instead go to DataTransferService for [Genre]
-
-// Networking should become more generic to handle decoding of greater range of objects
-
-// Generic network should be extensively tested to ensure it can decode objects of all types implemented in the Domain layer

@@ -15,7 +15,7 @@ class GenresRepositoryTests: XCTestCase {
         case failedFetching
     }
     
-    private var networkService: NetworkServiceMock?
+    private var dataTransferService: DataTransferServiceMock?
     private var sut: GenresRepository?
     private var resultValue: Result<[Genre], Error>?
     private var task: URLSessionTask?
@@ -28,20 +28,21 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Setup
     
     override func setUp() {
-        self.networkService = NetworkServiceMock()
+        self.dataTransferService = DataTransferServiceMock()
     }
     
     override func tearDown() {
-        self.networkService = nil
+        self.dataTransferService = nil
         self.sut = nil
         self.resultValue = nil
         self.task = nil
+        
         super.tearDown()
     }
     
     // MARK: - Tests
     
-    func test_GenresRepository_whenGetsMovieGenres_shouldCallNetworkOnce() {
+    func test_GenresRepository_whenGetsMovieGenres_shouldCallDataTransferServiceOnce() {
         // given
         givenGenresRepositoryIsInitialised()
         
@@ -49,7 +50,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryRequestsGenres()
         
         // then
-        thenEnsureNetworkCalledExactlyOnce()
+        thenEnsureDataTransferServiceCalledExactlyOnce()
     }
     
     func test_GenresRepository_whenSuccessfullyGetsMovieGenres_shouldReturnGenresWithSuccess() {
@@ -90,16 +91,15 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Given
         
     private func givenExpectedSuccess() {
-        self.networkService?.requestCompletionReturnValue = .success(createGenresData())
+        self.dataTransferService?.requestCompletionReturnValue = .success(self.genresStub)
     }
     
     private func givenExpectedFailure() {
-        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
+        self.dataTransferService?.requestCompletionReturnValue = .failure(NetworkError.someError)
     }
     
     private func givenGenresRepositoryIsInitialised() {
-        self.sut = GenresRepository(networkService: self.networkService!,
-                                    dataTransferService: DataTransferServiceMock())
+        self.sut = GenresRepository(dataTransferService: self.dataTransferService!)
     }
     
     // MARK: - When
@@ -112,8 +112,8 @@ class GenresRepositoryTests: XCTestCase {
     
     // MARK: - Then
     
-    private func thenEnsureNetworkCalledExactlyOnce() {
-        XCTAssertEqual(self.networkService?.requestCallsCount, 1)
+    private func thenEnsureDataTransferServiceCalledExactlyOnce() {
+        XCTAssertEqual(self.dataTransferService?.requestCallsCount, 1)
     }
     
     private func thenEnsureGenresAreFetched() {
@@ -137,26 +137,43 @@ class GenresRepositoryTests: XCTestCase {
         return try self.resultValue?.get()
     }
     
-    private func createGenresData() -> Data? {
-        """
-        {
-          "genres": [
-            {
-              "id": 50,
-              "name": "Genre1"
-            },
-            {
-              "id": 100,
-              "name": "Genre2"
-            }
-          ]
-        }
-        """.data(using: .utf8)
-    }
+    private let genresStub: [Genre] = [
+        Genre(id: Genre.Identifier(50), name: "Genre1"),
+        Genre(id: Genre.Identifier(100), name: "Genre2"),
+    ]
 }
 
 private class DataTransferServiceMock: DataTransferServiceProtocol {
+    
+    var requestCallsCount = 0
+    
+    // completion parameter
+    var requestCompletionReturnValue: ResultValue = .success([])
+
     func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
-        URLSessionTask()
+        self.requestCallsCount += 1
+        
+        completion(requestCompletionReturnValue)
+
+        return URLSessionTask()
     }
 }
+
+//var requestCallsCount = 0
+//var requestReturnValue: URLSessionTask? = URLSessionTask()
+//
+//// request parameter
+//var requestReceivedRequest: URLRequest?
+//
+//// completion parameter
+//var requestCompletionReturnValue: ResultValue = .success(nil)
+//
+//func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
+//    self.requestCallsCount += 1
+//
+//    self.requestReceivedRequest = request
+//
+//    completion(requestCompletionReturnValue)
+//
+//    return requestReturnValue
+//}

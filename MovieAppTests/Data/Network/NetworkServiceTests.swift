@@ -211,6 +211,8 @@ class NetworkServiceTests: XCTestCase {
     
     // data in an error should eventually be saved to file somewhere
     
+    // NeworkService should have NetworkConfiguration that contains base URL, etc.
+    
     
     // TODO: Network Logger
     // successful request should log time request made
@@ -239,6 +241,9 @@ class NetworkServiceTests: XCTestCase {
     // successful response should log body
     
     // unsuccessful response should log as above, plus a description of status code e.g. 404 Resource not found
+    
+    
+    
     
     // MARK: - Given
         
