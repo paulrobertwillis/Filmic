@@ -29,8 +29,12 @@ class DataTransferServiceTests: XCTestCase {
     private var sentURLRequest: URLRequest?
     private var urlRequestReceivedByNetworkService: URLRequest?
     
+    private var expectedGenres = GenresResponseDTO(genres: [
+        GenresResponseDTO.GenreDTO(id: 28, name: "Action")
+    ])
+    private var returnedGenres: GenresResponseDTO?
+    
     private var returnedResult: ReturnedResult?
-    private var returnedGenres: [Genre]?
     private var returnedError: Error?
 
     private func completion(_ result: DataTransferServiceProtocol.ResultValue) {
@@ -63,8 +67,9 @@ class DataTransferServiceTests: XCTestCase {
         self.sentURLRequest = nil
         self.urlRequestReceivedByNetworkService = nil
         
-        self.returnedResult = nil
         self.returnedGenres = nil
+        
+        self.returnedResult = nil
         self.returnedError = nil
         
         super.tearDown()
@@ -393,7 +398,7 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     private func thenEnsureDecodesDataIntoExpectedObject() {
-        XCTAssertEqual(genres, self.returnedGenres)
+        XCTAssertEqual(self.expectedGenres, self.returnedGenres)
     }
     
     // MARK: - Test Setup Errors
@@ -407,9 +412,4 @@ class DataTransferServiceTests: XCTestCase {
     private func urlRequest() -> URLRequest? {
         URLRequest(url: URL(string: "www.expectedReturnValue.com")!)
     }
-        
-    private let genres: [Genre] = [
-        Genre(id: Genre.Identifier(28), name: "Action")
-    ]
-
 }

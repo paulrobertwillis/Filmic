@@ -20,11 +20,11 @@ class GenresRepositoryTests: XCTestCase {
     private var resultValue: Result<[Genre], Error>?
     private var task: URLSessionTask?
     
-    private let genres = [
-        Genre(id: Genre.Identifier(50), name: "Genre1"),
-        Genre(id: Genre.Identifier(100), name: "Genre2"),
-    ]
-
+    private var expectedGenresResponseDTO: GenresResponseDTO?
+    private var expectedGenres = [Genre(id: Genre.Identifier(28), name: "Action")]
+    
+    private var returnedGenresResponseDTO: GenresResponseDTO?
+    
     // MARK: - Setup
     
     override func setUp() {
@@ -36,6 +36,10 @@ class GenresRepositoryTests: XCTestCase {
         self.sut = nil
         self.resultValue = nil
         self.task = nil
+        
+        self.expectedGenresResponseDTO = nil
+        
+        self.returnedGenresResponseDTO = nil
         
         super.tearDown()
     }
@@ -53,7 +57,19 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureDataTransferServiceCalledExactlyOnce()
     }
     
-    func test_GenresRepository_whenSuccessfullyGetsMovieGenres_shouldReturnGenresWithSuccess() {
+    func test_GenresRepository_whenSuccessfullyGetsResultFromDataTransferService_shouldMapDTOToDomainObject() {
+        // given
+        givenExpectedSuccess()
+        givenGenresRepositoryIsInitialised()
+        
+        // when
+        whenGenresRepositoryRequestsGenres()
+        
+        // then
+        thenEnsureDTOIsMappedToDomainObject()
+    }
+    
+    func test_GenresRepository_whenSuccessfullyGetsResultFromDataTransferService_shouldReturnGenresWithSuccess() {
         // given
         givenExpectedSuccess()
         givenGenresRepositoryIsInitialised()
@@ -91,7 +107,10 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Given
         
     private func givenExpectedSuccess() {
-        self.dataTransferService?.requestCompletionReturnValue = .success(self.genresStub)
+        self.expectedGenresResponseDTO = GenresResponseDTO(genres: [
+                                                                GenresResponseDTO.GenreDTO(id: 28, name: "Action")
+                                                            ])
+        self.dataTransferService?.requestCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
     }
     
     private func givenExpectedFailure() {
@@ -118,7 +137,7 @@ class GenresRepositoryTests: XCTestCase {
     
     private func thenEnsureGenresAreFetched() {
         let returnedGenres = try? unwrapResult()
-        XCTAssertEqual(self.genres, returnedGenres)
+        XCTAssertEqual(self.expectedGenres, returnedGenres)
     }
     
 //    private func thenEnsureFailureResultIsReturned() {
@@ -131,16 +150,16 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertNotNil(self.task)
     }
     
+    private func thenEnsureDTOIsMappedToDomainObject() {
+        let fetchedDomainObject = try? self.resultValue?.get()
+        XCTAssertNotNil(fetchedDomainObject)
+    }
+    
     // MARK: - Helpers
     
     private func unwrapResult() throws -> [Genre]? {
         return try self.resultValue?.get()
     }
-    
-    private let genresStub: [Genre] = [
-        Genre(id: Genre.Identifier(50), name: "Genre1"),
-        Genre(id: Genre.Identifier(100), name: "Genre2"),
-    ]
 }
 
 

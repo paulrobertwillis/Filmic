@@ -24,11 +24,11 @@ extension GenresRepository: GenresRepositoryProtocol {
     func getMovieGenres(completion: @escaping CompletionHandler) -> URLSessionTask? {
         
         let request = URLRequest(url: URL(string: "www.example.com")!)
-        return self.dataTransferService.request(request: request, completion: { result in
+        return self.dataTransferService.request(request: request, completion: { (result: Result<GenresResponseDTO, DataTransferError>) in
             
             switch result {
             case .success(let response):
-                completion(.success(response))
+                completion(.success(response.genres.map { $0.toDomain() }))
             case .failure(let error):
                 completion(.failure(error))
             }

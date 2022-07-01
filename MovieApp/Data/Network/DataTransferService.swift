@@ -14,7 +14,7 @@ enum DataTransferError: Error {
 }
 
 protocol DataTransferServiceProtocol {
-    typealias ResultValue = (Result<[Genre], DataTransferError>)
+    typealias ResultValue = (Result<GenresResponseDTO, DataTransferError>)
     typealias CompletionHandler = (ResultValue) -> Void
 
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
@@ -49,15 +49,12 @@ class DataTransferService: DataTransferServiceProtocol {
         return dataSessionTask
     }
     
-    private func decode(_ data: Data?) throws -> Result<[Genre], DataTransferError> {
+    private func decode(_ data: Data?) throws -> Result<GenresResponseDTO, DataTransferError> {
         do {
             guard let data = data else { return .failure(.missingData) }
             let result: GenresResponseDTO = try self.decoder.decode(data)
             
-            let genres = result.genres.map { $0.toDomain() }
-
-            
-            return .success(genres)
+            return .success(result)
         } catch {
             return .failure(.parsingFailure(error))
         }
