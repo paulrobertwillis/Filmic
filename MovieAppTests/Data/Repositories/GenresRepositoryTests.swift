@@ -143,21 +143,6 @@ class GenresRepositoryTests: XCTestCase {
     ]
 }
 
-private class DataTransferServiceMock: DataTransferServiceProtocol {
-    
-    var requestCallsCount = 0
-    
-    // completion parameter
-    var requestCompletionReturnValue: ResultValue = .success([])
-
-    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
-        self.requestCallsCount += 1
-        
-        completion(requestCompletionReturnValue)
-
-        return URLSessionTask()
-    }
-}
 
 //var requestCallsCount = 0
 //var requestReturnValue: URLSessionTask? = URLSessionTask()

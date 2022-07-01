@@ -30,6 +30,10 @@
 		69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */; };
 		69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7319286E02A4009C5F3E /* DataTransferService.swift */; };
 		69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */; };
+		69AD731E286F1B58009C5F3E /* GenresRepositoryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731D286F1B58009C5F3E /* GenresRepositoryMock.swift */; };
+		69AD7320286F1B8C009C5F3E /* DataTransferServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731F286F1B8C009C5F3E /* DataTransferServiceMock.swift */; };
+		69AD7322286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7321286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift */; };
+		69AD7324286F1BD4009C5F3E /* MoviesRepositoryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7323286F1BD4009C5F3E /* MoviesRepositoryMock.swift */; };
 		69D844182861E09F00A651F1 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D844172861E09F00A651F1 /* Movie.swift */; };
 		69D8441D2862052100A651F1 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8441C2862052100A651F1 /* AppConfiguration.swift */; };
 		69D8441F2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8441E2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift */; };
@@ -76,6 +80,10 @@
 		69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69AD7319286E02A4009C5F3E /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
 		69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferServiceTests.swift; sourceTree = "<group>"; };
+		69AD731D286F1B58009C5F3E /* GenresRepositoryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepositoryMock.swift; sourceTree = "<group>"; };
+		69AD731F286F1B8C009C5F3E /* DataTransferServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferServiceMock.swift; sourceTree = "<group>"; };
+		69AD7321286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestPerformerMock.swift; sourceTree = "<group>"; };
+		69AD7323286F1BD4009C5F3E /* MoviesRepositoryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesRepositoryMock.swift; sourceTree = "<group>"; };
 		69D844172861E09F00A651F1 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		69D8441C2862052100A651F1 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		69D8441E2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBConfigurationResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
@@ -370,6 +378,10 @@
 			isa = PBXGroup;
 			children = (
 				69F83F05286CADF7001A5FAF /* NetworkServiceMock.swift */,
+				69AD731D286F1B58009C5F3E /* GenresRepositoryMock.swift */,
+				69AD731F286F1B8C009C5F3E /* DataTransferServiceMock.swift */,
+				69AD7321286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift */,
+				69AD7323286F1BD4009C5F3E /* MoviesRepositoryMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -504,9 +516,13 @@
 				6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */,
 				69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */,
 				6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */,
+				69AD7320286F1B8C009C5F3E /* DataTransferServiceMock.swift in Sources */,
+				69AD7322286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift in Sources */,
 				695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */,
+				69AD731E286F1B58009C5F3E /* GenresRepositoryMock.swift in Sources */,
 				692F0935285A6F8C00780F72 /* MoviesResponseDTOTests.swift in Sources */,
 				692F0939285A7DEB00780F72 /* NetworkServiceTests.swift in Sources */,
+				69AD7324286F1BD4009C5F3E /* MoviesRepositoryMock.swift in Sources */,
 				69D8442628621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift in Sources */,
 				692F0934285A6F2A00780F72 /* MoviesResponseDTOMock.json in Sources */,
 			);
