@@ -206,26 +206,26 @@ class DataTransferServiceTests: XCTestCase {
 //        givenDataTransferServiceInitialised()
 //        let expectedError = NetworkError.generic(DataTransferErrorMock.someError)
 //        self.networkService?.requestCompletionReturnValue = .failure(expectedError)
-//        
+//
 //        // when
 //        whenNetworkRequestIsPerformed()
-//        
+//
 //        // then
 //        guard let returnedError = self.returnedError else {
 //            XCTFail("Should always be non-nil value at this point")
 //            return
 //        }
-//        
+//
 //        let networkError: NetworkError?
 //        if returnedError is NetworkError {
 //            networkError = returnedError as? NetworkError
 //        }
-//        
+//
 //        guard let networkError = networkError else {
 //            return
 //        }
 //
-//        
+//
 //        if case NetworkError.generic(DataTransferErrorMock.someError) = returnedError {
 //            XCTAssertEqual(expectedError, networkError)
 //        }
