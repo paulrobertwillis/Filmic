@@ -20,7 +20,6 @@ class DataTransferServiceTests: XCTestCase {
         case someError
     }
 
-
     private var networkService: NetworkServiceMock?
     private var sut: DataTransferService?
     
@@ -50,7 +49,8 @@ class DataTransferServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        
+        self.networkService = NetworkServiceMock()
+        self.sut = DataTransferService(networkService: self.networkService!)
     }
     
     override func tearDown() {
@@ -231,7 +231,7 @@ class DataTransferServiceTests: XCTestCase {
 //        }
 //    }
     
-    func test_DataTransferService_whenPerformFailedRequest_shouldCallNetworkServiceExactlyOnce() {
+    func test_DataTransferService_whenPerformsFailedRequest_shouldCallNetworkServiceExactlyOnce() {
         // given
         givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
@@ -243,7 +243,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureNetworkServiceCalled(numberOfTimes: 1)
     }
     
-    func test_DataTransferService_whenPerformMultipleFailedRequests_shouldCallNetworkServiceEqualNumberOfTimes() {
+    func test_DataTransferService_whenPerformsMultipleFailedRequests_shouldCallNetworkServiceEqualNumberOfTimes() {
         // given
         givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
@@ -256,7 +256,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureNetworkServiceCalled(numberOfTimes: 2)
     }
 
-    func test_DataTransferService_whenPerformSuccessfulRequest_shouldCallNetworkServiceExactlyOnce() {
+    func test_DataTransferService_whenPerformsSuccessfulRequest_shouldCallNetworkServiceExactlyOnce() {
         // given
         givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .success(nil)
@@ -268,7 +268,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureNetworkServiceCalled(numberOfTimes: 1)
     }
     
-    func test_DataTransferService_whenPerformMultipleSuccessfulRequests_shouldCallRequestPerformerEqualNumberOfTimes() {
+    func test_DataTransferService_whenPerformsMultipleSuccessfulRequests_shouldCallRequestPerformerEqualNumberOfTimes() {
         // given
         givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .success(nil)
@@ -283,7 +283,7 @@ class DataTransferServiceTests: XCTestCase {
     
     
     // TODO: Tests
-    func test_DataTransferService_whenPerformSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
+    func test_DataTransferService_whenPerformsSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
         // given
         givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
@@ -294,8 +294,6 @@ class DataTransferServiceTests: XCTestCase {
         // then
         thenEnsureDecodesDataIntoExpectedObject()
     }
-    
-    
     
     // should take data from NetworkService and decode it
 
@@ -327,8 +325,8 @@ class DataTransferServiceTests: XCTestCase {
     // MARK: - Given
     
     private func givenDataTransferServiceInitialised() {
-        self.networkService = NetworkServiceMock()
-        guard let networkService = networkService else { return }
+        guard let networkService = self.networkService else { throwPreconditionFailureWhereVariableShouldNotBeNil(); return }
+        
         self.sut = DataTransferService(networkService: networkService)
     }
     
@@ -358,7 +356,7 @@ class DataTransferServiceTests: XCTestCase {
             let expectedReturnedURLSessionTask = self.expectedReturnedURLSessionTask,
             let returnedURLSessionTask = self.returnedURLSessionTask
         else {
-            XCTFail("should not be nil")
+            throwPreconditionFailureWhereVariableShouldNotBeNil()
             return
         }
         
@@ -396,6 +394,12 @@ class DataTransferServiceTests: XCTestCase {
     
     private func thenEnsureDecodesDataIntoExpectedObject() {
         XCTAssertEqual(genres, self.returnedGenres)
+    }
+    
+    // MARK: - Test Setup Errors
+    
+    private func throwPreconditionFailureWhereVariableShouldNotBeNil() {
+        preconditionFailure("The test variable should not be nil at this point - check test setup and ensure variables are correctly initialised")
     }
     
     // MARK: - Helpers

@@ -95,7 +95,7 @@ class GenresRepositoryTests: XCTestCase {
     }
     
     private func givenExpectedFailure() {
-        self.dataTransferService?.requestCompletionReturnValue = .failure(NetworkError.someError)
+        self.dataTransferService?.requestCompletionReturnValue = .failure(DataTransferError.missingData)
     }
     
     private func givenGenresRepositoryIsInitialised() {
