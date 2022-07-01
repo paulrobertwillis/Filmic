@@ -14,10 +14,10 @@ enum DataTransferError: Error {
 }
 
 protocol DataTransferServiceProtocol {
-    typealias ResultValue = (Result<GenresResponseDTO, DataTransferError>)
-    typealias CompletionHandler = (ResultValue) -> Void
+    typealias ResultValue<T> = (Result<T, DataTransferError>)
+    typealias CompletionHandler<T> = (ResultValue<T>) -> Void
 
-    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
+    func request<T: Decodable>(request: URLRequest, completion: @escaping CompletionHandler<T>) -> URLSessionTask?
 }
 
 class DataTransferService: DataTransferServiceProtocol {
@@ -28,13 +28,13 @@ class DataTransferService: DataTransferServiceProtocol {
         self.networkService = networkService
     }
         
-    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func request<T: Decodable>(request: URLRequest, completion: @escaping CompletionHandler<T>) -> URLSessionTask? {
         
         let dataSessionTask = self.networkService.request(request: request) { result in
             switch result {
             case .success(let data):
                 do {
-                    let result = try self.decode(data)
+                    let result: ResultValue<T> = try self.decode(data)
                     completion(result)
                 } catch(let error) {
                     let resolvedError = self.resolve(error)
@@ -49,11 +49,10 @@ class DataTransferService: DataTransferServiceProtocol {
         return dataSessionTask
     }
     
-    private func decode(_ data: Data?) throws -> Result<GenresResponseDTO, DataTransferError> {
+    private func decode<T: Decodable>(_ data: Data?) throws -> Result<T, DataTransferError> {
         do {
             guard let data = data else { return .failure(.missingData) }
-            let result: GenresResponseDTO = try self.decoder.decode(data)
-            
+            let result: T = try self.decoder.decode(data)
             return .success(result)
         } catch {
             return .failure(.parsingFailure(error))
@@ -73,13 +72,13 @@ class DataTransferService: DataTransferServiceProtocol {
 }
 
 public protocol ResponseDecoder {
-    func decode(_ data: Data) throws -> GenresResponseDTO
+    func decode<T: Decodable>(_ data: Data) throws -> T
 }
 
 class JSONResponseDecoder: ResponseDecoder {
     private let jsonDecoder = JSONDecoder()
     
-    public func decode(_ data: Data) throws -> GenresResponseDTO {
-        return try jsonDecoder.decode(GenresResponseDTO.self, from: data)
+    public func decode<T: Decodable>(_ data: Data) throws -> T {
+        return try jsonDecoder.decode(T.self, from: data)
     }
 }

@@ -15,7 +15,7 @@ class DataTransferServiceMock: DataTransferServiceProtocol {
     // completion parameter
     var requestCompletionReturnValue: ResultValue = .success(GenresResponseDTO(genres: []))
 
-    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
+    func request<T: Decodable>(request: URLRequest, completion: CompletionHandler<T>) -> URLSessionTask? {
         self.requestCallsCount += 1
         
         completion(requestCompletionReturnValue)
