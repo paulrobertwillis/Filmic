@@ -10,6 +10,7 @@ import Foundation
 enum NetworkError: Error {
     case error(statusCode: Int)
     case generic(Error)
+    case someError
 }
 
 struct NetworkRequest {
@@ -17,7 +18,7 @@ struct NetworkRequest {
 }
 
 protocol NetworkServiceProtocol {
-    typealias ResultValue = (Result<Data?, Error>)
+    typealias ResultValue = (Result<Data?, NetworkError>)
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult

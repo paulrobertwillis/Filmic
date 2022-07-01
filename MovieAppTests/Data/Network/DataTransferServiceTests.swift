@@ -72,7 +72,7 @@ class DataTransferServiceTests: XCTestCase {
     
     // MARK: - Tests
     
-    func test_DataTransferService_whenPerformRequest_shouldReturnURLSessionTask() {
+    func test_DataTransferService_whenPerformsRequest_shouldReturnURLSessionTask() {
         //given
         givenDataTransferServiceInitialised()
         
@@ -83,7 +83,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureReturnsURLSessionTask()
     }
     
-    func test_DataTransferService_whenPerformRequest_shouldCallNetworkServiceExactlyOnce() {
+    func test_DataTransferService_whenPerformsRequest_shouldCallNetworkServiceExactlyOnce() {
         // given
         givenDataTransferServiceInitialised()
         
@@ -94,7 +94,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureNetworkServiceCalledExactlyOnce()
     }
     
-    func test_DataTransferService_whenPerformRequest_shouldReturnURLSessionTaskFromNetworkService() {
+    func test_DataTransferService_whenPerformsRequest_shouldReturnURLSessionTaskFromNetworkService() {
         // given
         givenDataTransferServiceInitialised()
         givenExpectedNetworkRequestResponse()
@@ -106,7 +106,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureReturnsURLSessionTaskFromNetworkService()
     }
     
-    func test_DataTransferService_whenPerformRequest_shouldPassRequestToNetworkService() {
+    func test_DataTransferService_whenPerformsRequest_shouldPassRequestToNetworkService() {
         // given
         givenDataTransferServiceInitialised()
                 
@@ -117,7 +117,7 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureRequestIsPassedToNetworkService()
     }
     
-    func test_DataTransferService_whenPerformRequest_shouldReturnResult() {
+    func test_DataTransferService_whenPerformsRequest_shouldReturnResult() {
         // given
         givenDataTransferServiceInitialised()
         
@@ -128,7 +128,7 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertNotNil(self.returnedResult)
     }
     
-    func test_DataTransferService_whenPerformSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
+    func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
         // given
         givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .success(nil)
@@ -140,10 +140,10 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertEqual(self.returnedResult, .success)
     }
     
-    func test_DataTransferService_whenPerformFailedRequest_shouldReturnFailureResultInCompletionHandler() {
+    func test_DataTransferService_whenPerformsFailedRequest_shouldReturnFailureResultInCompletionHandler() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .failure(DataTransferErrorMock.someError)
+        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
         
         // when
         whenNetworkRequestIsPerformed()
@@ -152,10 +152,11 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertEqual(self.returnedResult, .failure)
     }
     
-    func test_DataTransferService_whenPerformSuccessfulRequest_shouldReturnGenres() {
+    func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnGenres() {
         // given
         givenDataTransferServiceInitialised()
-        
+        self.networkService?.requestCompletionReturnValue = .success(nil)
+
         // when
         whenNetworkRequestIsPerformed()
         
@@ -163,10 +164,11 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertEqual(self.returnedGenres, [])
     }
     
-    func test_DataTransferService_whenPerformSuccessfulRequest_shouldReturnURLSessionTask() {
+    func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnURLSessionTask() {
         // given
         givenDataTransferServiceInitialised()
-        
+        self.networkService?.requestCompletionReturnValue = .success(nil)
+
         // when
         whenNetworkRequestIsPerformed()
         
@@ -174,10 +176,11 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertNotNil(self.returnedURLSessionTask)
     }
     
-    func test_DataTransferService_whenPerformFailedRequest_shouldReturnErrorInFailureResult() {
+    func test_DataTransferService_whenPerformsFailedRequest_shouldReturnErrorInFailureResult() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .failure(DataTransferErrorMock.someError)
+        let error = NetworkError.generic(DataTransferErrorMock.someError)
+        self.networkService?.requestCompletionReturnValue = .failure(error)
         
         // when
         whenNetworkRequestIsPerformed()
@@ -186,26 +189,89 @@ class DataTransferServiceTests: XCTestCase {
         XCTAssertNotNil(self.returnedError)
     }
     
-    func test_DataTransferService_whenPerformFailedRequest_shouldReturnSpecificDataTransferErrorInFailureResult() {
+//    func test_DataTransferService_whenPerformFailedRequest_shouldReturnSpecificDataTransferErrorInFailureResult() {
+//        // given
+//        givenDataTransferServiceInitialised()
+//        let expectedError = NetworkError.generic(DataTransferErrorMock.someError)
+//        self.networkService?.requestCompletionReturnValue = .failure(expectedError)
+//        
+//        // when
+//        whenNetworkRequestIsPerformed()
+//        
+//        // then
+//        guard let returnedError = self.returnedError else {
+//            XCTFail("Should always be non-nil value at this point")
+//            return
+//        }
+//        
+//        let networkError: NetworkError?
+//        if returnedError is NetworkError {
+//            networkError = returnedError as? NetworkError
+//        }
+//        
+//        guard let networkError = networkError else {
+//            return
+//        }
+//
+//        
+//        if case NetworkError.generic(DataTransferErrorMock.someError) = returnedError {
+//            XCTAssertEqual(expectedError, networkError)
+//        }
+//    }
+    
+    func test_DataTransferService_whenPerformFailedRequest_shouldCallRequestPerformerExactlyOnce() {
         // given
         givenDataTransferServiceInitialised()
-        let expectedError = DataTransferErrorMock.someError
-        self.networkService?.requestCompletionReturnValue = .failure(expectedError)
-        
+        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
+
         // when
         whenNetworkRequestIsPerformed()
         
         // then
-        guard let returnedError = self.returnedError else {
-            XCTFail("Should always be non-nil value at this point")
-            return
-        }
+        let actualCalls = self.networkService?.requestCallsCount
+        XCTAssertEqual(1, actualCalls)
+    }
+    
+    func test_DataTransferService_whenPerformMultipleFailedRequests_shouldCallRequestPerformerEqualNumberOfTimes() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
 
-        if case DataTransferErrorMock.someError = returnedError {
-            XCTAssertEqual(expectedError, returnedError as? DataTransferServiceTests.DataTransferErrorMock)
-        }
+        // when
+        whenNetworkRequestIsPerformed()
+        whenNetworkRequestIsPerformed()
+
+        // then
+        let actualCalls = self.networkService?.requestCallsCount
+        XCTAssertEqual(2, actualCalls)
     }
 
+    func test_DataTransferService_whenPerformSuccessfulRequest_shouldCallRequestPerformerExactlyOnce() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .success(nil)
+
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        let actualCalls = self.networkService?.requestCallsCount
+        XCTAssertEqual(1, actualCalls)
+    }
+    
+    func test_DataTransferService_whenPerformMultipleSuccessfulRequests_shouldCallRequestPerformerEqualNumberOfTimes() {
+        // given
+        givenDataTransferServiceInitialised()
+        self.networkService?.requestCompletionReturnValue = .success(nil)
+
+        // when
+        whenNetworkRequestIsPerformed()
+        whenNetworkRequestIsPerformed()
+
+        // then
+        let actualCalls = self.networkService?.requestCallsCount
+        XCTAssertEqual(2, actualCalls)
+    }
     
     // MARK: - Given
     

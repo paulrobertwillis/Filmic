@@ -15,9 +15,7 @@ protocol DataTransferServiceProtocol {
     typealias ResultValue = (Result<[Genre], Error>)
     typealias CompletionHandler = (ResultValue) -> Void
 
-    @discardableResult
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
-//    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
 class DataTransferService: DataTransferServiceProtocol {
@@ -26,14 +24,7 @@ class DataTransferService: DataTransferServiceProtocol {
     init(networkService: NetworkServiceProtocol) {
         self.networkService = networkService
     }
-    
-//    @discardableResult
-//    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
-//
-//
-//        return URLSessionTask()
-//    }
-    
+        
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
         
         let dataSessionTask = self.networkService.request(request: request) { result in
