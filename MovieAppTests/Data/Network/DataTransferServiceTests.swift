@@ -131,7 +131,7 @@ class DataTransferServiceTests: XCTestCase {
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(self.createDataStub())
+        self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
         
         // when
         whenNetworkRequestIsPerformed()
@@ -155,7 +155,7 @@ class DataTransferServiceTests: XCTestCase {
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnGenres() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(self.createDataStub())
+        self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
 
         // when
         whenNetworkRequestIsPerformed()
@@ -278,7 +278,7 @@ class DataTransferServiceTests: XCTestCase {
     func test_DataTransferService_whenPerformSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
         // given
         givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(createDataStub())
+        self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
 
         
         // when
@@ -367,20 +367,7 @@ class DataTransferServiceTests: XCTestCase {
     private func urlRequest() -> URLRequest? {
         URLRequest(url: URL(string: "www.expectedReturnValue.com")!)
     }
-    
-    private func createDataStub() -> Data? {
-        """
-        {
-          "genres": [
-            {
-              "id": 28,
-              "name": "Action"
-            }
-          ]
-        }
-        """.data(using: .utf8)
-    }
-    
+        
     private let genres: [Genre] = [
         Genre(id: Genre.Identifier(28), name: "Action")
     ]

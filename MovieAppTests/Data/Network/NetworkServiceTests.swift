@@ -249,7 +249,7 @@ class NetworkServiceTests: XCTestCase {
         
     private func givenRequestWillSucceed() {
         createRequestStub()
-        initialiseNetworkRequestPerformer(data: createDataStub(), response: createSuccessResponseStub(), error: nil)
+        initialiseNetworkRequestPerformer(data: TMDBResponseMocks.Genres.getGenres.successResponse(), response: createSuccessResponseStub(), error: nil)
         initialiseNetworkService()
     }
     
@@ -351,19 +351,6 @@ class NetworkServiceTests: XCTestCase {
                                        statusCode: 500,
                                        httpVersion: "1.1",
                                        headerFields: [:])
-    }
-    
-    private func createDataStub() -> Data? {
-        """
-        {
-          "genres": [
-            {
-              "id": 28,
-              "name": "Action"
-            }
-          ]
-        }
-        """.data(using: .utf8)
     }
 }
 
