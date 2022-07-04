@@ -14,13 +14,16 @@ enum DataTransferError: Error {
 }
 
 protocol DataTransferServiceProtocol {
-    typealias ResultValue<T> = (Result<T, DataTransferError>)
-    typealias CompletionHandler<T> = (ResultValue<T>) -> Void
+    associatedtype T: Decodable
+    
+    typealias ResultValue = (Result<T, DataTransferError>)
+    typealias CompletionHandler = (ResultValue) -> Void
 
-    func request<T: Decodable>(request: URLRequest, completion: @escaping CompletionHandler<T>) -> URLSessionTask?
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
-class DataTransferService: DataTransferServiceProtocol {
+class DataTransferService<T: Decodable>: DataTransferServiceProtocol {
+    
     private let networkService: NetworkServiceProtocol
     private let decoder: ResponseDecoder = JSONResponseDecoder()
     
@@ -28,13 +31,13 @@ class DataTransferService: DataTransferServiceProtocol {
         self.networkService = networkService
     }
         
-    func request<T: Decodable>(request: URLRequest, completion: @escaping CompletionHandler<T>) -> URLSessionTask? {
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
         
         let dataSessionTask = self.networkService.request(request: request) { result in
             switch result {
             case .success(let data):
                 do {
-                    let result: ResultValue<T> = try self.decode(data)
+                    let result: ResultValue = try self.decode(data)
                     completion(result)
                 } catch(let error) {
                     let resolvedError = self.resolve(error)

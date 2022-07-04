@@ -11,12 +11,14 @@ import XCTest
 
 class GenresRepositoryTests: XCTestCase {
     
+    typealias GenreDataTransferServiceMock = DataTransferServiceMock<GenresResponseDTO>
+    
     enum GenresRepositorySuccessTestError: Error {
         case failedFetching
     }
     
-    private var dataTransferService: DataTransferServiceMock?
-    private var sut: GenresRepository?
+    private var dataTransferService: GenreDataTransferServiceMock?
+    private var sut: Repository<GenreDataTransferServiceMock>?
     private var resultValue: Result<[Genre], Error>?
     private var task: URLSessionTask?
     
@@ -118,7 +120,7 @@ class GenresRepositoryTests: XCTestCase {
     }
     
     private func givenGenresRepositoryIsInitialised() {
-        self.sut = GenresRepository(dataTransferService: self.dataTransferService!)
+        self.sut = .init(dataTransferService: self.dataTransferService!)
     }
     
     // MARK: - When

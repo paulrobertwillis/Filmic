@@ -8,16 +8,20 @@
 import Foundation
 @testable import MovieApp
 
-class DataTransferServiceMock: DataTransferServiceProtocol {
+class DataTransferServiceMock<T: Decodable>: DataTransferServiceProtocol {
     
     var requestCallsCount = 0
     
     // completion parameter
-    var requestCompletionReturnValue: ResultValue = .success(GenresResponseDTO(genres: []))
+    var requestCompletionReturnValue: ResultValue?
 
-    func request<T: Decodable>(request: URLRequest, completion: CompletionHandler<T>) -> URLSessionTask? {
+    func request(request: URLRequest, completion: @escaping (Result<T, DataTransferError>) -> Void) -> URLSessionTask? {
         self.requestCallsCount += 1
         
+        guard let requestCompletionReturnValue = requestCompletionReturnValue else {
+            return URLSessionTask()
+        }
+
         completion(requestCompletionReturnValue)
 
         return URLSessionTask()

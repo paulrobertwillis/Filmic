@@ -11,6 +11,8 @@ import XCTest
 
 class DataTransferServiceTests: XCTestCase {
     
+    typealias SUT = DataTransferService<GenresResponseDTO>
+    
     private enum ReturnedResult {
         case success
         case failure
@@ -21,7 +23,7 @@ class DataTransferServiceTests: XCTestCase {
     }
 
     private var networkService: NetworkServiceMock?
-    private var sut: DataTransferService?
+    private var sut: SUT?
     
     private var expectedReturnedURLSessionTask: URLSessionTask?
     private var returnedURLSessionTask: URLSessionTask?
@@ -37,7 +39,7 @@ class DataTransferServiceTests: XCTestCase {
     private var returnedResult: ReturnedResult?
     private var returnedError: Error?
 
-    private func completion(_ result: DataTransferServiceProtocol.ResultValue) {
+    private func completion(_ result: SUT.ResultValue) {
         switch result {
         case .success(let returnedGenres):
             self.returnedResult = .success
