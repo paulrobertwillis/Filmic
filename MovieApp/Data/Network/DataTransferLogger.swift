@@ -11,8 +11,16 @@ protocol DataTransferLoggerProtocol {
     func log(_ log: String)
 }
 
-class DataTransferLogger: DataTransferLoggerProtocol {
+class DataTransferLogger {
+    var mostRecentLog: Log?
+}
+
+extension DataTransferLogger: DataTransferLoggerProtocol {
     func log(_ log: String) {
-        
+        self.mostRecentLog = Log(text: log)
     }
+}
+
+struct Log: Equatable {
+    let text: String
 }
