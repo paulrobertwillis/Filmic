@@ -27,6 +27,8 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     private let networkService: NetworkServiceProtocol
     private let decoder: ResponseDecoder = JSONResponseDecoder()
     
+    public var mostRecentLog: String?
+    
     init(networkService: NetworkServiceProtocol) {
         self.networkService = networkService
     }
@@ -36,22 +38,16 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
         let dataSessionTask = self.networkService.request(request: request) { result in
             switch result {
             case .success(let data):
-                do {
-                    let result: ResultValue = try self.decode(data)
-                    completion(result)
-                } catch(let error) {
-                    let resolvedError = self.resolve(error)
-                    completion(.failure(resolvedError))
-                }
+                self.handleSuccessfulRequest(for: data, completion: completion)
             case .failure(let error):
-                let resolvedError = self.resolve(error)
-                completion(.failure(resolvedError))
+                self.resolveAndHandleError(error, completion: completion)
             }
         }
                 
         return dataSessionTask
     }
     
+    // TODO: Consider how to migrate this decode function to the more appropriate ResponseDecoder object
     private func decode<T: Decodable>(_ data: Data?) throws -> Result<T, DataTransferError> {
         do {
             guard let data = data else { return .failure(.missingData) }
@@ -64,5 +60,25 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     
     private func resolve(_ error: Error) -> DataTransferError {
         return DataTransferError.parsingFailure(error)
+    }
+    
+    private func handleSuccessfulRequest(for data: Data?, completion: CompletionHandler) {
+        do {
+            try self.decodeAndHandleResult(from: data, completion: completion)
+        } catch(let error) {
+            self.resolveAndHandleError(error, completion: completion)
+        }
+    }
+    
+    // TODO: Consider how to refactor this function to do only one thing
+    private func decodeAndHandleResult(from data: Data?, completion: CompletionHandler) throws {
+        let result: ResultValue = try self.decode(data)
+        completion(result)
+    }
+    
+    // TODO: Consider how to refactor this function to do only one thing
+    private func resolveAndHandleError(_ error: Error, completion: CompletionHandler) {
+        let resolvedError = self.resolve(error)
+        completion(.failure(resolvedError))
     }
 }
