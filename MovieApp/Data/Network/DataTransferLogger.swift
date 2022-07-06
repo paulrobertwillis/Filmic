@@ -15,6 +15,9 @@ class DataTransferLogger {
     var mostRecentLog: Log?
 }
 
+
+// MARK: - DataTransferLoggerProtocol
+
 extension DataTransferLogger: DataTransferLoggerProtocol {
     func log(_ log: String) {
         self.mostRecentLog = Log(text: log)

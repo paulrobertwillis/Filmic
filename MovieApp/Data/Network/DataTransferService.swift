@@ -24,9 +24,13 @@ protocol DataTransferServiceProtocol {
 
 class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProtocol {
     
+    // MARK: - Private Properties
+    
     private let networkService: NetworkServiceProtocol
     private let logger: DataTransferLoggerProtocol
     private let decoder: ResponseDecoder = JSONResponseDecoder()
+    
+    // MARK: - Lifecycle
     
     init(networkService: NetworkServiceProtocol, logger: DataTransferLoggerProtocol) {
         self.networkService = networkService
@@ -46,6 +50,8 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
                 
         return dataSessionTask
     }
+    
+    // MARK: - Helpers
     
     // TODO: Consider how to migrate this decode function to the more appropriate ResponseDecoder object
     private func decode<T: Decodable>(_ data: Data?) throws -> Result<T, DataTransferError> {

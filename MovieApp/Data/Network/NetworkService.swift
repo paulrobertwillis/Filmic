@@ -26,12 +26,19 @@ protocol NetworkServiceProtocol {
 }
 
 class NetworkService {
+    
+    // MARK: - Private Properties
+    
     private let networkRequestPerformer: NetworkRequestPerformerProtocol
+    
+    // MARK: - Lifecycle
     
     init(networkRequestPerformer: NetworkRequestPerformerProtocol) {
         self.networkRequestPerformer = networkRequestPerformer
     }
 }
+
+// MARK: - NetworkServiceProtocol
 
 extension NetworkService: NetworkServiceProtocol {
     

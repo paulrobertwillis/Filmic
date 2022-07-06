@@ -15,13 +15,22 @@ protocol GetMovieGenresUseCaseProtocol {
     func execute(completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
-class GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
+class GetMovieGenresUseCase {
+    
+    // MARK: - Private Properties
+    
     private let repository: GenresRepositoryProtocol
+    
+    // MARK: - Lifecycle
     
     init(repository: GenresRepositoryProtocol) {
         self.repository = repository
     }
-    
+}
+
+// MARK: - GetMovieGenresUseCaseProtocol
+
+extension GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
     @discardableResult
     func execute(completion: @escaping CompletionHandler) -> URLSessionTask? {
         self.repository.getMovieGenres { result in

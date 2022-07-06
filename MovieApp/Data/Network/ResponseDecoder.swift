@@ -11,9 +11,12 @@ public protocol ResponseDecoder {
     func decode<T: Decodable>(_ data: Data) throws -> T
 }
 
-class JSONResponseDecoder: ResponseDecoder {
+class JSONResponseDecoder {
+    // MARK: - Private Properties
     private let jsonDecoder = JSONDecoder()
-    
+}
+
+extension JSONResponseDecoder: ResponseDecoder {
     public func decode<T: Decodable>(_ data: Data) throws -> T {
         return try jsonDecoder.decode(T.self, from: data)
     }
