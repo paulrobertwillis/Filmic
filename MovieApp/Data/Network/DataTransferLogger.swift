@@ -12,7 +12,7 @@ protocol DataTransferLoggerProtocol {
 }
 
 class DataTransferLogger {
-    var mostRecentLog: Log?
+    var logs: [Log] = []
 }
 
 
@@ -20,10 +20,12 @@ class DataTransferLogger {
 
 extension DataTransferLogger: DataTransferLoggerProtocol {
     func log(_ log: String) {
-        self.mostRecentLog = Log(text: log)
+        let logToSave = Log(text: log, status: 200)
+        self.logs.append(logToSave)
     }
 }
 
 struct Log: Equatable {
     let text: String
+    let status: Int
 }
