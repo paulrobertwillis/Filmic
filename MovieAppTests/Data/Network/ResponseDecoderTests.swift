@@ -52,7 +52,6 @@ class JSONResponseDecoderTests: XCTestCase {
             // Then
             XCTAssertEqual(user.forename, forename)
             XCTAssertEqual(user.surname, surname)
-
         } catch let error {
             XCTFail(error.localizedDescription)
         }
