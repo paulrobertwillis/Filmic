@@ -60,13 +60,6 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
         } catch {
             return .failure(.parsingFailure(error))
         }
-//        guard let data = data else { throw DataTransferError.missingData }
-//        let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
-//        let genres = genresResponseDTO?.genres.map { $0.toDomain() }
-//
-//        guard let genres = genres else { throw DataTransferError.decodingFailure }
-//
-//        return genres
     }
     
     private func resolve(_ error: Error) -> DataTransferError {
