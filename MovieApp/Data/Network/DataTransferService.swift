@@ -25,12 +25,12 @@ protocol DataTransferServiceProtocol {
 class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProtocol {
     
     private let networkService: NetworkServiceProtocol
+    private let logger: DataTransferLoggerProtocol
     private let decoder: ResponseDecoder = JSONResponseDecoder()
     
-    public var mostRecentLog: String?
-    
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkServiceProtocol, logger: DataTransferLoggerProtocol) {
         self.networkService = networkService
+        self.logger = logger
     }
         
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
@@ -52,6 +52,7 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
         do {
             guard let data = data else { return .failure(.missingData) }
             let result: T = try self.decoder.decode(data)
+            self.logger.log("successful request")
             return .success(result)
         } catch {
             return .failure(.parsingFailure(error))
@@ -79,6 +80,7 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     // TODO: Consider how to refactor this function to do only one thing
     private func resolveAndHandleError(_ error: Error, completion: CompletionHandler) {
         let resolvedError = self.resolve(error)
+        self.logger.log("failed request")
         completion(.failure(resolvedError))
     }
 }

@@ -23,6 +23,7 @@ class DataTransferServiceTests: XCTestCase {
     }
 
     private var networkService: NetworkServiceMock?
+    private var logger: DataTransferLoggerMock?
     private var sut: Sut?
     
     private var expectedReturnedURLSessionTask: URLSessionTask?
@@ -56,7 +57,10 @@ class DataTransferServiceTests: XCTestCase {
         super.setUp()
         
         self.networkService = NetworkServiceMock()
-        self.sut = DataTransferService(networkService: self.networkService!)
+        self.logger = DataTransferLoggerMock()
+        self.sut = DataTransferService(networkService: self.networkService!,
+                                       logger: self.logger!
+        )
     }
     
     override func tearDown() {
@@ -245,8 +249,50 @@ class DataTransferServiceTests: XCTestCase {
         thenEnsureDecodesDataIntoExpectedObject()
     }
     
+    func test_Logging_whenPerformsSuccessfulRequest_shouldLogToConsole() {
+        // when
+        whenPerformsSuccessfulRequest()
+
+        // then
+        XCTAssertEqual(1, self.logger?.logs.count)
+    }
     
+    func test_Logging_whenPerformsFailedRequest_shouldLogToConsole() {
+        // when
+        whenPerformsFailedRequest()
+
+        // then
+        XCTAssertEqual(1, self.logger?.logs.count)
+    }
     
+    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogToConsoleMultipleTimes() {
+        // when
+        whenPerformsSuccessfulRequest()
+        whenPerformsSuccessfulRequest()
+
+        // then
+        XCTAssertEqual(2, self.logger?.logs.count)
+    }
+    
+    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogToConsoleMultipleTimes() {
+        // when
+        whenPerformsFailedRequest()
+        whenPerformsFailedRequest()
+
+        // then
+        XCTAssertEqual(2, self.logger?.logs.count)
+    }
+
+    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogToConsoleMultipleTimes() {
+        // when
+        whenPerformsFailedRequest()
+        whenPerformsSuccessfulRequest()
+        whenPerformsFailedRequest()
+        whenPerformsSuccessfulRequest()
+
+        // then
+        XCTAssertEqual(4, self.logger?.logs.count)
+    }
     
     
     
@@ -260,15 +306,23 @@ class DataTransferServiceTests: XCTestCase {
 
     // DataTransferErrorResolver should have its own tests
 
+    
+    
+    
+    
     // DataTransferService should keep logs of failures to unwrap
 
     // DataTransferService should have a logger
 
     // DataTransferErrorLogger should have its own tests
 
+    
+    
+    
+    
     // GenreRepository should instead go to DataTransferService for [Genre]
 
-    // Networking should become more generic to handle decoding of greater range of objects
+    
 
     // Generic network should be extensively tested to ensure it can decode objects of all types implemented in the Domain layer
 
