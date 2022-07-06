@@ -8,5 +8,9 @@
 import Foundation
 
 protocol MoviesRepositoryProtocol {
-    func getMovies() -> [Movie]
+    typealias ResultValue = (Result<MoviesPage, Error>)
+    typealias CompletionHandler = (ResultValue) -> Void
+    
+    @discardableResult
+    func getMovies(completion: @escaping CompletionHandler) -> URLSessionTask?
 }

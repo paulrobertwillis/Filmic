@@ -8,6 +8,11 @@
 import Foundation
 
 protocol GetTopRatedMoviesUseCaseProtocol {
+    typealias ResultValue = (Result<MoviesPage, Error>)
+    typealias CompletionHandler = (ResultValue) -> Void
+
+    @discardableResult
+    func execute(completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
 class GetTopRatedMoviesUseCase {
@@ -27,7 +32,10 @@ class GetTopRatedMoviesUseCase {
 
 extension GetTopRatedMoviesUseCase: GetTopRatedMoviesUseCaseProtocol {
     @discardableResult
-    func execute() -> [Movie] {
-        self.repository.getMovies()
+    func execute(completion: @escaping CompletionHandler) -> URLSessionTask? {
+        self.repository.getMovies { result in
+            completion(result)
+        }
+        return URLSessionTask()
     }
 }

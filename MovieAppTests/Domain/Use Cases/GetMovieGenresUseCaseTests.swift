@@ -28,6 +28,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - Setup
     override func setUp() {
         self.repository = GenresRepositoryMock()
+        self.sut = GetMovieGenresUseCase(repository: repository!)
     }
     
     override func tearDown() {

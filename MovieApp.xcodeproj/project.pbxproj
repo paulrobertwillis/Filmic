@@ -402,11 +402,11 @@
 		69F83F04286CADE9001A5FAF /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				69F83F05286CADF7001A5FAF /* NetworkServiceMock.swift */,
 				69AD731D286F1B58009C5F3E /* GenresRepositoryMock.swift */,
-				69AD731F286F1B8C009C5F3E /* DataTransferServiceMock.swift */,
-				69AD7321286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift */,
 				69AD7323286F1BD4009C5F3E /* MoviesRepositoryMock.swift */,
+				69F83F05286CADF7001A5FAF /* NetworkServiceMock.swift */,
+				69AD7321286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift */,
+				69AD731F286F1B8C009C5F3E /* DataTransferServiceMock.swift */,
 				69F62396287646470059307F /* DataTransferLoggerMock.swift */,
 			);
 			path = Mocks;

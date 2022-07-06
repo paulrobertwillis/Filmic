@@ -12,40 +12,51 @@ import XCTest
 class GetTopRatedMoviesUseCaseTests: XCTestCase {
     private var repository: MoviesRepositoryMock?
     private var sut: GetTopRatedMoviesUseCase?
-    private var returnedMovies: [Movie]?
+    private var resultValue: MoviesRepositoryProtocol.ResultValue?
+    private var returnedMoviePage: MoviesPage?
+    private var task: URLSessionTask?
     
-    private let movies = [
-        Movie(
-            id: Movie.Identifier(50),
-            title: "movie1",
-            posterPath: "/posterpath1.jpg",
-            overview: "movie1 overview",
-            releaseDate: "2001-01-01"
-        ),
-        Movie(
-            id: Movie.Identifier(100),
-            title: "movie2",
-            posterPath: "/posterpath2.jpg",
-            overview: "movie2 overview",
-            releaseDate: "2002-01-01"
-        )
-    ]
+    private let moviesPage = MoviesPage(page: 1,
+                                        totalPages: 1,
+                                        movies: [
+                                            Movie(
+                                                id: Movie.Identifier(50),
+                                                title: "movie1",
+                                                posterPath: "/posterpath1.jpg",
+                                                overview: "movie1 overview",
+                                                releaseDate: "2001-01-01"
+                                            ),
+                                            Movie(
+                                                id: Movie.Identifier(100),
+                                                title: "movie2",
+                                                posterPath: "/posterpath2.jpg",
+                                                overview: "movie2 overview",
+                                                releaseDate: "2002-01-01"
+                                            )
+                                        ])
     
     // MARK: - Setup
+    
+    override func setUp() {
+        super.setUp()
+        
+        self.repository = MoviesRepositoryMock()
+        self.sut = GetTopRatedMoviesUseCase(repository: repository!)
+    }
     
     override func tearDown() {
         self.repository = nil
         self.sut = nil
-        self.returnedMovies = nil
+        self.resultValue = nil
+        self.returnedMoviePage = nil
+        self.task = nil
+        
+        super.tearDown()
     }
     
     // MARK: - Tests
     
     func test_GetTopRatedMoviesUseCase_whenExecutes_shouldCallRepositoryOnce() {
-        // given
-        givenMoviesToBeFetched(movies: [])
-        givenUseCaseIsInitialised()
-        
         // when
         whenUseCaseRequestsMovies()
 
@@ -53,33 +64,29 @@ class GetTopRatedMoviesUseCaseTests: XCTestCase {
         thenEnsureRepositoryIsCalledExactlyOnce()
     }
     
-    func test_GetTopRatedMoviesUseCase_shouldGetMoviesFromRepository() {
+    func test_GetTopRatedMoviesUseCase_whenPerformsSuccessfulRequest_shouldGetMoviePageFromRepository() {
         // given
-        givenMoviesToBeFetched(movies: self.movies)
-        givenUseCaseIsInitialised()
-             
+        givenExpectedSuccess()
+
         // when
         whenUseCaseRequestsMovies()
         
         // then
-        thenEnsureMoviesAreFetched()
+        thenEnsureMoviePageIsFetched()
     }
     
     // MARK: - Given
-    
-    private func givenMoviesToBeFetched(movies: [Movie]) {
-        self.repository = MoviesRepositoryMock()
-        self.repository?.getMoviesReturnValue = movies
+        
+    private func givenExpectedSuccess() {
+        self.repository?.getMoviesCompletionReturnValue = .success(self.moviesPage)
     }
-    
-    private func givenUseCaseIsInitialised() {
-        self.sut = GetTopRatedMoviesUseCase(repository: repository!)
-    }
-    
+        
     // MARK: - When
     
     private func whenUseCaseRequestsMovies() {
-        self.returnedMovies = self.sut?.execute()
+        self.task = self.sut?.execute { result in
+            self.resultValue = result
+        }
     }
     
     // MARK: - Then
@@ -88,7 +95,14 @@ class GetTopRatedMoviesUseCaseTests: XCTestCase {
         XCTAssertEqual(self.repository?.getMoviesCallsCount, 1)
     }
     
-    private func thenEnsureMoviesAreFetched() {
-        XCTAssertEqual(self.movies, self.returnedMovies)
+    private func thenEnsureMoviePageIsFetched() {
+        let returnedMoviesPage = try? unwrapResult()
+        XCTAssertEqual(self.moviesPage, returnedMoviesPage)
+    }
+    
+    // MARK: - Helpers
+    
+    private func unwrapResult() throws -> MoviesPage? {
+        return try self.resultValue?.get()
     }
 }

@@ -10,15 +10,26 @@ import Foundation
 
 class MoviesRepositoryMock: MoviesRepositoryProtocol {
     
+    enum MoviesRepositoryMockError: Error {
+        case failedFetching
+    }
+    
     // MARK: - getMovies
     
     var getMoviesCallsCount = 0
-    var getMoviesReturnValue: [Movie]! = []
-    var getMoviesClosure: (() -> [Movie])?
+    var getMoviesReturnValue: URLSessionTask?
 
-    func getMovies() -> [Movie] {
+    // completion parameter
+    var getMoviesCompletionReturnValue: ResultValue? = .failure(MoviesRepositoryMockError.failedFetching)
+    var getMoviesReceivedCompletion: CompletionHandler? = { _ in }
+
+    func getMovies(completion: @escaping CompletionHandler) -> URLSessionTask? {
         self.getMoviesCallsCount += 1
+        
+        self.getMoviesReceivedCompletion = completion
+        completion(getMoviesCompletionReturnValue!)
 
-        return getMoviesClosure.map({ $0() }) ?? getMoviesReturnValue
+        return getMoviesReturnValue
     }
+
 }
