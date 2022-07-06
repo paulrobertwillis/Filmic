@@ -11,7 +11,7 @@ import XCTest
 
 class DataTransferServiceTests: XCTestCase {
     
-    typealias SUT = DataTransferService<GenresResponseDTO>
+    typealias Sut = DataTransferService<GenresResponseDTO>
     
     private enum ReturnedResult {
         case success
@@ -23,7 +23,7 @@ class DataTransferServiceTests: XCTestCase {
     }
 
     private var networkService: NetworkServiceMock?
-    private var sut: SUT?
+    private var sut: Sut?
     
     private var expectedReturnedURLSessionTask: URLSessionTask?
     private var returnedURLSessionTask: URLSessionTask?
@@ -39,7 +39,7 @@ class DataTransferServiceTests: XCTestCase {
     private var returnedResult: ReturnedResult?
     private var returnedError: Error?
 
-    private func completion(_ result: SUT.ResultValue) {
+    private func completion(_ result: Sut.ResultValue) {
         switch result {
         case .success(let returnedGenres):
             self.returnedResult = .success
@@ -80,9 +80,6 @@ class DataTransferServiceTests: XCTestCase {
     // MARK: - Tests
     
     func test_DataTransferService_whenPerformsRequest_shouldReturnURLSessionTask() {
-        //given
-        givenDataTransferServiceInitialised()
-        
         // when
         whenNetworkRequestIsPerformed()
         
@@ -91,9 +88,6 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     func test_DataTransferService_whenPerformsRequest_shouldCallNetworkServiceExactlyOnce() {
-        // given
-        givenDataTransferServiceInitialised()
-        
         // when
         whenNetworkRequestIsPerformed()
         
@@ -102,8 +96,6 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     func test_DataTransferService_whenPerformsRequest_shouldReturnURLSessionTaskFromNetworkService() {
-        // given
-        givenDataTransferServiceInitialised()
         givenExpectedNetworkRequestResponse()
                 
         // when
@@ -114,9 +106,6 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     func test_DataTransferService_whenPerformsRequest_shouldPassRequestToNetworkService() {
-        // given
-        givenDataTransferServiceInitialised()
-                
         // when
         whenNetworkRequestIsPerformed()
         
@@ -125,9 +114,6 @@ class DataTransferServiceTests: XCTestCase {
     }
         
     func test_DataTransferService_whenPerformsRequest_shouldReturnResult() {
-        // given
-        givenDataTransferServiceInitialised()
-        
         // when
         whenNetworkRequestIsPerformed()
         
@@ -136,32 +122,24 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
-        
         // when
-        whenNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
         
         // then
         thenEnsureReturnsSuccessResult()
     }
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldReturnFailureResultInCompletionHandler() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
-        
         // when
-        whenNetworkRequestIsPerformed()
+        whenFailingNetworkRequestIsPerformed()
         
         // then
         thenEnsureReturnsFailureResult()
     }
     
+    // TODO: Think on this test and whether it is fit for purpose. Should it be specific about Genres?
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnGenres() {
         // given
-        givenDataTransferServiceInitialised()
         self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
 
         // when
@@ -172,37 +150,24 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnURLSessionTask() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(nil)
-
         // when
-        whenNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
         
         // then
         thenEnsureReturnsURLSessionTask()
     }
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldReturnURLSessionTask() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .failure(.someError)
-
         // when
-        whenNetworkRequestIsPerformed()
+        whenFailingNetworkRequestIsPerformed()
         
         // then
         thenEnsureReturnsURLSessionTask()
     }
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldReturnErrorInFailureResult() {
-        // given
-        givenDataTransferServiceInitialised()
-        let error = NetworkError.generic(DataTransferErrorMock.someError)
-        self.networkService?.requestCompletionReturnValue = .failure(error)
-        
         // when
-        whenNetworkRequestIsPerformed()
+        whenFailingNetworkRequestIsPerformed()
         
         // then
         thenEnsureReturnsError()
@@ -210,7 +175,6 @@ class DataTransferServiceTests: XCTestCase {
     
 //    func test_DataTransferService_whenPerformFailedRequest_shouldReturnSpecificDataTransferErrorInFailureResult() {
 //        // given
-//        givenDataTransferServiceInitialised()
 //        let expectedError = NetworkError.generic(DataTransferErrorMock.someError)
 //        self.networkService?.requestCompletionReturnValue = .failure(expectedError)
 //
@@ -239,50 +203,34 @@ class DataTransferServiceTests: XCTestCase {
 //    }
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldCallNetworkServiceExactlyOnce() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
-
         // when
-        whenNetworkRequestIsPerformed()
+        whenFailingNetworkRequestIsPerformed()
         
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 1)
     }
     
     func test_DataTransferService_whenPerformsMultipleFailedRequests_shouldCallNetworkServiceEqualNumberOfTimes() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
-
         // when
-        whenNetworkRequestIsPerformed()
-        whenNetworkRequestIsPerformed()
+        whenFailingNetworkRequestIsPerformed()
+        whenFailingNetworkRequestIsPerformed()
 
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 2)
     }
 
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldCallNetworkServiceExactlyOnce() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(nil)
-
         // when
-        whenNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
         
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 1)
     }
     
     func test_DataTransferService_whenPerformsMultipleSuccessfulRequests_shouldCallRequestPerformerEqualNumberOfTimes() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(nil)
-
         // when
-        whenNetworkRequestIsPerformed()
-        whenNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
 
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 2)
@@ -291,19 +239,15 @@ class DataTransferServiceTests: XCTestCase {
     
     // TODO: Tests
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
-        // given
-        givenDataTransferServiceInitialised()
-        self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
-
         // when
-        whenNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
         
         // then
         thenEnsureDecodesDataIntoExpectedObject()
     }
     
-    // should take data from NetworkService and decode it
 
+    
     // decoding should belong to a separate object, a DataUnwrapperService
 
     // DataUnwrapperService should have its own tests
@@ -330,24 +274,28 @@ class DataTransferServiceTests: XCTestCase {
 
     
     // MARK: - Given
-    
-    private func givenDataTransferServiceInitialised() {
-        guard let networkService = self.networkService else { throwPreconditionFailureWhereVariableShouldNotBeNil(); return }
         
-        self.sut = DataTransferService(networkService: networkService)
-    }
-    
     private func givenExpectedNetworkRequestResponse(of urlSessionTask: URLSessionTask? = nil) {
         self.expectedReturnedURLSessionTask = urlSessionTask ?? URLSessionTask()
         self.networkService?.requestReturnValue = expectedReturnedURLSessionTask
     }
     
     // MARK: - When
-    
+        
     private func whenNetworkRequestIsPerformed() {
-        self.returnedURLSessionTask = sut?.request(request: self.urlRequest()!, completion: self.completion(_:))
+        self.performRequest()
     }
     
+    private func whenSuccessfulNetworkRequestIsPerformed() {
+        self.createMockSuccessfulResponseFromNetworkService()
+        self.performRequest()
+    }
+    
+    private func whenFailingNetworkRequestIsPerformed() {
+        self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
+        self.performRequest()
+    }
+        
     // MARK: - Then
     
     private func thenEnsureReturnsURLSessionTask() {
@@ -413,5 +361,13 @@ class DataTransferServiceTests: XCTestCase {
     
     private func urlRequest() -> URLRequest? {
         URLRequest(url: URL(string: "www.expectedReturnValue.com")!)
+    }
+    
+    private func performRequest() {
+        self.returnedURLSessionTask = sut?.request(request: self.urlRequest()!, completion: self.completion(_:))
+    }
+    
+    private func createMockSuccessfulResponseFromNetworkService() {
+        self.networkService?.requestCompletionReturnValue = .success(TMDBResponseMocks.Genres.getGenres.successResponse())
     }
 }
