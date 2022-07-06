@@ -123,7 +123,7 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnSuccessResultInCompletionHandler() {
         // when
-        whenSuccessfulNetworkRequestIsPerformed()
+        whenPerformsSuccessfulRequest()
         
         // then
         thenEnsureReturnsSuccessResult()
@@ -131,7 +131,7 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldReturnFailureResultInCompletionHandler() {
         // when
-        whenFailingNetworkRequestIsPerformed()
+        whenPerformsFailedRequest()
         
         // then
         thenEnsureReturnsFailureResult()
@@ -151,7 +151,7 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldReturnURLSessionTask() {
         // when
-        whenSuccessfulNetworkRequestIsPerformed()
+        whenPerformsSuccessfulRequest()
         
         // then
         thenEnsureReturnsURLSessionTask()
@@ -159,7 +159,7 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldReturnURLSessionTask() {
         // when
-        whenFailingNetworkRequestIsPerformed()
+        whenPerformsFailedRequest()
         
         // then
         thenEnsureReturnsURLSessionTask()
@@ -167,7 +167,7 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldReturnErrorInFailureResult() {
         // when
-        whenFailingNetworkRequestIsPerformed()
+        whenPerformsFailedRequest()
         
         // then
         thenEnsureReturnsError()
@@ -204,7 +204,7 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsFailedRequest_shouldCallNetworkServiceExactlyOnce() {
         // when
-        whenFailingNetworkRequestIsPerformed()
+        whenPerformsFailedRequest()
         
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 1)
@@ -212,8 +212,8 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsMultipleFailedRequests_shouldCallNetworkServiceEqualNumberOfTimes() {
         // when
-        whenFailingNetworkRequestIsPerformed()
-        whenFailingNetworkRequestIsPerformed()
+        whenPerformsFailedRequest()
+        whenPerformsFailedRequest()
 
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 2)
@@ -221,7 +221,7 @@ class DataTransferServiceTests: XCTestCase {
 
     func test_DataTransferService_whenPerformsSuccessfulRequest_shouldCallNetworkServiceExactlyOnce() {
         // when
-        whenSuccessfulNetworkRequestIsPerformed()
+        whenPerformsSuccessfulRequest()
         
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 1)
@@ -229,28 +229,28 @@ class DataTransferServiceTests: XCTestCase {
     
     func test_DataTransferService_whenPerformsMultipleSuccessfulRequests_shouldCallRequestPerformerEqualNumberOfTimes() {
         // when
-        whenSuccessfulNetworkRequestIsPerformed()
-        whenSuccessfulNetworkRequestIsPerformed()
+        whenPerformsSuccessfulRequest()
+        whenPerformsSuccessfulRequest()
 
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 2)
     }
     
     
-    // TODO: Tests
-    func test_DataTransferService_whenPerformsSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
+    func test_Decoding_whenPerformsSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
         // when
-        whenSuccessfulNetworkRequestIsPerformed()
+        whenPerformsSuccessfulRequest()
         
         // then
         thenEnsureDecodesDataIntoExpectedObject()
     }
     
-
     
-    // decoding should belong to a separate object, a DataUnwrapperService
-
-    // DataUnwrapperService should have its own tests
+    
+    
+    
+    
+    // TODO: Tests
 
     // URLRequests should in some cases be replaced by a protocol-driven Endpoint
 
@@ -281,17 +281,17 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     // MARK: - When
-        
+    
     private func whenNetworkRequestIsPerformed() {
         self.performRequest()
     }
     
-    private func whenSuccessfulNetworkRequestIsPerformed() {
+    private func whenPerformsSuccessfulRequest() {
         self.createMockSuccessfulResponseFromNetworkService()
         self.performRequest()
     }
     
-    private func whenFailingNetworkRequestIsPerformed() {
+    private func whenPerformsFailedRequest() {
         self.networkService?.requestCompletionReturnValue = .failure(NetworkError.someError)
         self.performRequest()
     }
