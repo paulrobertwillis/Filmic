@@ -7,15 +7,15 @@
 
 import Foundation
 
-class Repository<P: DataTransferServiceProtocol> {
-    private let dataTransferService: P
+class Repository<GenericDataTransferService: DataTransferServiceProtocol> {
+    private let dataTransferService: GenericDataTransferService
     
-    init(dataTransferService: P) {
+    init(dataTransferService: GenericDataTransferService) {
         self.dataTransferService = dataTransferService
     }
 }
 
-extension Repository where P.T == GenresResponseDTO {
+extension Repository where GenericDataTransferService.GenericDecodable == GenresResponseDTO {
     @discardableResult
     func getMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
         
@@ -30,8 +30,4 @@ extension Repository where P.T == GenresResponseDTO {
             }
         })
     }
-}
-
-enum GenresError: Error {
-    case failedDecode
 }

@@ -14,15 +14,15 @@ enum DataTransferError: Error {
 }
 
 protocol DataTransferServiceProtocol {
-    associatedtype T: Decodable
+    associatedtype GenericDecodable: Decodable
     
-    typealias ResultValue = (Result<T, DataTransferError>)
+    typealias ResultValue = (Result<GenericDecodable, DataTransferError>)
     typealias CompletionHandler = (ResultValue) -> Void
 
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
-class DataTransferService<T: Decodable>: DataTransferServiceProtocol {
+class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProtocol {
     
     private let networkService: NetworkServiceProtocol
     private let decoder: ResponseDecoder = JSONResponseDecoder()
