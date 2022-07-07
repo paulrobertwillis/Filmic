@@ -191,6 +191,39 @@ class NetworkLoggerTests: XCTestCase {
         // then
         thenEnsureLogContainsExpectedResponseHeaders()
     }
+    
+    func test_NetworkLogger_whenLoggingRequest_LogShouldContainTimeAndDateRequestWasMade() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogContainsTimeAndDate()
+    }
+    
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldContainTimeAndDateResponseWasReceived() {
+        // given
+        givenSuccessfulResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogContainsTimeAndDate()
+    }
+    
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainTimeAndDateResponseWasReceived() {
+        // given
+        givenFailedResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogContainsTimeAndDate()
+    }
 
     // MARK: - Given
     
@@ -211,7 +244,7 @@ class NetworkLoggerTests: XCTestCase {
         self.response = HTTPURLResponse(url: self.url!,
                                         statusCode: 400,
                                         httpVersion: "1.1",
-                                        headerFields: [:]
+                                        headerFields: ["Date": "Thu, 07 Jul 2022 15:51:17 GMT"]
                                         )!
     }
     
@@ -285,6 +318,10 @@ class NetworkLoggerTests: XCTestCase {
         XCTAssertEqual(self.sut?.logs[0].headers, self.response?.allHeaderFields as? [String: String])
     }
     
+    private func thenEnsureLogContainsTimeAndDate() {
+        XCTAssertEqual(self.sut?.logs[0].timeDate.ISO8601Format(), Date().ISO8601Format())
+    }
+    
     // MARK: - Helpers
     
     
@@ -294,13 +331,9 @@ class NetworkLoggerTests: XCTestCase {
 
 // TODO: Tests
 
-// Log records success / failure
-
 // Log records request type, e.g. GetMovieGenres
 
 // Log records error if present
-
-// Log records time and date
 
 /*
  

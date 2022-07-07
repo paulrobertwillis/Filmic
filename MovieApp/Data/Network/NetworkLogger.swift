@@ -52,6 +52,7 @@ struct Log: Equatable {
     let status: Int?
     let statusDescription: String?
     let headers: [String: String]?
+    let timeDate: Date
     
     init(
         type: LogType,
@@ -64,6 +65,7 @@ struct Log: Equatable {
             self.status = status
             self.statusDescription = statusDescription
             self.headers = headers
+            self.timeDate = Date()
         }
 }
 
