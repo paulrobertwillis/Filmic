@@ -21,6 +21,7 @@ class NetworkLoggerTests: XCTestCase {
     private var request: NetworkRequest?
     private var response: NetworkResponse?
     
+    private var successResponseData: Data?
     private var networkError: NetworkErrorMock?
         
     // MARK: - Setup
@@ -40,6 +41,7 @@ class NetworkLoggerTests: XCTestCase {
         self.request = nil
         self.response = nil
         
+        self.successResponseData = nil
         self.networkError = nil
     }
     
@@ -318,7 +320,7 @@ class NetworkLoggerTests: XCTestCase {
         whenRequestIsLogged()
         
         // then
-        XCTAssertEqual(HTTPMethodType.get.rawValue, self.lastLogCreated()?.httpMethodType)
+        thenEnsureLogContainsGetHTTPMethodType()
     }
     
     func test_NetworkLogger_whenLoggingPostRequest_logShouldContainHTTPMethodTypeOfRequest() {
@@ -329,7 +331,7 @@ class NetworkLoggerTests: XCTestCase {
         whenRequestIsLogged()
         
         // then
-        XCTAssertEqual(HTTPMethodType.post.rawValue, self.lastLogCreated()?.httpMethodType)
+        thenEnsureLogContainsPostHTTPMethodType()
     }
     
     func test_NetworkLogger_whenLoggingDeleteRequest_logShouldContainHTTPMethodTypeOfRequest() {
@@ -340,20 +342,30 @@ class NetworkLoggerTests: XCTestCase {
         whenRequestIsLogged()
         
         // then
-        XCTAssertEqual(HTTPMethodType.delete.rawValue, self.lastLogCreated()?.httpMethodType)
+        thenEnsureLogContainsDeleteHTTPMethodType()
     }
     
     func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainBodyOfResponseAsJson() {
         // given
-        let successResponseData = TMDBResponseMocks.Genres.getGenres.successResponse()
-        let jsonResponse = String(data: successResponseData, encoding: .utf8)
+        self.successResponseData = TMDBResponseMocks.Genres.getGenres.successResponse()
         givenSuccessfulResponse(withData: successResponseData)
         
         // when
         whenResponseIsLogged()
         
         // then
-        XCTAssertEqual(self.lastLogCreated()?.body, jsonResponse)
+        thenEnsureLogContainsBodyOfResponseAsJSON()
+    }
+    
+    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainNoBody() {
+        // given
+        givenFailedResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogBodyIsNil()
     }
     
     // TODO: Change "NetworkLogger" in these test names to something specific to the thing being tested, e.g. LogBody or LogType or ContainsFormattedDate
@@ -521,6 +533,26 @@ class NetworkLoggerTests: XCTestCase {
         XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName?.rawValue)
     }
     
+    private func thenEnsureLogContainsGetHTTPMethodType() {
+        XCTAssertEqual(HTTPMethodType.get.rawValue, self.lastLogCreated()?.httpMethodType)
+    }
+    
+    private func thenEnsureLogContainsPostHTTPMethodType() {
+        XCTAssertEqual(HTTPMethodType.post.rawValue, self.lastLogCreated()?.httpMethodType)
+    }
+    
+    private func thenEnsureLogContainsDeleteHTTPMethodType() {
+        XCTAssertEqual(HTTPMethodType.delete.rawValue, self.lastLogCreated()?.httpMethodType)
+    }
+    
+    private func thenEnsureLogContainsBodyOfResponseAsJSON() {
+        XCTAssertEqual(self.lastLogCreated()?.body, self.successResponseData?.toJsonString())
+    }
+    
+    private func thenEnsureLogBodyIsNil() {
+        XCTAssertNil(self.lastLogCreated()?.body)
+    }
+
     // MARK: - Helpers
     
     private func lastLogCreated() -> Log? {
@@ -559,3 +591,8 @@ class NetworkLoggerTests: XCTestCase {
 
 
 
+extension Data {
+    func toJsonString() -> String? {
+        return String(data: self, encoding: .utf8)
+    }
+}
