@@ -31,11 +31,12 @@ extension NetworkLogger: NetworkLoggerProtocol {
     
     func log(_ response: HTTPURLResponse) {
         let log = Log(type: .response,
-                            url: response.url,
-                            status: response.statusCode,
-                            statusDescription: HTTPResponseStatusCode.statusCodes[response.statusCode] ?? ""
+                      url: response.url,
+                      status: response.statusCode,
+                      statusDescription: HTTPResponseStatusCode.statusCodes[response.statusCode] ?? "",
+                      headers: response.allHeaderFields as? [String: String]
         )
-        
+                
         self.logs.append(log)
     }
 }
@@ -50,14 +51,14 @@ struct Log: Equatable {
     let url: URL?
     let status: Int?
     let statusDescription: String?
-    let headers: [String : String]?
+    let headers: [String: String]?
     
     init(
         type: LogType,
         url: URL?,
         status: Int? = nil,
         statusDescription: String? = nil,
-        headers: [String : String]? = nil) {
+        headers: [String: String]? = nil) {
             self.type = type
             self.url = url
             self.status = status

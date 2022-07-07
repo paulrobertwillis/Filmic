@@ -159,7 +159,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogTypeIsRequest()
     }
     
-    func test_NetworkLogger_whenLoggingRequest_LogShouldContainHeaders() {
+    func test_NetworkLogger_whenLoggingRequest_LogShouldContainRequestHeaders() {
         // given
         givenRequest()
         
@@ -167,7 +167,29 @@ class NetworkLoggerTests: XCTestCase {
         whenRequestIsLogged()
         
         // then
-        thenEnsureLogContainsExpectedHeaders()
+        thenEnsureLogContainsExpectedRequestHeaders()
+    }
+    
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldContainResponseHeaders() {
+        // given
+        givenSuccessfulResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogContainsExpectedResponseHeaders()
+    }
+    
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainResponseHeaders() {
+        // given
+        givenFailedResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogContainsExpectedResponseHeaders()
     }
 
     // MARK: - Given
@@ -181,7 +203,7 @@ class NetworkLoggerTests: XCTestCase {
         self.response = HTTPURLResponse(url: self.url!,
                                         statusCode: 200,
                                         httpVersion: "1.1",
-                                        headerFields: [:]
+                                        headerFields: ["Date": "Thu, 07 Jul 2022 15:51:17 GMT"]
                                         )!
     }
     
@@ -255,8 +277,12 @@ class NetworkLoggerTests: XCTestCase {
         XCTAssertEqual(self.sut?.logs[0].type, .response)
     }
     
-    private func thenEnsureLogContainsExpectedHeaders() {
+    private func thenEnsureLogContainsExpectedRequestHeaders() {
         XCTAssertEqual(self.sut?.logs[0].headers, self.request?.allHTTPHeaderFields)
+    }
+    
+    private func thenEnsureLogContainsExpectedResponseHeaders() {
+        XCTAssertEqual(self.sut?.logs[0].headers, self.response?.allHeaderFields as? [String: String])
     }
     
     // MARK: - Helpers
