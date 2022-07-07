@@ -15,17 +15,23 @@ class NetworkLoggerTests: XCTestCase {
     
     private var sut: NetworkLogger?
     
+    private var url: URL?
+    private var request: URLRequest?
     private var response: HTTPURLResponse?
     
     // MARK: - Setup
     
     override func setUp() {
         self.sut = NetworkLogger()
+        
+        self.url = URL(string: "www.example.com")
     }
     
     override func tearDown() {
         self.sut = nil
         
+        self.url = nil
+        self.request = nil
         self.response = nil
     }
     
@@ -109,26 +115,93 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsEmptyStringAsStatusCodeDescription()
     }
     
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldBeResponseLog() {
+        // given
+        givenSuccessfulResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogTypeIsResponse()
+    }
     
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldBeResponseLog() {
+        // given
+        givenFailedResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogTypeIsResponse()
+    }
+
+    func test_NetworkLogger_whenLoggingRequest_LogShouldBeRequestLog() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogTypeIsRequest()
+    }
+    
+    func test_NetworkLogger_whenLoggingRequest_LogShouldContainRequestURL() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogTypeIsRequest()
+    }
 
     // MARK: - Given
     
+    private func givenRequest() {
+        self.request = URLRequest(url: self.url!)
+    }
+    
     private func givenSuccessfulResponse() {
-        self.response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 200, httpVersion: "1.1", headerFields: [:])!
+        self.response = HTTPURLResponse(url: self.url!,
+                                        statusCode: 200,
+                                        httpVersion: "1.1",
+                                        headerFields: [:]
+                                        )!
     }
     
     private func givenFailedResponse() {
-        self.response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 400, httpVersion: "1.1", headerFields: [:])!
+        self.response = HTTPURLResponse(url: self.url!,
+                                        statusCode: 400,
+                                        httpVersion: "1.1",
+                                        headerFields: [:]
+                                        )!
     }
     
     private func givenFailedResponseWithUnrecognisedStatusCode() {
-        self.response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 9999, httpVersion: "1.1", headerFields: [:])!
+        self.response = HTTPURLResponse(url: self.url!,
+                                        statusCode: 9999,
+                                        httpVersion: "1.1",
+                                        headerFields: [:]
+                                        )!
     }
     
     // MARK: - When
     
+    private func whenRequestIsLogged() {
+        guard let request = self.request else {
+            XCTFail("request should be non optional at this point of execution")
+            return
+        }
+
+        self.sut?.log(request)
+    }
+    
     private func whenResponseIsLogged() {
-        guard let response = response else {
+        guard let response = self.response else {
             XCTFail("response should be non optional at this point of execution")
             return
         }
@@ -163,7 +236,14 @@ class NetworkLoggerTests: XCTestCase {
         XCTAssertEqual("", sut?.logs[0].statusDescription)
     }
     
+    private func thenEnsureLogTypeIsRequest() {
+        XCTAssertEqual(self.sut?.logs[0].type, .request)
+    }
 
+    private func thenEnsureLogTypeIsResponse() {
+        XCTAssertEqual(self.sut?.logs[0].type, .response)
+    }
+    
     // MARK: - Helpers
     
     

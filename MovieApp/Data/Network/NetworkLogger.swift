@@ -21,23 +21,45 @@ class NetworkLogger {
 
 extension NetworkLogger: NetworkLoggerProtocol {
     func log(_ request: URLRequest) {
+        let log = Log(type: .request,
+                      url: request.url
+        )
         
+        self.logs.append(log)
     }
     
     func log(_ response: HTTPURLResponse) {
-        let logToSave = Log(url: response.url!.absoluteString,
+        let log = Log(type: .response,
+                            url: response.url,
                             status: response.statusCode,
                             statusDescription: HTTPResponseStatusCode.statusCodes[response.statusCode] ?? ""
         )
         
-        self.logs.append(logToSave)
+        self.logs.append(log)
     }
 }
 
 struct Log: Equatable {
-    let url: String
-    let status: Int
-    let statusDescription: String
+    enum LogType {
+        case request
+        case response
+    }
+    
+    let type: LogType
+    let url: URL?
+    let status: Int?
+    let statusDescription: String?
+    
+    init(
+        type: LogType,
+        url: URL?,
+        status: Int? = nil,
+        statusDescription: String? = nil) {
+            self.type = type
+            self.url = url
+            self.status = status
+            self.statusDescription = statusDescription
+        }
 }
 
 struct HTTPResponseStatusCode {
