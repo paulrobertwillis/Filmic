@@ -67,9 +67,9 @@ struct Log: Equatable {
     
     let logType: LogType
     let timeDate: Date
-    let requestName: RequestName
+    let requestName: String
     let httpMethodType: String?
-    let url: URL?
+    let url: String?
     let status: Int?
     let statusDescription: String?
     let headers: [String: String]?
@@ -87,9 +87,9 @@ struct Log: Equatable {
         errorDescription: String? = nil,
         body: String? = nil) {
             self.logType = logType
-            self.requestName = requestName
+            self.requestName = requestName.rawValue
             self.httpMethodType = httpMethodType
-            self.url = url
+            self.url = url?.absoluteString
             self.status = status
             self.statusDescription = statusDescription
             self.headers = headers

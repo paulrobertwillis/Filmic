@@ -490,7 +490,7 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsRequestURL() {
-        XCTAssertEqual(self.lastLogCreated()?.url, self.request?.urlRequest.url)
+        XCTAssertEqual(self.lastLogCreated()?.url, self.request?.urlRequest.url?.absoluteString)
     }
     
     private func thenEnsureLogContainsExpectedRequestHeaders() {
@@ -514,11 +514,11 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsNameOfNetworkRequestBeingPerformed() {
-        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName)
+        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName?.rawValue)
     }
     
     private func thenEnsureLogContainsNameOfRequestThatResultedInResponse() {
-        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName)
+        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName?.rawValue)
     }
     
     // MARK: - Helpers
