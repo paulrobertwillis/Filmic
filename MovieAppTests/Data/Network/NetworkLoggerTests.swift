@@ -368,6 +368,18 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogBodyIsNil()
     }
     
+    func test_NetworkLogger_whenLoggingRequest_logShouldContainNoBody() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogBodyIsNil()
+    }
+    
+    
     // TODO: Change "NetworkLogger" in these test names to something specific to the thing being tested, e.g. LogBody or LogType or ContainsFormattedDate
     
     // MARK: - Given
@@ -514,7 +526,7 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsTimeAndDate() {
-        XCTAssertEqual(self.lastLogCreated()?.timeDate.ISO8601Format(), Date().ISO8601Format())
+        XCTAssertEqual(self.lastLogCreated()?.dateTime.ISO8601Format(), Date().ISO8601Format())
     }
     
     private func thenEnsureLogContainsErrorDescriptionForFailedResponse() {
