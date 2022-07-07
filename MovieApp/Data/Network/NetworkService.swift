@@ -21,6 +21,15 @@ struct NetworkRequest {
 struct NetworkResponse {
     let urlResponse: HTTPURLResponse
     var requestName: RequestName
+    let data: Data?
+    
+    init(urlResponse: HTTPURLResponse,
+         requestName: RequestName,
+         data: Data? = nil) {
+        self.urlResponse = urlResponse
+        self.requestName = requestName
+        self.data = data
+    }
 }
 
 protocol NetworkServiceProtocol {

@@ -43,10 +43,19 @@ extension NetworkLogger: NetworkLoggerProtocol {
                       status: response.urlResponse.statusCode,
                       statusDescription: HTTPResponse.statusCodes[response.urlResponse.statusCode] ?? "",
                       headers: response.urlResponse.allHeaderFields as? [String: String],
-                      errorDescription: error?.localizedDescription
+                      errorDescription: error?.localizedDescription,
+                      body: self.convertJsonToString(response.data)
         )
-                
+        
         self.logs.append(log)
+    }
+    
+    private func convertJsonToString(_ data: Data?) -> String? {
+        guard let data = data else {
+            return nil
+        }
+        
+        return String(data: data, encoding: .utf8)
     }
 }
 
@@ -65,6 +74,7 @@ struct Log: Equatable {
     let statusDescription: String?
     let headers: [String: String]?
     let errorDescription: String?
+    let body: String?
     
     init(
         logType: LogType,
@@ -74,7 +84,8 @@ struct Log: Equatable {
         status: Int? = nil,
         statusDescription: String? = nil,
         headers: [String: String]? = nil,
-        errorDescription: String? = nil) {
+        errorDescription: String? = nil,
+        body: String? = nil) {
             self.logType = logType
             self.requestName = requestName
             self.httpMethodType = httpMethodType
@@ -84,6 +95,7 @@ struct Log: Equatable {
             self.headers = headers
             self.timeDate = Date()
             self.errorDescription = errorDescription
+            self.body = body
         }
 }
 
