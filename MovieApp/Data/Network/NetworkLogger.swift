@@ -9,8 +9,8 @@ import Foundation
 
 protocol NetworkLoggerProtocol {
     func log(_ request: NetworkRequest)
-    func log(_ response: HTTPURLResponse)
-    func log(_ response: HTTPURLResponse, withError error: Error?)
+    func log(_ response: NetworkResponse)
+    func log(_ response: NetworkResponse, withError error: Error?)
 }
 
 class NetworkLogger {
@@ -23,7 +23,7 @@ class NetworkLogger {
 extension NetworkLogger: NetworkLoggerProtocol {
     func log(_ request: NetworkRequest) {
         let log = Log(logType: .request,
-                      requestType: request.requestType,
+                      requestName: request.requestName,
                       url: request.urlRequest.url,
                       headers: request.urlRequest.allHTTPHeaderFields
         )
@@ -31,17 +31,17 @@ extension NetworkLogger: NetworkLoggerProtocol {
         self.logs.append(log)
     }
     
-    func log(_ response: HTTPURLResponse) {
+    func log(_ response: NetworkResponse) {
         self.log(response, withError: nil)
     }
     
-    func log(_ response: HTTPURLResponse, withError error: Error?) {
+    func log(_ response: NetworkResponse, withError error: Error?) {
         let log = Log(logType: .response,
-                      requestType: RequestType.get,
-                      url: response.url,
-                      status: response.statusCode,
-                      statusDescription: HTTPResponse.statusCodes[response.statusCode] ?? "",
-                      headers: response.allHeaderFields as? [String: String],
+                      requestName: RequestName.get,
+                      url: response.urlResponse.url,
+                      status: response.urlResponse.statusCode,
+                      statusDescription: HTTPResponse.statusCodes[response.urlResponse.statusCode] ?? "",
+                      headers: response.urlResponse.allHeaderFields as? [String: String],
                       errorDescription: error?.localizedDescription
         )
                 
@@ -57,7 +57,7 @@ struct Log: Equatable {
     
     let timeDate: Date
     let logType: LogType
-    let requestType: RequestType
+    let requestName: RequestName
     let url: URL?
     let status: Int?
     let statusDescription: String?
@@ -66,14 +66,14 @@ struct Log: Equatable {
     
     init(
         logType: LogType,
-        requestType: RequestType,
+        requestName: RequestName,
         url: URL?,
         status: Int? = nil,
         statusDescription: String? = nil,
         headers: [String: String]? = nil,
         errorDescription: String? = nil) {
             self.logType = logType
-            self.requestType = requestType
+            self.requestName = requestName
             self.url = url
             self.status = status
             self.statusDescription = statusDescription
@@ -90,12 +90,9 @@ struct HTTPResponse {
     ]
 }
 
-struct NetworkRequest {
-    let urlRequest: URLRequest
-    var requestType: RequestType
-}
+protocol RequestNameProtocol {}
 
-enum RequestType {
+enum RequestName: String, RequestNameProtocol {
     case getMovieGenres
     case getTopRatedMovies
     case getPopularMovies

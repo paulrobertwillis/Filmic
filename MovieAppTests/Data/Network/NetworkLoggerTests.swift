@@ -17,11 +17,15 @@ class NetworkLoggerTests: XCTestCase {
     
     private var url: URL?
     
-    private var requestType: RequestType?
+    private var requestType: RequestName?
     private var request: NetworkRequest?
-    private var response: HTTPURLResponse?
+    private var response: NetworkResponse?
     
     private var networkError: NetworkErrorMock?
+    
+    private enum NetworkLoggerRequestNameMock: RequestNameProtocol {
+        case someRequestName
+    }
     
     // MARK: - Setup
     
@@ -286,45 +290,72 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
     }
 
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldContainNameOfRequestThatResultedInResponse() {
+        // given
+        givenRequest(ofType: .getMovieGenres)
+        givenSuccessfulResponse(ofType: .getMovieGenres)
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogContainsNameOfRequestThatResultedInResponse()
+    }
     
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainNameOfRequestThatResultedInResponse() {
+        // given
+        givenRequest(ofType: .getMovieGenres)
+        givenFailedResponse(ofType: .getMovieGenres)
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsureLogContainsNameOfRequestThatResultedInResponse()
+    }
     
     // MARK: - Given
     
-    private func givenRequest(ofType type: RequestType = .get) {
+    private func givenRequest(ofType type: RequestName = .get) {
         self.requestType = type
 
         var urlRequest = URLRequest(url: self.url!)
         urlRequest.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
 
         self.request = NetworkRequest(urlRequest: urlRequest,
-                                      requestType: type)
+                                      requestName: type)
         
     }
     
-    private func givenSuccessfulResponse() {
-        self.response = HTTPURLResponse(url: self.url!,
-                                        statusCode: 200,
-                                        httpVersion: "1.1",
-                                        headerFields: ["Date": "Thu, 07 Jul 2022 15:51:17 GMT"]
-                                        )!
+    private func givenSuccessfulResponse(ofType type: RequestName = .get) {
+        let urlResponse = HTTPURLResponse(url: self.url!,
+                                         statusCode: 200,
+                                         httpVersion: "1.1",
+                                         headerFields: ["Date": "Thu, 07 Jul 2022 15:51:17 GMT"]
+                                         )!
+        self.response = NetworkResponse(urlResponse: urlResponse,
+                                        requestName: type)
     }
     
-    private func givenFailedResponse() {
-        self.response = HTTPURLResponse(url: self.url!,
+    private func givenFailedResponse(ofType type: RequestName = .get) {
+        let urlResponse = HTTPURLResponse(url: self.url!,
                                         statusCode: 400,
                                         httpVersion: "1.1",
                                         headerFields: ["Date": "Thu, 07 Jul 2022 15:51:17 GMT"]
                                         )!
-        
+        self.response = NetworkResponse(urlResponse: urlResponse,
+                                        requestName: type)
         self.networkError = NetworkErrorMock.someError
     }
     
-    private func givenFailedResponseWithUnrecognisedStatusCode() {
-        self.response = HTTPURLResponse(url: self.url!,
-                                        statusCode: 9999,
-                                        httpVersion: "1.1",
-                                        headerFields: [:]
-                                        )!
+    private func givenFailedResponseWithUnrecognisedStatusCode(requestType type: RequestName = .get) {
+        let urlResponse = HTTPURLResponse(url: self.url!,
+                                         statusCode: 9999,
+                                         httpVersion: "1.1",
+                                         headerFields: [:]
+                                         )!
+        self.response = NetworkResponse(urlResponse: urlResponse,
+                                        requestName: type)
     }
     
     // MARK: - When
@@ -390,7 +421,7 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsExpectedResponseHeaders() {
-        XCTAssertEqual(self.lastLogCreated()?.headers, self.response?.allHeaderFields as? [String: String])
+        XCTAssertEqual(self.lastLogCreated()?.headers, self.response?.urlResponse.allHeaderFields as? [String: String])
     }
     
     private func thenEnsureLogContainsTimeAndDate() {
@@ -406,7 +437,11 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsNameOfNetworkRequestBeingPerformed() {
-        XCTAssertEqual(self.lastLogCreated()?.requestType, self.requestType)
+        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestType)
+    }
+    
+    private func thenEnsureLogContainsNameOfRequestThatResultedInResponse() {
+        XCTAssertEqual(self.requestType, self.response?.requestName)
     }
     
     // MARK: - Helpers

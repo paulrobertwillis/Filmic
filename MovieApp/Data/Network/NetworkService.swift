@@ -13,6 +13,16 @@ enum NetworkError: Error {
     case someError
 }
 
+struct NetworkRequest {
+    let urlRequest: URLRequest
+    var requestName: RequestName
+}
+
+struct NetworkResponse {
+    let urlResponse: HTTPURLResponse
+    var requestName: RequestName
+}
+
 protocol NetworkServiceProtocol {
     typealias ResultValue = (Result<Data?, NetworkError>)
     typealias CompletionHandler = (ResultValue) -> Void
@@ -58,7 +68,8 @@ extension NetworkService: NetworkServiceProtocol {
         _ = self.networkRequestPerformer.request(request: request) { data, response, error in
             
             if let response = response as? HTTPURLResponse {
-                self.logger.log(response)
+                let networkResponse = NetworkResponse(urlResponse: response, requestName: .get)
+                self.logger.log(networkResponse)
             }
             
             if let error = error {

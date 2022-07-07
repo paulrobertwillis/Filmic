@@ -23,7 +23,7 @@ class NetworkLoggerMock: NetworkLoggerProtocol {
     var logResponseCallCount: Int = 0
     
     // response
-    var logResponseParameterReceived: HTTPURLResponse?
+    var logResponseParameterReceived: NetworkResponse?
     
     // withError
     var logWithErrorParameterReceived: Error?
@@ -31,11 +31,11 @@ class NetworkLoggerMock: NetworkLoggerProtocol {
     var mostRecentLog: Log?
     var logs: [Log] = []
 
-    func log(_ response: HTTPURLResponse) {
+    func log(_ response: NetworkResponse) {
         self.log(response, withError: nil)
     }
     
-    func log(_ response: HTTPURLResponse, withError error: Error?) {
+    func log(_ response: NetworkResponse, withError error: Error?) {
         self.logResponseCallCount += 1
         self.logResponseParameterReceived = response
     }
