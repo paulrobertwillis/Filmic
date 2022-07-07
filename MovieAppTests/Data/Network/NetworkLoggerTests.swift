@@ -17,7 +17,7 @@ class NetworkLoggerTests: XCTestCase {
     
     private var url: URL?
     
-    private var requestType: String?
+    private var requestType: RequestType?
     private var request: NetworkRequest?
     private var response: HTTPURLResponse?
     
@@ -257,7 +257,7 @@ class NetworkLoggerTests: XCTestCase {
     
     func test_NetworkLogger_whenLoggingRequest_LogShouldContainNameOfNetworkRequestBeingPerformed() {
         // given
-        givenRequest(ofType: "NetworkLoggerTestRequest1")
+        givenRequest(ofType: .getMovieGenres)
         
         // when
         whenRequestIsLogged()
@@ -268,7 +268,7 @@ class NetworkLoggerTests: XCTestCase {
     
     func test_NetworkLogger_whenLoggingMultipleRequests_LogsShouldContainNamesOfAllNetworkRequestsBeingPerformed() {
         // given
-        givenRequest(ofType: "NetworkLoggerTestRequest2")
+        givenRequest(ofType: .getPopularMovies)
         
         // when
         whenRequestIsLogged()
@@ -277,7 +277,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
 
         // given
-        givenRequest(ofType: "NetworkLoggerTestRequest3")
+        givenRequest(ofType: .getTopRatedMovies)
         
         // when
         whenRequestIsLogged()
@@ -290,7 +290,7 @@ class NetworkLoggerTests: XCTestCase {
     
     // MARK: - Given
     
-    private func givenRequest(ofType type: String = "RequestType") {
+    private func givenRequest(ofType type: RequestType = .get) {
         self.requestType = type
 
         var urlRequest = URLRequest(url: self.url!)
@@ -406,7 +406,7 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsNameOfNetworkRequestBeingPerformed() {
-        XCTAssertEqual(self.lastLogCreated()?.networkRequest, self.requestType)
+        XCTAssertEqual(self.lastLogCreated()?.requestType, self.requestType)
     }
     
     // MARK: - Helpers

@@ -23,7 +23,7 @@ class NetworkLogger {
 extension NetworkLogger: NetworkLoggerProtocol {
     func log(_ request: NetworkRequest) {
         let log = Log(logType: .request,
-                      networkRequest: request.requestType,
+                      requestType: request.requestType,
                       url: request.urlRequest.url,
                       headers: request.urlRequest.allHTTPHeaderFields
         )
@@ -37,7 +37,7 @@ extension NetworkLogger: NetworkLoggerProtocol {
     
     func log(_ response: HTTPURLResponse, withError error: Error?) {
         let log = Log(logType: .response,
-                      networkRequest: "NetworkLoggerTestRequest",
+                      requestType: RequestType.get,
                       url: response.url,
                       status: response.statusCode,
                       statusDescription: HTTPResponse.statusCodes[response.statusCode] ?? "",
@@ -57,7 +57,7 @@ struct Log: Equatable {
     
     let timeDate: Date
     let logType: LogType
-    let networkRequest: String
+    let requestType: RequestType
     let url: URL?
     let status: Int?
     let statusDescription: String?
@@ -66,14 +66,14 @@ struct Log: Equatable {
     
     init(
         logType: LogType,
-        networkRequest: String,
+        requestType: RequestType,
         url: URL?,
         status: Int? = nil,
         statusDescription: String? = nil,
         headers: [String: String]? = nil,
         errorDescription: String? = nil) {
             self.logType = logType
-            self.networkRequest = networkRequest
+            self.requestType = requestType
             self.url = url
             self.status = status
             self.statusDescription = statusDescription
@@ -92,5 +92,12 @@ struct HTTPResponse {
 
 struct NetworkRequest {
     let urlRequest: URLRequest
-    var requestType: String
+    var requestType: RequestType
+}
+
+enum RequestType {
+    case getMovieGenres
+    case getTopRatedMovies
+    case getPopularMovies
+    case get
 }
