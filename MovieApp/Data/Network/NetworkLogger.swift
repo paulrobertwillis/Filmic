@@ -26,7 +26,9 @@ extension NetworkLogger: NetworkLoggerProtocol {
     
     func log(_ response: HTTPURLResponse) {
         let logToSave = Log(url: response.url!.absoluteString,
-                            status: response.statusCode)
+                            status: response.statusCode,
+                            statusDescription: HTTPResponseStatusCode.statusCodes[response.statusCode] ?? ""
+        )
         
         self.logs.append(logToSave)
     }
@@ -35,13 +37,12 @@ extension NetworkLogger: NetworkLoggerProtocol {
 struct Log: Equatable {
     let url: String
     let status: Int
+    let statusDescription: String
 }
 
-
-protocol NetworkResponse {
-    
-}
-
-extension HTTPURLResponse: NetworkResponse {
-    
+struct HTTPResponseStatusCode {
+    public static let statusCodes: [Int: String] = [
+        200: "OK",
+        400: "Bad Request"
+    ]
 }

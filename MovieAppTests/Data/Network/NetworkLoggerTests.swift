@@ -11,47 +11,164 @@ import XCTest
 
 class NetworkLoggerTests: XCTestCase {
 
+    // MARK: - Private Properties
+    
+    private var sut: NetworkLogger?
+    
+    private var response: HTTPURLResponse?
+    
+    // MARK: - Setup
+    
+    override func setUp() {
+        self.sut = NetworkLogger()
+    }
+    
+    override func tearDown() {
+        self.sut = nil
+        
+        self.response = nil
+    }
+    
+    // MARK: - Tests
+    
     func test_NetworkLogger_whenLoggingResponseStatus_shouldCreateLog() {
-        let sut = NetworkLogger()
+        // given
+        givenSuccessfulResponse()
         
-        let response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 200, httpVersion: "1.1", headerFields: [:])!
-        
-        sut.log(response)
+        // when
+        whenResponseIsLogged()
 
-        XCTAssertEqual(sut.logs.count, 1)
+        // then
+        thenEnsureLogsCreated(count: 1)
     }
     
     func test_NetworkLogger_whenLoggingMultipleResponseStatuses_shouldCreateMultipleLogs() {
-        let sut = NetworkLogger()
+        // given
+        givenSuccessfulResponse()
         
-        
-        let response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 200, httpVersion: "1.1", headerFields: [:])!
-        
-        sut.log(response)
-        sut.log(response)
+        // when
+        whenResponseIsLogged()
+        whenResponseIsLogged()
 
-        XCTAssertEqual(sut.logs.count, 2)
+        // then
+        thenEnsureLogsCreated(count: 2)
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldContainSuccessStatus() {
-        let sut = NetworkLogger()
-        
-        let response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 200, httpVersion: "1.1", headerFields: [:])!
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldContainSuccessStatusCode() {
+        // given
+        givenSuccessfulResponse()
 
-        sut.log(response)
+        // when
+        whenResponseIsLogged()
 
-        XCTAssertEqual(sut.logs[0].status, 200)
+        // then
+        thenEnsureLogStatusCode(is: 200)
     }
     
-//    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainFailedStatus() {
-//        let sut = NetworkLogger()
-//
-//        sut.log("failed response")
-//
-//        XCTAssertNotEqual(sut.logs[0].status, 200)
-//    }
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldNotContainSuccessfulStatusCode() {
+        // given
+        givenFailedResponse()
+
+        // when
+        whenResponseIsLogged()
+
+        // then
+        thenEnsureLogStatusCodeIsNotSuccess()
+    }
     
-    // should contain specific failed status depending on error type
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldContainHTTPResponseStatusCodeDescription() {
+        // given
+        givenSuccessfulResponse()
+        
+        // when
+        whenResponseIsLogged()
+
+        // then
+        thenEnsureLogContainsSuccessfulStatusCodeDescription()
+    }
+    
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainHTTPResponseStatusCodeDescription() {
+        // given
+        givenFailedResponse()
+
+        // when
+        whenResponseIsLogged()
+
+        // then
+        thenEnsureLogContainsFailedStatusCodeDescription()
+    }
+    
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainEmptyHTTPResponseStatusCodeDescriptionIfResponseStatusCodeNotRecognised() {
+        // given
+        givenFailedResponseWithUnrecognisedStatusCode()
+        
+        // when
+        whenResponseIsLogged()
+
+        // then
+        thenEnsureLogContainsEmptyStringAsStatusCodeDescription()
+    }
+    
+    
+
+    // MARK: - Given
+    
+    private func givenSuccessfulResponse() {
+        self.response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 200, httpVersion: "1.1", headerFields: [:])!
+    }
+    
+    private func givenFailedResponse() {
+        self.response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 400, httpVersion: "1.1", headerFields: [:])!
+    }
+    
+    private func givenFailedResponseWithUnrecognisedStatusCode() {
+        self.response = HTTPURLResponse(url: URL(string: "www.example.com")!, statusCode: 9999, httpVersion: "1.1", headerFields: [:])!
+    }
+    
+    // MARK: - When
+    
+    private func whenResponseIsLogged() {
+        guard let response = response else {
+            XCTFail("response should be non optional at this point of execution")
+            return
+        }
+
+        self.sut?.log(response)
+    }
+    
+    
+    // MARK: - Then
+    
+    private func thenEnsureLogsCreated(count: Int) {
+        XCTAssertEqual(self.sut?.logs.count, count)
+    }
+    
+    private func thenEnsureLogStatusCode(is status: Int) {
+        XCTAssertEqual(self.sut?.logs[0].status, status)
+    }
+    
+    private func thenEnsureLogStatusCodeIsNotSuccess() {
+        XCTAssertNotEqual(self.sut?.logs[0].status, 200)
+    }
+    
+    private func thenEnsureLogContainsSuccessfulStatusCodeDescription() {
+        XCTAssertEqual("OK", sut?.logs[0].statusDescription)
+    }
+    
+    private func thenEnsureLogContainsFailedStatusCodeDescription() {
+        XCTAssertEqual("Bad Request", sut?.logs[0].statusDescription)
+    }
+    
+    private func thenEnsureLogContainsEmptyStringAsStatusCodeDescription() {
+        XCTAssertEqual("", sut?.logs[0].statusDescription)
+    }
+    
+
+    // MARK: - Helpers
+    
+    
+
+
 }
 
 // TODO: Tests
@@ -95,3 +212,6 @@ class NetworkLoggerTests: XCTestCase {
 // TODO: Create log printer
 
 // Log Printer should pretty print Log items with emojis and formatting
+
+
+

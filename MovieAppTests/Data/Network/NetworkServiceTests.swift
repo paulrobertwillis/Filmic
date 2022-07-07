@@ -222,41 +222,41 @@ class NetworkServiceTests: XCTestCase {
     
     
     
-    func test_Logging_whenPerformsSuccessfulRequest_shouldLogToConsole() {
+    func test_Logging_whenPerformsSuccessfulRequest_shouldLogResponseToConsole() {
         // when
         whenSuccessfulNetworkRequestIsPerformed()
 
         // then
-        XCTAssertEqual(1, self.logger.logs.count)
+        XCTAssertEqual(1, self.logger.logResponseCallCount)
     }
     
-    func test_Logging_whenPerformsFailedRequest_shouldLogToConsole() {
+    func test_Logging_whenPerformsFailedRequest_shouldLogResponseToConsole() {
         // when
         whenFailedNetworkRequestIsPerformed()
         
         // then
-        XCTAssertEqual(1, self.logger.logs.count)
+        XCTAssertEqual(1, self.logger.logResponseCallCount)
     }
     
-    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogToConsoleMultipleTimes() {
+    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogResponseToConsoleMultipleTimes() {
         // when
         whenSuccessfulNetworkRequestIsPerformed()
         whenSuccessfulNetworkRequestIsPerformed()
 
         // then
-        XCTAssertEqual(2, self.logger.logs.count)
+        XCTAssertEqual(2, self.logger.logResponseCallCount)
     }
     
-    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogToConsoleMultipleTimes() {
+    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogResponseToConsoleMultipleTimes() {
         // when
         whenFailedNetworkRequestIsPerformed()
         whenFailedNetworkRequestIsPerformed()
 
         // then
-        XCTAssertEqual(2, self.logger.logs.count)
+        XCTAssertEqual(2, self.logger.logResponseCallCount)
     }
 
-    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogToConsoleMultipleTimes() {
+    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogResponseToConsoleMultipleTimes() {
         // when
         whenFailedNetworkRequestIsPerformed()
         whenSuccessfulNetworkRequestIsPerformed()
@@ -264,7 +264,7 @@ class NetworkServiceTests: XCTestCase {
         whenSuccessfulNetworkRequestIsPerformed()
 
         // then
-        XCTAssertEqual(4, self.logger.logs.count)
+        XCTAssertEqual(4, self.logger.logResponseCallCount)
     }
 
     
