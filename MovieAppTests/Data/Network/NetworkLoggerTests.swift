@@ -17,16 +17,12 @@ class NetworkLoggerTests: XCTestCase {
     
     private var url: URL?
     
-    private var requestType: RequestName?
+    private var requestName: RequestName?
     private var request: NetworkRequest?
     private var response: NetworkResponse?
     
     private var networkError: NetworkErrorMock?
-    
-    private enum NetworkLoggerRequestNameMock: RequestNameProtocol {
-        case someRequestName
-    }
-    
+        
     // MARK: - Setup
     
     override func setUp() {
@@ -40,7 +36,7 @@ class NetworkLoggerTests: XCTestCase {
         
         self.url = nil
         
-        self.requestType = nil
+        self.requestName = nil
         self.request = nil
         self.response = nil
         
@@ -314,19 +310,80 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfRequestThatResultedInResponse()
     }
     
+    func test_NetworkLogger_whenLoggingGetRequest_LogShouldContainHTTPMethodTypeOfRequest() {
+        // given
+        givenGetRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        XCTAssertEqual(HTTPMethodType.get.rawValue, self.lastLogCreated()?.httpMethodType)
+    }
+    
+    func test_NetworkLogger_whenLoggingPostRequest_LogShouldContainHTTPMethodTypeOfRequest() {
+        // given
+        givenPostRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        XCTAssertEqual(HTTPMethodType.post.rawValue, self.lastLogCreated()?.httpMethodType)
+    }
+    
+    func test_NetworkLogger_whenLoggingDeleteRequest_LogShouldContainHTTPMethodTypeOfRequest() {
+        // given
+        givenDeleteRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        XCTAssertEqual(HTTPMethodType.delete.rawValue, self.lastLogCreated()?.httpMethodType)
+    }
+    
     // MARK: - Given
     
     private func givenRequest(ofType type: RequestName = .get) {
-        self.requestType = type
+        self.requestName = type
+        self.request = NetworkRequest(urlRequest: URLRequest(url: self.url!),
+                                      requestName: type)
+    }
+    
+    private func givenGetRequest() {
+        self.requestName = .getMovieGenres
 
         var urlRequest = URLRequest(url: self.url!)
         urlRequest.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
-
-        self.request = NetworkRequest(urlRequest: urlRequest,
-                                      requestName: type)
+        urlRequest.httpMethod = HTTPMethodType.get.rawValue
         
+        self.request = NetworkRequest(urlRequest: urlRequest,
+                                      requestName: self.requestName!)
     }
     
+    private func givenPostRequest() {
+        self.requestName = .postMovieRating
+
+        var urlRequest = URLRequest(url: self.url!)
+        urlRequest.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
+        urlRequest.httpMethod = HTTPMethodType.post.rawValue
+        
+        self.request = NetworkRequest(urlRequest: urlRequest,
+                                      requestName: self.requestName!)
+    }
+    
+    private func givenDeleteRequest() {
+        self.requestName = .deleteMovieRating
+
+        var urlRequest = URLRequest(url: self.url!)
+        urlRequest.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
+        urlRequest.httpMethod = HTTPMethodType.delete.rawValue
+        
+        self.request = NetworkRequest(urlRequest: urlRequest,
+                                      requestName: self.requestName!)
+    }
+        
     private func givenSuccessfulResponse(ofType type: RequestName = .get) {
         let urlResponse = HTTPURLResponse(url: self.url!,
                                          statusCode: 200,
@@ -437,11 +494,11 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogContainsNameOfNetworkRequestBeingPerformed() {
-        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestType)
+        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName)
     }
     
-    private func thenEnsureLogContainsNameOfRequestThatResultedInResponse() {
-        XCTAssertEqual(self.requestType, self.response?.requestName)
+    private func thenEnsureLogContainsNameOfRequestThatResultedInResponse() {        
+        XCTAssertEqual(self.lastLogCreated()?.requestName, self.requestName)
     }
     
     // MARK: - Helpers
@@ -455,10 +512,7 @@ class NetworkLoggerTests: XCTestCase {
 
 // TODO: Tests
 
-// Log records request type, e.g. GetMovieGenres
-
 /*
- 
  Log records URL Request details such as
         ===
         - Time/Date
@@ -470,7 +524,6 @@ class NetworkLoggerTests: XCTestCase {
  */
 
 /*
- 
  Log URL Response details such as
         ===
         - Time/Date
@@ -480,7 +533,6 @@ class NetworkLoggerTests: XCTestCase {
         - Parsing (OK? Error?)
         - Headers:
         - Body: [Raw JSON]
-
  */
 
 

@@ -24,6 +24,7 @@ extension NetworkLogger: NetworkLoggerProtocol {
     func log(_ request: NetworkRequest) {
         let log = Log(logType: .request,
                       requestName: request.requestName,
+                      httpMethodType: request.urlRequest.httpMethod,
                       url: request.urlRequest.url,
                       headers: request.urlRequest.allHTTPHeaderFields
         )
@@ -37,7 +38,7 @@ extension NetworkLogger: NetworkLoggerProtocol {
     
     func log(_ response: NetworkResponse, withError error: Error?) {
         let log = Log(logType: .response,
-                      requestName: RequestName.get,
+                      requestName: response.requestName,
                       url: response.urlResponse.url,
                       status: response.urlResponse.statusCode,
                       statusDescription: HTTPResponse.statusCodes[response.urlResponse.statusCode] ?? "",
@@ -55,9 +56,10 @@ struct Log: Equatable {
         case response
     }
     
-    let timeDate: Date
     let logType: LogType
+    let timeDate: Date
     let requestName: RequestName
+    let httpMethodType: String?
     let url: URL?
     let status: Int?
     let statusDescription: String?
@@ -67,6 +69,7 @@ struct Log: Equatable {
     init(
         logType: LogType,
         requestName: RequestName,
+        httpMethodType: String? = nil,
         url: URL?,
         status: Int? = nil,
         statusDescription: String? = nil,
@@ -74,6 +77,7 @@ struct Log: Equatable {
         errorDescription: String? = nil) {
             self.logType = logType
             self.requestName = requestName
+            self.httpMethodType = httpMethodType
             self.url = url
             self.status = status
             self.statusDescription = statusDescription
@@ -97,4 +101,12 @@ enum RequestName: String, RequestNameProtocol {
     case getTopRatedMovies
     case getPopularMovies
     case get
+    case postMovieRating
+    case deleteMovieRating
+}
+
+enum HTTPMethodType: String {
+    case get = "GET"
+    case post = "POST"
+    case delete = "DELETE"
 }

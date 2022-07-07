@@ -222,7 +222,7 @@ class NetworkServiceTests: XCTestCase {
     
     
     
-    func test_Logging_whenPerformsSuccessfulRequest_shouldLogResponseToConsole() {
+    func test_Logging_whenPerformsSuccessfulRequest_shouldLogResponse() {
         // when
         whenSuccessfulNetworkRequestIsPerformed()
 
@@ -230,7 +230,7 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(1, self.logger.logResponseCallCount)
     }
     
-    func test_Logging_whenPerformsFailedRequest_shouldLogResponseToConsole() {
+    func test_Logging_whenPerformsFailedRequest_shouldLogResponse() {
         // when
         whenFailedNetworkRequestIsPerformed()
         
@@ -238,7 +238,7 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(1, self.logger.logResponseCallCount)
     }
     
-    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogResponseToConsoleMultipleTimes() {
+    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogResponseMultipleTimes() {
         // when
         whenSuccessfulNetworkRequestIsPerformed()
         whenSuccessfulNetworkRequestIsPerformed()
@@ -247,7 +247,7 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(2, self.logger.logResponseCallCount)
     }
     
-    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogResponseToConsoleMultipleTimes() {
+    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogResponseMultipleTimes() {
         // when
         whenFailedNetworkRequestIsPerformed()
         whenFailedNetworkRequestIsPerformed()
@@ -256,7 +256,7 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(2, self.logger.logResponseCallCount)
     }
 
-    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogResponseToConsoleMultipleTimes() {
+    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogResponseMultipleTimes() {
         // when
         whenFailedNetworkRequestIsPerformed()
         whenSuccessfulNetworkRequestIsPerformed()
