@@ -12,7 +12,7 @@ class NetworkLoggerMock: NetworkLoggerProtocol {
     
     // MARK: - log(_ request: URLRequest)
     
-    func log(_ request: URLRequest) {
+    func log(_ request: NetworkRequest) {
         
     }
     

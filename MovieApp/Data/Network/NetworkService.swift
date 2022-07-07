@@ -13,10 +13,6 @@ enum NetworkError: Error {
     case someError
 }
 
-struct NetworkRequest {
-    let success: Bool
-}
-
 protocol NetworkServiceProtocol {
     typealias ResultValue = (Result<Data?, NetworkError>)
     typealias CompletionHandler = (ResultValue) -> Void

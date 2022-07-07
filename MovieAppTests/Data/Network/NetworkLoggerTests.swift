@@ -16,7 +16,9 @@ class NetworkLoggerTests: XCTestCase {
     private var sut: NetworkLogger?
     
     private var url: URL?
-    private var request: URLRequest?
+    
+    private var requestType: String?
+    private var request: NetworkRequest?
     private var response: HTTPURLResponse?
     
     private var networkError: NetworkErrorMock?
@@ -33,6 +35,8 @@ class NetworkLoggerTests: XCTestCase {
         self.sut = nil
         
         self.url = nil
+        
+        self.requestType = nil
         self.request = nil
         self.response = nil
         
@@ -237,7 +241,7 @@ class NetworkLoggerTests: XCTestCase {
         whenResponseIsLogged()
         
         // then
-        XCTAssertEqual(self.sut?.logs[0].errorDescription, self.networkError?.localizedDescription)
+        thenEnsureLogContainsErrorDescriptionForFailedResponse()
     }
     
     func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldNotContainAnyResponseError() {
@@ -248,14 +252,53 @@ class NetworkLoggerTests: XCTestCase {
         whenResponseIsLogged()
         
         // then
-        XCTAssertNil(self.sut?.logs[0].errorDescription)
+        thenEnsureLogDoesNotContainErrorDescription()
+    }
+    
+    func test_NetworkLogger_whenLoggingRequest_LogShouldContainNameOfNetworkRequestBeingPerformed() {
+        // given
+        givenRequest(ofType: "NetworkLoggerTestRequest1")
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
+    }
+    
+    func test_NetworkLogger_whenLoggingMultipleRequests_LogsShouldContainNamesOfAllNetworkRequestsBeingPerformed() {
+        // given
+        givenRequest(ofType: "NetworkLoggerTestRequest2")
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
+
+        // given
+        givenRequest(ofType: "NetworkLoggerTestRequest3")
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
     }
 
+    
+    
     // MARK: - Given
     
-    private func givenRequest() {
-        self.request = URLRequest(url: self.url!)
-        self.request?.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
+    private func givenRequest(ofType type: String = "RequestType") {
+        self.requestType = type
+
+        var urlRequest = URLRequest(url: self.url!)
+        urlRequest.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
+
+        self.request = NetworkRequest(urlRequest: urlRequest,
+                                      requestType: type)
+        
     }
     
     private func givenSuccessfulResponse() {
@@ -315,48 +358,62 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsureLogStatusCode(is status: Int) {
-        XCTAssertEqual(self.sut?.logs[0].status, status)
+        XCTAssertEqual(self.lastLogCreated()?.status, status)
     }
     
     private func thenEnsureLogStatusCodeIsNotSuccess() {
-        XCTAssertNotEqual(self.sut?.logs[0].status, 200)
+        XCTAssertNotEqual(self.lastLogCreated()?.status, 200)
     }
     
     private func thenEnsureLogContainsSuccessfulStatusCodeDescription() {
-        XCTAssertEqual("OK", sut?.logs[0].statusDescription)
+        XCTAssertEqual("OK", self.lastLogCreated()?.statusDescription)
     }
     
     private func thenEnsureLogContainsFailedStatusCodeDescription() {
-        XCTAssertEqual("Bad Request", sut?.logs[0].statusDescription)
+        XCTAssertEqual("Bad Request", self.lastLogCreated()?.statusDescription)
     }
     
     private func thenEnsureLogContainsEmptyStringAsStatusCodeDescription() {
-        XCTAssertEqual("", sut?.logs[0].statusDescription)
+        XCTAssertEqual("", self.lastLogCreated()?.statusDescription)
     }
     
     private func thenEnsureLogTypeIsRequest() {
-        XCTAssertEqual(self.sut?.logs[0].type, .request)
+        XCTAssertEqual(self.lastLogCreated()?.logType, .request)
     }
 
     private func thenEnsureLogTypeIsResponse() {
-        XCTAssertEqual(self.sut?.logs[0].type, .response)
+        XCTAssertEqual(self.lastLogCreated()?.logType, .response)
     }
     
     private func thenEnsureLogContainsExpectedRequestHeaders() {
-        XCTAssertEqual(self.sut?.logs[0].headers, self.request?.allHTTPHeaderFields)
+        XCTAssertEqual(self.lastLogCreated()?.headers, self.request?.urlRequest.allHTTPHeaderFields)
     }
     
     private func thenEnsureLogContainsExpectedResponseHeaders() {
-        XCTAssertEqual(self.sut?.logs[0].headers, self.response?.allHeaderFields as? [String: String])
+        XCTAssertEqual(self.lastLogCreated()?.headers, self.response?.allHeaderFields as? [String: String])
     }
     
     private func thenEnsureLogContainsTimeAndDate() {
-        XCTAssertEqual(self.sut?.logs[0].timeDate.ISO8601Format(), Date().ISO8601Format())
+        XCTAssertEqual(self.lastLogCreated()?.timeDate.ISO8601Format(), Date().ISO8601Format())
+    }
+    
+    private func thenEnsureLogContainsErrorDescriptionForFailedResponse() {
+        XCTAssertEqual(self.lastLogCreated()?.errorDescription, self.networkError?.localizedDescription)
+    }
+    
+    private func thenEnsureLogDoesNotContainErrorDescription() {
+        XCTAssertNil(self.lastLogCreated()?.errorDescription)
+    }
+    
+    private func thenEnsureLogContainsNameOfNetworkRequestBeingPerformed() {
+        XCTAssertEqual(self.lastLogCreated()?.networkRequest, self.requestType)
     }
     
     // MARK: - Helpers
     
-    
+    private func lastLogCreated() -> Log? {
+        self.sut?.logs.last
+    }
 
 
 }
@@ -364,8 +421,6 @@ class NetworkLoggerTests: XCTestCase {
 // TODO: Tests
 
 // Log records request type, e.g. GetMovieGenres
-
-// Log records error if present
 
 /*
  
