@@ -15,8 +15,8 @@ protocol NetworkLoggerProtocol {
 
 class NetworkLogger {
     var logs: [Log] = []
+    var printedLog: String = ""
 }
-
 
 // MARK: - NetworkLoggerProtocol
 
@@ -30,6 +30,7 @@ extension NetworkLogger: NetworkLoggerProtocol {
         )
         
         self.logs.append(log)
+        self.printToDebugArea(log)
     }
     
     func log(_ response: NetworkResponse) {
@@ -57,47 +58,12 @@ extension NetworkLogger: NetworkLoggerProtocol {
         
         return String(data: data, encoding: .utf8)
     }
+    
+    private func printToDebugArea(_ log: Log) {
+        self.printedLog.append(contentsOf: log.dateTime.description)
+    }
 }
 
-struct Log: Equatable {
-    enum LogType {
-        case request
-        case response
-    }
-    
-    let logType: LogType
-    let dateTime: Date
-    let requestName: String
-    let httpMethodType: String?
-    let url: String?
-    let status: Int?
-    let statusDescription: String?
-    let headers: [String: String]?
-    let errorDescription: String?
-    let body: String?
-    
-    init(
-        logType: LogType,
-        requestName: RequestName,
-        httpMethodType: String? = nil,
-        url: URL?,
-        status: Int? = nil,
-        statusDescription: String? = nil,
-        headers: [String: String]? = nil,
-        errorDescription: String? = nil,
-        body: String? = nil) {
-            self.logType = logType
-            self.requestName = requestName.rawValue
-            self.httpMethodType = httpMethodType
-            self.url = url?.absoluteString
-            self.status = status
-            self.statusDescription = statusDescription
-            self.headers = headers
-            self.dateTime = Date()
-            self.errorDescription = errorDescription
-            self.body = body
-        }
-}
 
 struct HTTPResponse {
     public static let statusCodes: [Int: String] = [
@@ -106,9 +72,7 @@ struct HTTPResponse {
     ]
 }
 
-protocol RequestNameProtocol {}
-
-enum RequestName: String, RequestNameProtocol {
+enum RequestName: String {
     case getMovieGenres
     case getTopRatedMovies
     case getPopularMovies

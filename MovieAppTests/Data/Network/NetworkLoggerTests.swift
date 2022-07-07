@@ -379,6 +379,16 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogBodyIsNil()
     }
     
+    func test_NetworkLogger_whenLoggingRequestInDebug_shouldPrintLogDateTime() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        XCTAssertEqual(self.sut?.printedLog, self.lastLogCreated()?.dateTime.description)
+    }
     
     // TODO: Change "NetworkLogger" in these test names to something specific to the thing being tested, e.g. LogBody or LogType or ContainsFormattedDate
     
