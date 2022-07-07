@@ -158,11 +158,23 @@ class NetworkLoggerTests: XCTestCase {
         // then
         thenEnsureLogTypeIsRequest()
     }
+    
+    func test_NetworkLogger_whenLoggingRequest_LogShouldContainHeaders() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        thenEnsureLogContainsExpectedHeaders()
+    }
 
     // MARK: - Given
     
     private func givenRequest() {
         self.request = URLRequest(url: self.url!)
+        self.request?.addValue("Thu, 07 Jul 2022 15:51:16 GMT", forHTTPHeaderField: "Date")
     }
     
     private func givenSuccessfulResponse() {
@@ -209,7 +221,6 @@ class NetworkLoggerTests: XCTestCase {
         self.sut?.log(response)
     }
     
-    
     // MARK: - Then
     
     private func thenEnsureLogsCreated(count: Int) {
@@ -242,6 +253,10 @@ class NetworkLoggerTests: XCTestCase {
 
     private func thenEnsureLogTypeIsResponse() {
         XCTAssertEqual(self.sut?.logs[0].type, .response)
+    }
+    
+    private func thenEnsureLogContainsExpectedHeaders() {
+        XCTAssertEqual(self.sut?.logs[0].headers, self.request?.allHTTPHeaderFields)
     }
     
     // MARK: - Helpers

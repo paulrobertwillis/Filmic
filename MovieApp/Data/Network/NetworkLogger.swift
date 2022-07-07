@@ -22,7 +22,8 @@ class NetworkLogger {
 extension NetworkLogger: NetworkLoggerProtocol {
     func log(_ request: URLRequest) {
         let log = Log(type: .request,
-                      url: request.url
+                      url: request.url,
+                      headers: request.allHTTPHeaderFields
         )
         
         self.logs.append(log)
@@ -49,16 +50,19 @@ struct Log: Equatable {
     let url: URL?
     let status: Int?
     let statusDescription: String?
+    let headers: [String : String]?
     
     init(
         type: LogType,
         url: URL?,
         status: Int? = nil,
-        statusDescription: String? = nil) {
+        statusDescription: String? = nil,
+        headers: [String : String]? = nil) {
             self.type = type
             self.url = url
             self.status = status
             self.statusDescription = statusDescription
+            self.headers = headers
         }
 }
 
