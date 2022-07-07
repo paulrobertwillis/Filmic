@@ -8,6 +8,10 @@
 import XCTest
 @testable import MovieApp
 
+enum NetworkErrorMock: Error {
+    case someError
+}
+
 class NetworkServiceTests: XCTestCase {
     
     private enum ReturnedResult {
@@ -15,10 +19,6 @@ class NetworkServiceTests: XCTestCase {
         case failure
     }
         
-    private enum NetworkErrorMock: Error {
-        case someError
-    }
-
     private var networkRequestPerformer: NetworkRequestPerformerMock?
     private var logger: NetworkLoggerMock = NetworkLoggerMock()
 

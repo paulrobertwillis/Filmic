@@ -19,6 +19,8 @@ class NetworkLoggerTests: XCTestCase {
     private var request: URLRequest?
     private var response: HTTPURLResponse?
     
+    private var networkError: NetworkErrorMock?
+    
     // MARK: - Setup
     
     override func setUp() {
@@ -33,6 +35,8 @@ class NetworkLoggerTests: XCTestCase {
         self.url = nil
         self.request = nil
         self.response = nil
+        
+        self.networkError = nil
     }
     
     // MARK: - Tests
@@ -224,6 +228,28 @@ class NetworkLoggerTests: XCTestCase {
         // then
         thenEnsureLogContainsTimeAndDate()
     }
+    
+    func test_NetworkLogger_whenLoggingFailedResponse_LogShouldContainAssociatedResponseError() {
+        // given
+        givenFailedResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        XCTAssertEqual(self.sut?.logs[0].errorDescription, self.networkError?.localizedDescription)
+    }
+    
+    func test_NetworkLogger_whenLoggingSuccessfulResponse_LogShouldNotContainAnyResponseError() {
+        // given
+        givenSuccessfulResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        XCTAssertNil(self.sut?.logs[0].errorDescription)
+    }
 
     // MARK: - Given
     
@@ -246,6 +272,8 @@ class NetworkLoggerTests: XCTestCase {
                                         httpVersion: "1.1",
                                         headerFields: ["Date": "Thu, 07 Jul 2022 15:51:17 GMT"]
                                         )!
+        
+        self.networkError = NetworkErrorMock.someError
     }
     
     private func givenFailedResponseWithUnrecognisedStatusCode() {
@@ -272,10 +300,14 @@ class NetworkLoggerTests: XCTestCase {
             XCTFail("response should be non optional at this point of execution")
             return
         }
-
-        self.sut?.log(response)
+        
+        if self.networkError != nil {
+            self.sut?.log(response, withError: self.networkError)
+        } else {
+            self.sut?.log(response)
+        }
     }
-    
+        
     // MARK: - Then
     
     private func thenEnsureLogsCreated(count: Int) {
