@@ -23,7 +23,6 @@ class DataTransferServiceTests: XCTestCase {
     }
 
     private var networkService: NetworkServiceMock?
-    private var logger: DataTransferLoggerMock?
     private var sut: Sut?
     
     private var expectedReturnedURLSessionTask: URLSessionTask?
@@ -57,10 +56,7 @@ class DataTransferServiceTests: XCTestCase {
         super.setUp()
         
         self.networkService = NetworkServiceMock()
-        self.logger = DataTransferLoggerMock()
-        self.sut = DataTransferService(networkService: self.networkService!,
-                                       logger: self.logger!
-        )
+        self.sut = DataTransferService(networkService: self.networkService!)
     }
     
     override func tearDown() {
@@ -247,51 +243,6 @@ class DataTransferServiceTests: XCTestCase {
         
         // then
         thenEnsureDecodesDataIntoExpectedObject()
-    }
-    
-    func test_Logging_whenPerformsSuccessfulRequest_shouldLogToConsole() {
-        // when
-        whenPerformsSuccessfulRequest()
-
-        // then
-        XCTAssertEqual(1, self.logger?.logs.count)
-    }
-    
-    func test_Logging_whenPerformsFailedRequest_shouldLogToConsole() {
-        // when
-        whenPerformsFailedRequest()
-
-        // then
-        XCTAssertEqual(1, self.logger?.logs.count)
-    }
-    
-    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogToConsoleMultipleTimes() {
-        // when
-        whenPerformsSuccessfulRequest()
-        whenPerformsSuccessfulRequest()
-
-        // then
-        XCTAssertEqual(2, self.logger?.logs.count)
-    }
-    
-    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogToConsoleMultipleTimes() {
-        // when
-        whenPerformsFailedRequest()
-        whenPerformsFailedRequest()
-
-        // then
-        XCTAssertEqual(2, self.logger?.logs.count)
-    }
-
-    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogToConsoleMultipleTimes() {
-        // when
-        whenPerformsFailedRequest()
-        whenPerformsSuccessfulRequest()
-        whenPerformsFailedRequest()
-        whenPerformsSuccessfulRequest()
-
-        // then
-        XCTAssertEqual(4, self.logger?.logs.count)
     }
     
     

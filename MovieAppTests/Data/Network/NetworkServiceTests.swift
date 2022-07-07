@@ -20,7 +20,10 @@ class NetworkServiceTests: XCTestCase {
     }
 
     private var networkRequestPerformer: NetworkRequestPerformerMock?
+    private var logger: NetworkLoggerMock = NetworkLoggerMock()
+
     private var sut: NetworkService?
+    
     private var request: URLRequest?
     private var task: URLSessionTask?
     
@@ -51,7 +54,10 @@ class NetworkServiceTests: XCTestCase {
     
     override func tearDown() {
         self.networkRequestPerformer = nil
+//        self.logger = nil
+        
         self.sut = nil
+        
         self.request = nil
         self.task = nil
         
@@ -214,6 +220,54 @@ class NetworkServiceTests: XCTestCase {
     // NeworkService should have NetworkConfiguration that contains base URL, etc.
     
     
+    
+    
+    func test_Logging_whenPerformsSuccessfulRequest_shouldLogToConsole() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        XCTAssertEqual(1, self.logger.logs.count)
+    }
+    
+    func test_Logging_whenPerformsFailedRequest_shouldLogToConsole() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        
+        // then
+        XCTAssertEqual(1, self.logger.logs.count)
+    }
+    
+    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogToConsoleMultipleTimes() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        XCTAssertEqual(2, self.logger.logs.count)
+    }
+    
+    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogToConsoleMultipleTimes() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+
+        // then
+        XCTAssertEqual(2, self.logger.logs.count)
+    }
+
+    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogToConsoleMultipleTimes() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        XCTAssertEqual(4, self.logger.logs.count)
+    }
+
+    
     // TODO: Network Logger
     // successful request should log time request made
     
@@ -324,7 +378,8 @@ class NetworkServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private func initialiseNetworkService() {
-        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!)
+        self.sut = NetworkService(networkRequestPerformer: self.networkRequestPerformer!,
+                                  logger: self.logger)
     }
     
     private func initialiseNetworkRequestPerformer(data: Data?, response: HTTPURLResponse?, error: Error?) {

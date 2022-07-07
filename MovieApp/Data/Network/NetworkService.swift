@@ -30,11 +30,13 @@ class NetworkService {
     // MARK: - Private Properties
     
     private let networkRequestPerformer: NetworkRequestPerformerProtocol
+    private let logger: NetworkLoggerProtocol
     
     // MARK: - Lifecycle
     
-    init(networkRequestPerformer: NetworkRequestPerformerProtocol) {
+    init(networkRequestPerformer: NetworkRequestPerformerProtocol, logger: NetworkLoggerProtocol) {
         self.networkRequestPerformer = networkRequestPerformer
+        self.logger = logger
     }
 }
 
@@ -58,6 +60,10 @@ extension NetworkService: NetworkServiceProtocol {
 //        return task
         
         _ = self.networkRequestPerformer.request(request: request) { data, response, error in
+            
+            if let response = response as? HTTPURLResponse {
+                self.logger.log(response)
+            }
             
             if let error = error {
                 var errorToBeReturned: NetworkError
