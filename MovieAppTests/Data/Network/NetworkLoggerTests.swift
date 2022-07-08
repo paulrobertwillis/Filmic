@@ -417,6 +417,78 @@ class NetworkLoggerTests: XCTestCase {
         XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
     }
     
+    func test_NetworkLogger_whenLoggingSuccessfulResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
+        // given
+        givenSuccessfulResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsurePrinterIsCalled(numberOfTimes: 1)
+    }
+    
+    func test_NetworkLogger_whenLoggingMultipleSuccessfulResponsesInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
+        // given
+        givenSuccessfulResponse()
+
+        // when
+        whenResponseIsLogged()
+        whenResponseIsLogged()
+        whenResponseIsLogged()
+
+        // then
+        thenEnsurePrinterIsCalled(numberOfTimes: 3)
+    }
+    
+    func test_NetworkLogger_whenLoggingSuccessfulResponseInDebug_shouldPassLogToPrinter() {
+        // given
+        givenSuccessfulResponse()
+
+        // when
+        whenResponseIsLogged()
+
+        // then
+        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
+    }
+
+    func test_NetworkLogger_whenLoggingFailedResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
+        // given
+        givenFailedResponse()
+        
+        // when
+        whenResponseIsLogged()
+        
+        // then
+        thenEnsurePrinterIsCalled(numberOfTimes: 1)
+    }
+    
+    func test_NetworkLogger_whenLoggingMultipleFailedResponsesInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
+        // given
+        givenFailedResponse()
+
+        // when
+        whenResponseIsLogged()
+        whenResponseIsLogged()
+        whenResponseIsLogged()
+
+        // then
+        thenEnsurePrinterIsCalled(numberOfTimes: 3)
+    }
+    
+    func test_NetworkLogger_whenLoggingFailedResponseInDebug_shouldPassLogToPrinter() {
+        // given
+        givenFailedResponse()
+
+        // when
+        whenResponseIsLogged()
+
+        // then
+        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
+    }
+    
+    
+    
     // TODO: Change "NetworkLogger" in these test names to something specific to the thing being tested, e.g. LogBody or LogType or ContainsFormattedDate
     
     // MARK: - Given

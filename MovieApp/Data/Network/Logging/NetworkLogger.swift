@@ -61,6 +61,7 @@ extension NetworkLogger: NetworkLoggerProtocol {
         )
         
         self.logs.append(log)
+        self.printer.printToDebugArea(log)
     }
     
     private func convertJsonToString(_ data: Data?) -> String? {
