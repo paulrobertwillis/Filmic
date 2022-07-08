@@ -5,7 +5,6 @@
 //  Created by Paul on 06/07/2022.
 //
 
-import Foundation
 import XCTest
 @testable import MovieApp
 
