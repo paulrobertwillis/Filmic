@@ -488,7 +488,7 @@ class NetworkLoggerTests: XCTestCase {
         
     // MARK: - Given
     
-    private func givenRequest(ofType type: RequestName = .get) {
+    private func givenRequest(ofType type: RequestName = .unknown) {
         self.requestName = type
         self.request = NetworkRequest(urlRequest: URLRequest(url: self.url!),
                                       requestName: type)
@@ -527,7 +527,7 @@ class NetworkLoggerTests: XCTestCase {
                                       requestName: self.requestName!)
     }
         
-    private func givenSuccessfulResponse(ofType type: RequestName = .get, withData data: Data? = nil) {
+    private func givenSuccessfulResponse(ofType type: RequestName = .unknown, withData data: Data? = nil) {
         let urlResponse = HTTPURLResponse(url: self.url!,
                                          statusCode: 200,
                                          httpVersion: "1.1",
@@ -538,7 +538,7 @@ class NetworkLoggerTests: XCTestCase {
                                         data: data)
     }
     
-    private func givenFailedResponse(ofType type: RequestName = .get) {
+    private func givenFailedResponse(ofType type: RequestName = .unknown) {
         let urlResponse = HTTPURLResponse(url: self.url!,
                                         statusCode: 400,
                                         httpVersion: "1.1",
@@ -549,7 +549,7 @@ class NetworkLoggerTests: XCTestCase {
         self.networkError = NetworkErrorMock.someError
     }
     
-    private func givenFailedResponseWithUnrecognisedStatusCode(requestType type: RequestName = .get) {
+    private func givenFailedResponseWithUnrecognisedStatusCode(requestType type: RequestName = .unknown) {
         let urlResponse = HTTPURLResponse(url: self.url!,
                                          statusCode: 9999,
                                          httpVersion: "1.1",

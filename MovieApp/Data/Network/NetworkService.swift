@@ -77,7 +77,7 @@ extension NetworkService: NetworkServiceProtocol {
         _ = self.networkRequestPerformer.request(request: request) { data, response, error in
             
             if let response = response as? HTTPURLResponse {
-                let networkResponse = NetworkResponse(urlResponse: response, requestName: .get)
+                let networkResponse = NetworkResponse(urlResponse: response, requestName: .unknown, data: data)
                 self.logger.log(networkResponse)
             }
             
@@ -101,6 +101,9 @@ extension NetworkService: NetworkServiceProtocol {
                 completion(.success(data))
             }
         }
+        
+        let loggableRequest = NetworkRequest(urlRequest: request, requestName: .getMovieGenres)
+        self.logger.log(loggableRequest)
         
         return URLSessionTask()
     }

@@ -75,10 +75,10 @@ struct HTTPResponse {
 }
 
 enum RequestName: String {
+    case unknown
     case getMovieGenres
     case getTopRatedMovies
     case getPopularMovies
-    case get
     case postMovieRating
     case deleteMovieRating
 }

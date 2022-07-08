@@ -8,8 +8,7 @@
 import Foundation
 
 protocol NetworkRequestPerformerProtocol {
-    typealias ResultValue = (Data?, URLResponse?, Error?)
-    typealias CompletionHandler = (ResultValue) -> Void
+    typealias CompletionHandler = (Data?, URLResponse?, Error?) -> Void
     
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask
 }
@@ -17,7 +16,10 @@ protocol NetworkRequestPerformerProtocol {
 class NetworkRequestPerformer: NetworkRequestPerformerProtocol {
     // TODO: Replace URLRequest here with NetworkRequest?
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
-        return URLSessionTask()
+        
+        let task = URLSession.shared.dataTask(with: request, completionHandler: completion)
+        task.resume()
+        return task
     }
     
     func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
