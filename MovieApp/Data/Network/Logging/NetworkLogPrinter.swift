@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkLogPrinterProtocol {
-    func recordLog(_ log: Log)
+    func writeLog(_ log: Log)
 }
 
 class NetworkLogPrinter: NetworkLogPrinterProtocol {
@@ -34,89 +34,90 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
     // MARK: - API
     
-    func recordLog(_ log: Log) {
-        switch log.logType {
-        case .request:
-            self.recordRequest(log)
-        case .response:
-            self.recordResponse(log)
+    func writeLog(_ log: Log) {
+        self.writeDividerSection()
+        self.writeDateTimeSection(log.dateTime)
+        self.writeRequestNameSection(log.requestName)
+        self.writeDataTransferSection(for: log)
+        
+        if let headers = log.headers {
+            self.writeHeadersSection(headers)
         }
+
+        self.writeBodySection(log.body)
+        self.writeDividerSection()
+
     }
     
     // MARK: - Helpers
+        
     
-    private func recordRequest(_ log: Log) {
-        self.printDividerSection()
-        self.printDateTimeSection(log.dateTime)
-        self.printRequestNameSection(log.requestName)
-        
-        if let httpMethodType = log.httpMethodType,
-           let url = log.url {
-            self.printDataTransferSection(httpMethodType: httpMethodType, url: url)
-        }
-        
-        if let headers = log.headers {
-            self.printHeadersSection(headers)
-        }
-
-        self.printBodySection(log.body)
-        self.printDividerSection()
-    }
+    // MARK: Divider Section
     
-    private func recordResponse(_ log: Log) {
-        self.printDividerSection()
-        self.printDateTimeSection(log.dateTime)
-        self.printRequestNameSection(log.requestName)
-        
-        if let url = log.url {
-            self.printResponseDataTransferSection(url: url)
-        }
-        
-        if let headers = log.headers {
-            self.printHeadersSection(headers)
-        }
-
-        self.printBodySection(log.body)
-        self.printDividerSection()
-
-    }
-    
-    private func printDividerSection() {
+    private func writeDividerSection() {
         self.output.write("----")
     }
     
-    private func printDateTimeSection(_ date: Date) {
+    // MARK: Date/Time Section
+    
+    private func writeDateTimeSection(_ date: Date) {
         let formattedDateTime = "\(SectionEmojis.dateTime.rawValue) \(date)"
         self.output.write(formattedDateTime)
     }
     
-    private func printRequestNameSection(_ requestName: String) {
+    // MARK: Request Name Section
+    
+    private func writeRequestNameSection(_ requestName: String) {
         let formattedRequestName = "\(SectionEmojis.requestName.rawValue) Request Name: \(requestName)"
         self.output.write(formattedRequestName)
     }
+
+    // MARK: Data Transfer Section
     
-    private func printDataTransferSection(httpMethodType: String, url: String) {
-        let formattedMethodTypeAndURL = "\(SectionEmojis.sendingRequest.rawValue) Sending \(httpMethodType) to: \(url)"
-        self.output.write(formattedMethodTypeAndURL)
+    private func writeDataTransferSection(for log: Log) {
+        guard let formattedDataTransferSection = formattedDataTransferSectionFromLog(log) else {
+            return
+        }
+        
+        self.output.write(formattedDataTransferSection)
     }
     
-    private func printResponseDataTransferSection(url: String) {
-        let formattedMethodTypeAndURL = "\(SectionEmojis.receivingRequest.rawValue) Received from \(url)"
-        self.output.write(formattedMethodTypeAndURL)
+    private func formattedDataTransferSectionFromLog(_ log: Log) -> String? {
+        switch log.logType {
+        case .request:
+            return self.requestDataTransferSection(httpMethodType: log.httpMethodType, url: log.url)
+        case .response:
+            return self.responseDataTransferSection(url: log.url)
+        }
     }
     
-    private func printHeadersSection(_ headers: [String: String]) {
+    private func requestDataTransferSection(httpMethodType: String?, url: String?) -> String? {
+        guard let httpMethodType = httpMethodType else { return nil }
+        guard let url = url else { return nil }
+
+        return "\(SectionEmojis.sendingRequest.rawValue) Sending \(httpMethodType) to: \(url)"
+    }
+    
+    private func responseDataTransferSection(url: String?) -> String? {
+        guard let url = url else { return nil }
+
+        return "\(SectionEmojis.receivingRequest.rawValue) Received from \(url)"
+    }
+    
+    // MARK: Headers Section
+    
+    private func writeHeadersSection(_ headers: [String: String]) {
         let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers: \(headers)"
         self.output.write(formattedHeaders)
     }
     
-    private func printBodySection(_ body: String?) {
+    // MARK: Body Section
+    
+    private func writeBodySection(_ body: String?) {
         let formattedBody = "\(SectionEmojis.body.rawValue) Body: None"
         self.output.write(formattedBody)
     }
 }
-
-// TODO: Move emoji to enum PrinterEmojis with case for each section
 
 protocol LogOutputProtocol {
     func write(_ string: String)
@@ -133,9 +134,6 @@ class FileLogOutput: LogOutputProtocol {
         // do later when want to do to file
     }
 }
-
-
-// create mock LogOutput and put the array there
 
 // for prod/dev, can have different targets or a switch ...? By default, just use ifdebug.
 

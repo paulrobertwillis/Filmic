@@ -18,7 +18,7 @@ class NetworkLogPrinterMock: NetworkLogPrinterProtocol {
     // log
     var recordLogParameterReceived: Log?
     
-    func recordLog(_ log: Log) {
+    func writeLog(_ log: Log) {
         self.recordLogCallCount += 1
         self.recordLogParameterReceived = log
     }

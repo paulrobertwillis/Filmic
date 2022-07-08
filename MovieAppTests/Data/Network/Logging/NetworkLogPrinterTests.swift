@@ -344,9 +344,9 @@ class NetworkLogPrinterTests: XCTestCase {
     
     private func whenPrintRequest(_ log: Log? = nil) {
         if let log = log {
-            self.sut?.recordLog(log)
+            self.sut?.writeLog(log)
         } else {
-            self.sut?.recordLog(self.requestLog!)
+            self.sut?.writeLog(self.requestLog!)
         }
         
         self.logType = .request
@@ -354,9 +354,9 @@ class NetworkLogPrinterTests: XCTestCase {
     
     private func whenPrintResponse(_ log: Log? = nil) {
         if let log = log {
-            self.sut?.recordLog(log)
+            self.sut?.writeLog(log)
         } else {
-            self.sut?.recordLog(self.responseLog!)
+            self.sut?.writeLog(self.responseLog!)
         }
         
         self.logType = .response
