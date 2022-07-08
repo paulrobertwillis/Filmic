@@ -18,6 +18,9 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         case requestName = "⌨️"
         case sendingRequest = "⬆️"
         case receivingRequest = "⬇️"
+        case status = "📋"
+        case statusSuccess = "🟢"
+        case statusFailure = "🔴"
         case headers = "🧠"
         case body = "🏋️"
     }
@@ -39,6 +42,8 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         self.writeDateTimeSection(log.dateTime)
         self.writeRequestNameSection(log.requestName)
         self.writeDataTransferSection(for: log)
+        self.writeStatusSection(for: log)
+        
         
         if let headers = log.headers {
             self.writeHeadersSection(headers)
@@ -102,6 +107,34 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         guard let url = url else { return nil }
 
         return "\(SectionEmojis.receivingRequest.rawValue) Received from \(url)"
+    }
+    
+    // MARK: Status Section
+    
+    private func writeStatusSection(for log: Log) {
+        guard let formattedStatusSection = formattedStatusSectionFromLog(log) else {
+            return
+        }
+        
+        self.output.write(formattedStatusSection)
+    }
+    
+    private func formattedStatusSectionFromLog(_ log: Log) -> String? {
+        switch log.logType {
+        case .request:
+            return nil
+        case .response:
+            return self.responseStatusSection(status: log.status, statusDescription: log.statusDescription)
+        }
+    }
+    
+    private func responseStatusSection(status: Int?, statusDescription: String?) -> String? {
+        guard let status = status else { return nil }
+        guard let statusDescription = statusDescription else { return nil }
+        
+        let statusEmoji = status == 200 ? SectionEmojis.statusSuccess.rawValue : SectionEmojis.statusFailure.rawValue
+
+        return "\(SectionEmojis.status.rawValue) Status: \(status) \(statusEmoji) -- \(statusDescription)"
     }
     
     // MARK: Headers Section

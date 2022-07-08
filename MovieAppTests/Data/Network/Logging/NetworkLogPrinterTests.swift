@@ -77,7 +77,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsRequestNameSectionAsFormattedString()
     }
     
-    func test_RequestSectionFormatting_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintSendingRequestSectionAsFormattedString() {
+    func test_RequestSectionFormatting_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintDataTransferSectionAsFormattedString() {
         // given
         givenRequestLogCreatedWithMethodTypeAndUrl()
         
@@ -123,7 +123,7 @@ class NetworkLogPrinterTests: XCTestCase {
     
     // MARK: - Tests: Request Optional Handling
     
-    func test_OptionalHandling_whenPrintsRequestWithNoMethodType_shouldNotPrintSendingRequestSectionIfMethodTypeIsNil() {
+    func test_OptionalHandling_whenPrintsRequestWithNoMethodType_shouldNotPrintDataTransferSectionIfMethodTypeIsNil() {
         // given
         givenRequestLogCreated()
         
@@ -131,10 +131,10 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsureDoesNotPrintSendingRequestSection()
+        thenEnsureDoesNotPrintDataTransferSection()
     }
     
-    func test_OptionalHandling_whenPrintsRequestWithNoURL_shouldNotPrintSendingRequestSection() {
+    func test_OptionalHandling_whenPrintsRequestWithNoURL_shouldNotPrintDataTransferSection() {
         // given
         givenRequestLogCreatedWithNoUrl()
         
@@ -142,10 +142,10 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsureDoesNotPrintSendingRequestSection()
+        thenEnsureDoesNotPrintDataTransferSection()
     }
     
-    func test_OptionalHandling_whenPrintsRequestWithNoMethodTypeAndNoUrl_shouldNotPrintSendingRequestSectionIfMethodTypeAndUrlAreNil() {
+    func test_OptionalHandling_whenPrintsRequestWithNoMethodTypeAndNoUrl_shouldNotPrintDataTransferSectionIfMethodTypeAndUrlAreNil() {
         // given
         givenRequestLogCreated()
         
@@ -153,7 +153,7 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsureDoesNotPrintSendingRequestSection()
+        thenEnsureDoesNotPrintDataTransferSection()
     }
     
     
@@ -192,7 +192,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsRequestNameSectionExactlyOnce()
     }
     
-    func test_OutputCallCount_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintSendingRequestSectionExactlyOnce() {
+    func test_OutputCallCount_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintDataTransferSectionExactlyOnce() {
         // given
         givenRequestLogCreatedWithMethodTypeAndUrl()
         
@@ -200,7 +200,7 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsSendingRequestSectionExactlyOnce()
+        thenEnsurePrintsDataTransferSectionExactlyOnce()
     }
     
     func test_OutputCallCount_whenPrintsRequestWithHeaders_shouldPrintHeadersSectionExactlyOnce() {
@@ -260,7 +260,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsRequestNameSectionAsFormattedString()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsResponseWithMethodTypeAndUrl_shouldPrintSendingRequestSectionAsFormattedString() {
+    func test_ResponseSectionFormatting_whenPrintsResponseWithMethodTypeAndUrl_shouldPrintDataTransferSectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -271,7 +271,21 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsDataTransferRequestSectionAsFormattedString()
     }
 
-    
+    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintStatusSectionAsFormattedString() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        // thenEnsurePrintsStatusSectionAsFormattedString
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.status()))
+    }
+
     
     
     
@@ -334,6 +348,7 @@ class NetworkLogPrinterTests: XCTestCase {
                       requestName: .getMovieGenres,
                       url: URL(string: "www.example.com"),
                       status: 200,
+                      statusDescription: "OK",
                       body: TMDBResponseMocks.Genres.getGenres.successResponse().toJsonString()
         )
         self.responseLog = log
@@ -413,7 +428,7 @@ class NetworkLogPrinterTests: XCTestCase {
     
     // MARK: - Then: EnsureDoesNotPrint
     
-    private func thenEnsureDoesNotPrintSendingRequestSection() {
+    private func thenEnsureDoesNotPrintDataTransferSection() {
         guard let output = self.output else { XCTFail(); return }
         guard let log = self.requestLog else { XCTFail(); return }
         
@@ -453,12 +468,12 @@ class NetworkLogPrinterTests: XCTestCase {
         XCTAssertEqual(occurrences, 1)
     }
     
-    private func thenEnsurePrintsSendingRequestSectionExactlyOnce() {
+    private func thenEnsurePrintsDataTransferSectionExactlyOnce() {
         guard let output = self.output else { XCTFail(); return }
         guard let log = self.requestLog else { XCTFail(); return }
         
-        let formattedSendingRequest = "⬆️ Sending \(log.httpMethodType!) to: \(log.url!)"
-        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedSendingRequest }.count
+        let formattedDataTransfer = "⬆️ Sending \(log.httpMethodType!) to: \(log.url!)"
+        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedDataTransfer }.count
         
         XCTAssertEqual(occurrences, 1)
     }
@@ -495,8 +510,6 @@ class NetworkLogPrinterTests: XCTestCase {
         }
     }
 
-    
-    
     struct FormattedRequestStrings: FormattedStringsProtocol {
         var log: Log
         
@@ -513,16 +526,21 @@ class NetworkLogPrinterTests: XCTestCase {
                 let httpMethodType = self.log.httpMethodType,
                 let url = self.log.url
             else {
-                XCTFail()
+                XCTFail("httpMethodType must be non optional")
                 return ""
             }
             
             return "⬆️ Sending \(httpMethodType) to: \(url)"
         }
         
+        func status() -> String {
+            XCTFail("Request cannot contain a status or status code")
+            return ""
+        }
+        
         func headers() -> String {
             guard let headers = self.log.headers else {
-                XCTFail()
+                XCTFail("headers must be non optional")
                 return ""
             }
             
@@ -547,11 +565,25 @@ class NetworkLogPrinterTests: XCTestCase {
         
         func httpMethodTypeAndUrl() -> String {
             guard let url = self.log.url else {
-                XCTFail()
+                XCTFail("url must be non optional")
                 return ""
             }
             
             return "⬇️ Received from \(url)"
+        }
+        
+        func status() -> String {
+            guard
+                let status = self.log.status,
+                let statusDescription = self.log.statusDescription
+            else {
+                XCTFail("status and statusDescription must be non optional")
+                return ""
+            }
+            
+            let statusEmoji = status == 200 ? "🟢" : "🔴"
+                        
+            return "📋 Status: \(status) \(statusEmoji) -- \(statusDescription)"
         }
         
         func headers() -> String {
@@ -569,6 +601,7 @@ protocol FormattedStringsProtocol {
     func dateTime() -> String
     func requestName() -> String
     func httpMethodTypeAndUrl() -> String
+    func status() -> String
     func headers() -> String
     func body() -> String
 }
@@ -598,7 +631,6 @@ protocol FormattedStringsProtocol {
  - Request Type
  - Received from [target URL]
  - Status (e.g. 200, 404)
- - Parsing (OK? Error?)
  - Headers:
  - Body: [Raw JSON]
  */
