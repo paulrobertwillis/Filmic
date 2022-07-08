@@ -452,6 +452,17 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsHeadersSectionAsFormattedString()
     }
 
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponseWithNoHeaders_shouldPrintHeadersSectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreatedWithNoHeaders()
+
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsHeadersSectionAsFormattedString()
+    }
+
     func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintBodySectionAsFormattedString() {
         // given
         givenFailedResponseLogCreated()
@@ -622,6 +633,18 @@ class NetworkLogPrinterTests: XCTestCase {
         self.responseLog = log
         self.formattedResponseStrings = FormattedResponseStrings(log: log)
     }
+    
+    private func givenFailedResponseLogCreatedWithNoHeaders() {
+        let log = Log(logType: .response,
+                      requestName: .getMovieGenres,
+                      url: URL(string: "www.example.com"),
+                      status: 400,
+                      statusDescription: "Bad Request"
+        )
+        self.responseLog = log
+        self.formattedResponseStrings = FormattedResponseStrings(log: log)
+    }
+
     
     // MARK: - When
     
@@ -902,12 +925,12 @@ class NetworkLogPrinterTests: XCTestCase {
         }
         
         func headers() -> String {
-            guard let headers = self.log.headers else {
-                XCTFail("headers must be non optional")
-                return ""
+            switch self.log.headers {
+            case .some(let headers):
+                return "🧠 Headers:\n\(headers)"
+            case .none:
+                return "🧠 Headers: None"
             }
-            
-            return "🧠 Headers:\n\(String(describing: headers))"
         }
         
         func body() -> String {

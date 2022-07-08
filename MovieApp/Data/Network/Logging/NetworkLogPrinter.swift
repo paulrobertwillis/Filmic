@@ -13,7 +13,7 @@ protocol NetworkLogPrinterProtocol {
 
 class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
-    enum SectionEmojis: String {
+    private enum SectionEmojis: String {
         case dateTime = "🕔"
         case requestName = "⌨️"
         case sendingRequest = "⬆️"
@@ -39,17 +39,12 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
     func writeLog(_ log: Log) {
         self.writeDividerSection()
-        self.writeDateTimeSection(log.dateTime)
-        self.writeRequestNameSection(log.requestName)
+        self.writeDateTimeSection(with: log.dateTime)
+        self.writeRequestNameSection(with: log.requestName)
         self.writeDataTransferSection(for: log)
         self.writeStatusSection(for: log)
-        
-        
-        if let headers = log.headers {
-            self.writeHeadersSection(headers)
-        }
-
-        self.writeBodySection(log.body)
+        self.writeHeadersSection(with: log.headers)
+        self.writeBodySection(with: log.body)
         self.writeDividerSection()
 
     }
@@ -65,14 +60,14 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
     // MARK: Date/Time Section
     
-    private func writeDateTimeSection(_ date: Date) {
+    private func writeDateTimeSection(with date: Date) {
         let formattedDateTime = "\(SectionEmojis.dateTime.rawValue) \(date)"
         self.output.write(formattedDateTime)
     }
     
     // MARK: Request Name Section
     
-    private func writeRequestNameSection(_ requestName: String) {
+    private func writeRequestNameSection(with requestName: String) {
         let formattedRequestName = "\(SectionEmojis.requestName.rawValue) Request Name: \(requestName)"
         self.output.write(formattedRequestName)
     }
@@ -139,14 +134,20 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
     // MARK: Headers Section
     
-    private func writeHeadersSection(_ headers: [String: String]) {
-        let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers:\n\(headers)"
-        self.output.write(formattedHeaders)
+    private func writeHeadersSection(with headers: [String: String]?) {
+        switch headers {
+        case .some(let headers):
+            let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers:\n\(headers)"
+            self.output.write(formattedHeaders)
+        case .none:
+            let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers: None"
+            self.output.write(formattedHeaders)
+        }
     }
     
     // MARK: Body Section
     
-    private func writeBodySection(_ body: String?) {
+    private func writeBodySection(with body: String?) {
         body == nil ? self.writeEmptyBodySection() : self.writeSuccessResponseBodySection(body!)
     }
     
