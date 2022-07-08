@@ -13,6 +13,7 @@ class NetworkLoggerTests: XCTestCase {
 
     // MARK: - Private Properties
     
+    private var printer: NetworkLogPrinterMock?
     private var sut: NetworkLogger?
     
     private var url: URL?
@@ -27,12 +28,14 @@ class NetworkLoggerTests: XCTestCase {
     // MARK: - Setup
     
     override func setUp() {
-        self.sut = NetworkLogger()
+        self.printer = NetworkLogPrinterMock()
+        self.sut = NetworkLogger(printer: self.printer!)
         
         self.url = URL(string: "www.example.com")
     }
     
     override func tearDown() {
+        self.printer = nil
         self.sut = nil
         
         self.url = nil
@@ -379,7 +382,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogBodyIsNil()
     }
     
-    func test_NetworkLogger_whenLoggingRequestInDebug_shouldPrintLogDateTime() {
+    func test_NetworkLogger_whenLoggingRequestInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
         // given
         givenRequest()
         
@@ -387,7 +390,31 @@ class NetworkLoggerTests: XCTestCase {
         whenRequestIsLogged()
         
         // then
-        XCTAssertEqual(self.sut?.printedLog, self.lastLogCreated()?.dateTime.description)
+        thenEnsurePrinterIsCalled(numberOfTimes: 1)
+    }
+    
+    func test_NetworkLogger_whenLoggingMultipleRequestsInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        whenRequestIsLogged()
+        whenRequestIsLogged()
+
+        // then
+        thenEnsurePrinterIsCalled(numberOfTimes: 3)
+    }
+    
+    func test_NetworkLogger_whenLoggingRequestInDebug_shouldPassLogToPrinter() {
+        // given
+        givenRequest()
+        
+        // when
+        whenRequestIsLogged()
+        
+        // then
+        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
     }
     
     // TODO: Change "NetworkLogger" in these test names to something specific to the thing being tested, e.g. LogBody or LogType or ContainsFormattedDate
@@ -573,6 +600,10 @@ class NetworkLoggerTests: XCTestCase {
     
     private func thenEnsureLogBodyIsNil() {
         XCTAssertNil(self.lastLogCreated()?.body)
+    }
+    
+    private func thenEnsurePrinterIsCalled(numberOfTimes: Int) {
+        XCTAssertEqual(self.printer?.printToDebugAreaCallCount, numberOfTimes)
     }
 
     // MARK: - Helpers

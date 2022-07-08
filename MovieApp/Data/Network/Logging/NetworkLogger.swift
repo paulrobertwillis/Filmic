@@ -14,8 +14,20 @@ protocol NetworkLoggerProtocol {
 }
 
 class NetworkLogger {
+    
+    // MARK: - Public Properties
+    
     var logs: [Log] = []
-    var printedLog: String = ""
+    
+    // MARK: - Private Properties
+    
+    private let printer: NetworkLogPrinterProtocol
+    
+    // MARK: - Lifecycle
+    
+    init(printer: NetworkLogPrinterProtocol) {
+        self.printer = printer
+    }
 }
 
 // MARK: - NetworkLoggerProtocol
@@ -30,7 +42,7 @@ extension NetworkLogger: NetworkLoggerProtocol {
         )
         
         self.logs.append(log)
-        self.printToDebugArea(log)
+        self.printer.printToDebugArea(log)
     }
     
     func log(_ response: NetworkResponse) {
@@ -58,10 +70,6 @@ extension NetworkLogger: NetworkLoggerProtocol {
         
         return String(data: data, encoding: .utf8)
     }
-    
-    private func printToDebugArea(_ log: Log) {
-        self.printedLog.append(contentsOf: log.dateTime.description)
-    }
 }
 
 
@@ -85,4 +93,26 @@ enum HTTPMethodType: String {
     case get = "GET"
     case post = "POST"
     case delete = "DELETE"
+}
+
+// MARK: - NetworkLogPrinter
+
+protocol NetworkLogPrinterProtocol {
+    func printToDebugArea(_ log: Log)
+}
+
+class NetworkLogPrinterMock: NetworkLogPrinterProtocol {
+    var printedLog: String = ""
+    
+    // MARK: - printToDebugArea
+    
+    var printToDebugAreaCallCount = 0
+    
+    // log
+    var printToDebugAreaLogParameterReceived: Log?
+    
+    func printToDebugArea(_ log: Log) {
+        self.printToDebugAreaCallCount += 1
+        self.printToDebugAreaLogParameterReceived = log
+    }
 }
