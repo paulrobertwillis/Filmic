@@ -170,7 +170,7 @@ class NetworkLogPrinterTests: XCTestCase {
     
     // MARK: - Tests: Request Output Call Count
     
-    func test_OutputCallCount_whenPrintsRequest_shouldPrintDateTimeSectionExactlyOnce() {
+    func test_RequestOutputCallCount_whenPrintsRequest_shouldPrintDateTimeSectionExactlyOnce() {
         // given
         givenRequestLogCreated()
         
@@ -178,10 +178,10 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsDateTimeSectionExactlyOnce()
+        thenEnsurePrintsDateTimeSectionExactlyOnceForRequest()
     }
     
-    func test_OutputCallCount_whenPrintsRequest_shouldPrintRequestNameSectionExactlyOnce() {
+    func test_RequestOutputCallCount_whenPrintsRequest_shouldPrintRequestNameSectionExactlyOnce() {
         // given
         givenRequestLogCreated()
         
@@ -189,10 +189,10 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsRequestNameSectionExactlyOnce()
+        thenEnsurePrintsRequestNameSectionExactlyOnceForRequest()
     }
     
-    func test_OutputCallCount_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintDataTransferSectionExactlyOnce() {
+    func test_RequestOutputCallCount_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintDataTransferSectionExactlyOnce() {
         // given
         givenRequestLogCreatedWithMethodTypeAndUrl()
         
@@ -200,10 +200,10 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsDataTransferSectionExactlyOnce()
+        thenEnsurePrintsDataTransferSectionExactlyOnceForRequest()
     }
     
-    func test_OutputCallCount_whenPrintsRequestWithHeaders_shouldPrintHeadersSectionExactlyOnce() {
+    func test_RequestOutputCallCount_whenPrintsRequestWithHeaders_shouldPrintHeadersSectionExactlyOnce() {
         // given
         givenRequestLogCreatedWithHeaders()
         
@@ -211,10 +211,10 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsHeadersSectionExactlyOnce()
+        thenEnsurePrintsHeadersSectionExactlyOnceForRequest()
     }
     
-    func test_OutputCallCount_whenPrintsRequest_shouldPrintBodySectionExactlyOnce() {
+    func test_RequestOutputCallCount_whenPrintsRequest_shouldPrintBodySectionExactlyOnce() {
         // given
         givenRequestLogCreated()
         
@@ -222,12 +222,12 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsBodySectionExactlyOnce()
+        thenEnsurePrintsBodySectionExactlyOnceForRequest()
     }
     
-    // MARK: - Tests: Response Section Formatting
+    // MARK: - Tests: Successful Response Section Formatting
     
-    func test_ResponseSectionFormatting_whenPrintsResponse_shouldPrintFirstSectionAsDashedDivider() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintFirstSectionAsDashedDivider() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -238,7 +238,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsFirstSectionAsDashedDivider()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintDateTimeSectionAsFormattedString() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintDateTimeSectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -249,7 +249,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsDateTimeSectionAsFormattedString()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintRequestNameSectionAsFormattedString() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintRequestNameSectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -260,7 +260,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsRequestNameSectionAsFormattedString()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsResponseWithMethodTypeAndUrl_shouldPrintDataTransferSectionAsFormattedString() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintDataTransferSectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -271,7 +271,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsDataTransferRequestSectionAsFormattedString()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintStatusSectionAsFormattedString() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintStatusSectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -282,7 +282,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsStatusSectionAsFormattedString()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintHeadersSectionAsFormattedString() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintHeadersSectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -293,7 +293,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsHeadersSectionAsFormattedString()
     }
 
-    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintBodySectionAsFormattedString() {
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintBodySectionAsFormattedString() {
         // given
         givenSuccessfulResponseLogCreated()
         
@@ -304,11 +304,244 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsBodySectionAsFormattedString()
     }
 
+    func test_SuccessfulResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintLastSectionAsDashedDivider() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsLastSectionAsDashedDivider()
+    }
     
+    // MARK: - Tests: Successful Response Output Call Count
     
+    func test_SuccessfulResponseOutputCallCount_whenPrintsSuccessfulResponse_shouldPrintDateTimeSectionExactlyOnce() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsDateTimeSectionExactlyOnceForResponse()
+    }
     
+    func test_SuccessfulResponseOutputCallCount_whenPrintsSuccessfulResponse_shouldPrintRequestNameSectionExactlyOnce() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsRequestNameSectionExactlyOnceForResponse()
+    }
     
+    func test_SuccessfulResponseOutputCallCount_whenPrintsSuccessfulResponse_shouldPrintDataTransferSectionExactlyOnce() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsDataTransferSectionExactlyOnceForResponse()
+    }
     
+    func test_SuccessfulResponseOutputCallCount_whenPrintsSuccessfulResponse_shouldPrintStatusSectionExactlyOnce() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsStatusSectionExactlyOnceForResponse()
+    }
+
+    
+    func test_SuccessfulResponseOutputCallCount_whenPrintsSuccessfulResponse_shouldPrintHeadersSectionExactlyOnce() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsHeadersSectionExactlyOnceForResponse()
+    }
+    
+    func test_SuccessfulResponseOutputCallCount_whenPrintsSuccessfulResponse_shouldPrintBodySectionExactlyOnce() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsBodySectionExactlyOnceForResponse()
+    }
+    
+    // MARK: - Tests: Failed Response Section Formatting
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintFirstSectionAsDashedDivider() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+        
+        // then
+        thenEnsurePrintsFirstSectionAsDashedDivider()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintDateTimeSectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+        
+        // then
+        thenEnsurePrintsDateTimeSectionAsFormattedString()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintRequestNameSectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsRequestNameSectionAsFormattedString()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintDataTransferSectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+        
+        // then
+        thenEnsurePrintsDataTransferRequestSectionAsFormattedString()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintStatusSectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsStatusSectionAsFormattedString()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintHeadersSectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsHeadersSectionAsFormattedString()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintBodySectionAsFormattedString() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsBodySectionAsFormattedString()
+    }
+
+    func test_FailedResponseSectionFormatting_whenPrintsFailedResponse_shouldPrintLastSectionAsDashedDivider() {
+        // given
+        givenFailedResponseLogCreated()
+
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsLastSectionAsDashedDivider()
+    }
+
+    // MARK: - Tests: Failed Response Output Call Count
+    
+    func test_FailedResponseOutputCallCount_whenPrintsFailedResponse_shouldPrintDateTimeSectionExactlyOnce() {
+        // given
+        givenFailedResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsDateTimeSectionExactlyOnceForResponse()
+    }
+    
+    func test_FailedResponseOutputCallCount_whenPrintsFailedResponse_shouldPrintRequestNameSectionExactlyOnce() {
+        // given
+        givenFailedResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsRequestNameSectionExactlyOnceForResponse()
+    }
+    
+    func test_FailedResponseOutputCallCount_whenPrintsFailedResponse_shouldPrintDataTransferSectionExactlyOnce() {
+        // given
+        givenFailedResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsDataTransferSectionExactlyOnceForResponse()
+    }
+    
+    func test_FailedResponseOutputCallCount_whenPrintsFailedResponse_shouldPrintStatusSectionExactlyOnce() {
+        // given
+        givenFailedResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsStatusSectionExactlyOnceForResponse()
+    }
+
+    
+    func test_FailedResponseOutputCallCount_whenPrintsFailedResponse_shouldPrintHeadersSectionExactlyOnce() {
+        // given
+        givenFailedResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsHeadersSectionExactlyOnceForResponse()
+    }
+    
+    func test_FailedResponseOutputCallCount_whenPrintsFailedResponse_shouldPrintBodySectionExactlyOnce() {
+        // given
+        givenFailedResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsBodySectionExactlyOnceForResponse()
+    }
     
     // MARK: - Given: Request Logs
     
@@ -374,6 +607,22 @@ class NetworkLogPrinterTests: XCTestCase {
         self.formattedResponseStrings = FormattedResponseStrings(log: log)
     }
     
+    private func givenFailedResponseLogCreated() {
+        let log = Log(logType: .response,
+                      requestName: .getMovieGenres,
+                      url: URL(string: "www.example.com"),
+                      status: 400,
+                      statusDescription: "Bad Request",
+                      headers: [
+                        "Date": "Thu, 07 Jul 2022 15:51:16 GMT",
+                        "Gateway-Status": "OK",
+                        "Example-Header": "Value"
+                      ]
+        )
+        self.responseLog = log
+        self.formattedResponseStrings = FormattedResponseStrings(log: log)
+    }
+    
     // MARK: - When
     
     private func whenPrintRequest(_ log: Log? = nil) {
@@ -399,9 +648,7 @@ class NetworkLogPrinterTests: XCTestCase {
     // MARK: - Then: EnsurePrintsFormattedStrings
     
     private func thenEnsurePrintsFirstSectionAsDashedDivider() {
-        guard let output = self.output else { XCTFail(); return }
-        
-        XCTAssertEqual(output.writeStringParametersReceived.first, "----")
+        XCTAssertEqual(output?.writeStringParametersReceived.first, "----")
     }
     
     private func thenEnsurePrintsDateTimeSectionAsFormattedString() {
@@ -454,9 +701,7 @@ class NetworkLogPrinterTests: XCTestCase {
     }
     
     private func thenEnsurePrintsLastSectionAsDashedDivider() {
-        guard let output = self.output else { XCTFail(); return }
-        
-        XCTAssertEqual(output.writeStringParametersReceived.last, "----")
+        XCTAssertEqual(output?.writeStringParametersReceived.last, "----")
     }
     
     // MARK: - Then: EnsureDoesNotPrint
@@ -479,57 +724,90 @@ class NetworkLogPrinterTests: XCTestCase {
         XCTAssertFalse(output.writeStringParametersReceived.contains(formattedHeaders), "should only print this line if headers property is not nil")
     }
     
-    // MARK: - Then: EnsurePrintsExactlyOnce
+    // MARK: - Then: EnsurePrintsExactlyOnceForRequest
     
-    private func thenEnsurePrintsDateTimeSectionExactlyOnce() {
-        guard let output = self.output else { XCTFail(); return }
-        guard let log = self.requestLog else { XCTFail(); return }
-        
-        let formattedDateTime = "🕔 \(log.dateTime.description)"
-        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
+    private func thenEnsurePrintsDateTimeSectionExactlyOnceForRequest() {
+        let formattedDateTime = self.formattedRequestStrings?.dateTime()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
         
         XCTAssertEqual(occurrences, 1)
     }
     
-    private func thenEnsurePrintsRequestNameSectionExactlyOnce() {
-        guard let output = self.output else { XCTFail(); return }
-        guard let log = self.requestLog else { XCTFail(); return }
-        
-        let formattedRequestName = "⌨️ Request Name: \(log.requestName)"
-        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
+    private func thenEnsurePrintsRequestNameSectionExactlyOnceForRequest() {
+        let formattedRequestName = self.formattedRequestStrings?.requestName()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
         
         XCTAssertEqual(occurrences, 1)
     }
     
-    private func thenEnsurePrintsDataTransferSectionExactlyOnce() {
-        guard let output = self.output else { XCTFail(); return }
-        guard let log = self.requestLog else { XCTFail(); return }
-        
-        let formattedDataTransfer = "⬆️ Sending \(log.httpMethodType!) to: \(log.url!)"
-        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedDataTransfer }.count
+    private func thenEnsurePrintsDataTransferSectionExactlyOnceForRequest() {
+        let formattedDataTransfer = self.formattedRequestStrings?.httpMethodTypeAndUrl()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedDataTransfer }.count
         
         XCTAssertEqual(occurrences, 1)
     }
     
-    private func thenEnsurePrintsHeadersSectionExactlyOnce() {
-        guard let output = self.output else { XCTFail(); return }
-        guard let log = self.requestLog else { XCTFail(); return }
+    private func thenEnsurePrintsHeadersSectionExactlyOnceForRequest() {
+        let formattedHeaders = self.formattedRequestStrings?.headers()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedHeaders }.count
         
-        let formattedHeaders = "🧠 Headers: \(log.headers!)"
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    private func thenEnsurePrintsBodySectionExactlyOnceForRequest() {
+        let formattedBody = self.formattedRequestStrings?.body()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedBody }.count
+        
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    // MARK: - Then: EnsurePrintsExactlyOnceForResponse
+
+    private func thenEnsurePrintsDateTimeSectionExactlyOnceForResponse() {
+        let formattedDateTime = self.formattedResponseStrings?.dateTime()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
+        
+        XCTAssertEqual(occurrences, 1)
+    }
+
+    private func thenEnsurePrintsRequestNameSectionExactlyOnceForResponse() {
+        let formattedRequestName = self.formattedResponseStrings?.requestName()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
+        
+        XCTAssertEqual(occurrences, 1)
+    }
+
+    private func thenEnsurePrintsDataTransferSectionExactlyOnceForResponse() {
+        let formattedDataTransfer = self.formattedResponseStrings?.httpMethodTypeAndUrl()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedDataTransfer }.count
+        
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    private func thenEnsurePrintsStatusSectionExactlyOnceForResponse() {
+        let formattedDataTransfer = self.formattedResponseStrings?.status()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedDataTransfer }.count
+        
+        XCTAssertEqual(occurrences, 1)
+    }
+
+    
+    private func thenEnsurePrintsHeadersSectionExactlyOnceForResponse() {
+        guard let output = self.output else { XCTFail(); return }
+        
+        let formattedHeaders = self.formattedResponseStrings?.headers()
         let occurrences = output.writeStringParametersReceived.filter { $0 == formattedHeaders }.count
         
         XCTAssertEqual(occurrences, 1)
     }
     
-    private func thenEnsurePrintsBodySectionExactlyOnce() {
-        guard let output = self.output else { XCTFail(); return }
-        
-        let formattedBody = "🏋️ Body: None"
-        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedBody }.count
+    private func thenEnsurePrintsBodySectionExactlyOnceForResponse() {
+        let formattedBody = self.formattedResponseStrings?.body()
+        let occurrences = output?.writeStringParametersReceived.filter { $0 == formattedBody }.count
         
         XCTAssertEqual(occurrences, 1)
     }
-    
+
     // MARK: - Helpers
     
     private func formattedStringsFromLogType() -> FormattedStringsProtocol? {
@@ -541,6 +819,10 @@ class NetworkLogPrinterTests: XCTestCase {
         case .response:
             return self.formattedResponseStrings
         }
+    }
+    
+    private func statusEmoji(from status: Int) -> String {
+        status == 200 ? "🟢" : "🔴"
     }
 
     struct FormattedRequestStrings: FormattedStringsProtocol {
@@ -577,7 +859,7 @@ class NetworkLogPrinterTests: XCTestCase {
                 return ""
             }
             
-            return "🧠 Headers: \(String(describing: headers))"
+            return "🧠 Headers:\n\(String(describing: headers))"
         }
         
         func body() -> String {
@@ -625,16 +907,16 @@ class NetworkLogPrinterTests: XCTestCase {
                 return ""
             }
             
-            return "🧠 Headers: \(String(describing: headers))"
+            return "🧠 Headers:\n\(String(describing: headers))"
         }
         
         func body() -> String {
-            guard let body = self.log.body else {
-                XCTFail("body must be non optional")
-                return ""
+            switch self.log.body {
+            case .some(let body):
+                return "🏋️ Body:\n\(body)"
+            case .none:
+                return "🏋️ Body: None"
             }
-            
-            return "🏋️ Body: \(body)"
         }
     }
 }
@@ -648,33 +930,3 @@ protocol FormattedStringsProtocol {
     func headers() -> String
     func body() -> String
 }
-
-
-// should handle optionals!
-
-// should handle requests and responses
-
-// should print each line only once
-
-/*
- Log records URL Request details such as
- ===
- - Time/Date
- - Request Type e.g. GetMovieGenresRequest
- - Sending [GET/POST/DELETE] to [target URL]
- - Headers:
- - Body: None
- ===
- */
-
-/*
- Log URL Response details such as
- ===
- - Time/Date
- - Request Type
- - Received from [target URL]
- - Status (e.g. 200, 404)
- - Headers:
- - Body: [Raw JSON]
- */
-

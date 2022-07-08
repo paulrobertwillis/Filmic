@@ -140,7 +140,7 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     // MARK: Headers Section
     
     private func writeHeadersSection(_ headers: [String: String]) {
-        let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers: \(headers)"
+        let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers:\n\(headers)"
         self.output.write(formattedHeaders)
     }
     
@@ -156,7 +156,7 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     }
     
     private func writeSuccessResponseBodySection(_ body: String) {
-        let formattedBody = "\(SectionEmojis.body.rawValue) Body: \(body)"
+        let formattedBody = "\(SectionEmojis.body.rawValue) Body:\n\(body)"
         self.output.write(formattedBody)
     }
 }
