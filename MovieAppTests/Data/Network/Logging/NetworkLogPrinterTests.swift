@@ -12,6 +12,7 @@ class NetworkLogPrinterTests: XCTestCase {
     
     // MARK: - Private Properties
     
+    private var output: ConsoleLogOutputMock?
     private var sut: NetworkLogPrinter?
     
     private var requestLog: Log?
@@ -23,7 +24,8 @@ class NetworkLogPrinterTests: XCTestCase {
     // MARK: - Lifecycle
     
     override func setUp() {
-        self.sut = NetworkLogPrinter()
+        self.output = ConsoleLogOutputMock()
+        self.sut = NetworkLogPrinter(output: self.output!)
     }
     
     override func tearDown() {
@@ -366,3 +368,5 @@ class NetworkLogPrinterTests: XCTestCase {
 // TODO: Create log printer
 
 // Log Printer should pretty print Log items with emojis and formatting
+
+

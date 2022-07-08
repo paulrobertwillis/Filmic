@@ -14,6 +14,16 @@ protocol NetworkLogPrinterProtocol {
 class NetworkLogPrinter: NetworkLogPrinterProtocol {
     var printLineArray: [String] = []
     
+    private let output: LogOutputProtocol
+    
+    // MARK: - Lifecycle
+    
+    init(output: LogOutputProtocol) {
+        self.output = output
+    }
+    
+    // MARK: - API
+    
     func printToDebugArea(_ log: Log) {
         self.printDivider()
         
@@ -38,6 +48,8 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
             print(line)
         }
     }
+    
+    // MARK: - Helpers
     
     private func printDivider() {
         self.printLineArray.append("----")

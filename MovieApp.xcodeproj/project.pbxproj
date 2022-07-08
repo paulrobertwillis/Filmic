@@ -30,6 +30,7 @@
 		698EC3EF2877B2D0008DCF21 /* NetworkLogPrinterMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3EE2877B2D0008DCF21 /* NetworkLogPrinterMock.swift */; };
 		698EC3F12877B2FC008DCF21 /* NetworkLogPrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3F02877B2FC008DCF21 /* NetworkLogPrinter.swift */; };
 		698EC3F72877B379008DCF21 /* NetworkLogPrinterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3F62877B379008DCF21 /* NetworkLogPrinterTests.swift */; };
+		698EC3F92878875C008DCF21 /* ConsoleLogOutputMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3F82878875C008DCF21 /* ConsoleLogOutputMock.swift */; };
 		69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */; };
 		69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7319286E02A4009C5F3E /* DataTransferService.swift */; };
 		69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */; };
@@ -90,6 +91,7 @@
 		698EC3EE2877B2D0008DCF21 /* NetworkLogPrinterMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLogPrinterMock.swift; sourceTree = "<group>"; };
 		698EC3F02877B2FC008DCF21 /* NetworkLogPrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLogPrinter.swift; sourceTree = "<group>"; };
 		698EC3F62877B379008DCF21 /* NetworkLogPrinterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLogPrinterTests.swift; sourceTree = "<group>"; };
+		698EC3F82878875C008DCF21 /* ConsoleLogOutputMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLogOutputMock.swift; sourceTree = "<group>"; };
 		69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69AD7319286E02A4009C5F3E /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
 		69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferServiceTests.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				69AD7321286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift */,
 				69F62396287646470059307F /* NetworkLoggerMock.swift */,
 				698EC3EE2877B2D0008DCF21 /* NetworkLogPrinterMock.swift */,
+				698EC3F82878875C008DCF21 /* ConsoleLogOutputMock.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -611,6 +614,7 @@
 				692F0935285A6F8C00780F72 /* MoviesResponseDTOTests.swift in Sources */,
 				692F0939285A7DEB00780F72 /* NetworkServiceTests.swift in Sources */,
 				69AD7324286F1BD4009C5F3E /* MoviesRepositoryMock.swift in Sources */,
+				698EC3F92878875C008DCF21 /* ConsoleLogOutputMock.swift in Sources */,
 				69D8442628621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift in Sources */,
 				692F0934285A6F2A00780F72 /* MoviesResponseDTOMock.json in Sources */,
 			);
