@@ -237,80 +237,119 @@ class NetworkLogPrinterTests: XCTestCase {
         } else {
             self.sut?.printToDebugArea(self.requestLog!)
         }
+        
     }
     
     // MARK: - Then
     
     private func thenEnsurePrintsFirstSectionAsDashedDivider() {
-        XCTAssertEqual(self.output?.writeStringParametersReceived.first, "----")
+        guard let output = self.output else { XCTFail(); return }
+        
+        XCTAssertEqual(output.writeStringParametersReceived.first, "----")
     }
     
     private func thenEnsurePrintsDateTimeSectionAsFormattedString() {
-        XCTAssertTrue(self.output!.writeStringParametersReceived.contains(self.formattedRequestStrings!.dateTime()))
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+        
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.dateTime()))
     }
     
     private func thenEnsurePrintsRequestNameSectionAsFormattedString() {
-        XCTAssertTrue(self.output!.writeStringParametersReceived.contains(self.formattedRequestStrings!.requestName()))
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.requestName()))
     }
     
     private func thenEnsurePrintsSendingRequestSectionAsFormattedString() {
-        XCTAssertTrue(self.output!.writeStringParametersReceived.contains(self.formattedRequestStrings!.httpMethodTypeAndUrl()))
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.httpMethodTypeAndUrl()))
     }
     
     private func thenEnsurePrintsHeadersSectionAsFormattedString() {
-        XCTAssertTrue(self.output!.writeStringParametersReceived.contains(self.formattedRequestStrings!.headers()))
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.headers()))
     }
     
     private func thenEnsurePrintsRequestBodySectionAsNone() {
-        XCTAssertTrue(self.output!.writeStringParametersReceived.contains(self.formattedRequestStrings!.body()))
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.body()))
     }
     
     private func thenEnsurePrintsLastSectionAsDashedDivider() {
-        XCTAssertEqual(self.output!.writeStringParametersReceived.last, "----")
+        guard let output = self.output else { XCTFail(); return }
+        
+        XCTAssertEqual(output.writeStringParametersReceived.last, "----")
     }
     
     private func thenEnsureDoesNotPrintSendingRequestSectionIfMethodTypeIsNil() {
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
+        guard let output = self.output else { XCTFail(); return }
+        guard let log = self.requestLog else { XCTFail(); return }
 
-        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: log.httpMethodType)) to: \(String(describing: log.url))"
+
+        XCTAssertFalse(output.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
     }
     
     private func thenEnsureDoesNotPrintSendingRequestSectionIfUrlIsNil() {
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
+        guard let output = self.output else { XCTFail(); return }
+        guard let log = self.requestLog else { XCTFail(); return }
 
-        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: log.httpMethodType)) to: \(String(describing: log.url))"
+
+        XCTAssertFalse(output.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
     }
     
     private func thenEnsureDoesNotPrintHeadersSectionIfHeadersIsNil() {
-        let formattedHeaders = "🧠 Headers: \(String(describing: requestLog!.headers))"
+        guard let output = self.output else { XCTFail(); return }
+        guard let log = self.requestLog else { XCTFail(); return }
 
-        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedHeaders), "should only print this line if headers property is not nil")
+        let formattedHeaders = "🧠 Headers: \(String(describing: log.headers))"
+
+        XCTAssertFalse(output.writeStringParametersReceived.contains(formattedHeaders), "should only print this line if headers property is not nil")
     }
     
     private func thenEnsurePrintsDateTimeSectionExactlyOnce() {
-        let formattedDateTime = "🕔 \(requestLog!.dateTime.description)"
-        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
+        guard let output = self.output else { XCTFail(); return }
+        guard let log = self.requestLog else { XCTFail(); return }
+
+        let formattedDateTime = "🕔 \(log.dateTime.description)"
+        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
 
         XCTAssertEqual(occurrences, 1)
     }
     
     private func thenEnsurePrintsRequestNameSectionExactlyOnce() {
-        let formattedRequestName = "⌨️ Request Name: \(requestLog!.requestName)"
-        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
+        guard let output = self.output else { XCTFail(); return }
+        guard let log = self.requestLog else { XCTFail(); return }
 
-        // then
+        let formattedRequestName = "⌨️ Request Name: \(log.requestName)"
+        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
+
         XCTAssertEqual(occurrences, 1)
     }
     
     private func thenEnsureDoesNotPrintSendingRequestSection() {
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: self.requestLog!.httpMethodType)) to: \(String(describing: self.requestLog!.url))"
-        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedMethodTypeAndURL }.count
+        guard let output = self.output else { XCTFail(); return }
+        guard let log = self.requestLog else { XCTFail(); return }
+
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: log.httpMethodType)) to: \(String(describing: log.url))"
+        let occurrences = output.writeStringParametersReceived.filter { $0 == formattedMethodTypeAndURL }.count
 
         // then
         XCTAssertEqual(occurrences, 0)
     }
 
     // MARK: - Helpers
+    
+    
     
     struct FormattedRequestStrings {
         let log: Log
@@ -382,9 +421,4 @@ class NetworkLogPrinterTests: XCTestCase {
         - Headers:
         - Body: [Raw JSON]
  */
-
-// TODO: Create log printer
-
-// Log Printer should pretty print Log items with emojis and formatting
-
 
