@@ -12,7 +12,8 @@ protocol NetworkLogPrinterProtocol {
 }
 
 class NetworkLogPrinter: NetworkLogPrinterProtocol {
-    var printLineArray: [String] = []
+    
+    // MARK: - Private Properties
     
     private let output: LogOutputProtocol
     
@@ -43,41 +44,37 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         self.printBody(log.body)
         
         self.printDivider()
-
-        for line in printLineArray {
-            print(line)
-        }
     }
     
     // MARK: - Helpers
     
     private func printDivider() {
-        self.printLineArray.append("----")
+        self.output.write("----")
     }
     
     private func printDateTime(_ date: Date) {
         let formattedDateTime = "🕔 \(date)"
-        self.printLineArray.append(formattedDateTime)
+        self.output.write(formattedDateTime)
     }
     
     private func printRequestName(_ requestName: String) {
         let formattedRequestName = "⌨️ Request Name: \(requestName)"
-        self.printLineArray.append(formattedRequestName)
+        self.output.write(formattedRequestName)
     }
     
     private func printHTTPMethodTypeAndURL(httpMethodType: String, url: String) {
         let formattedMethodTypeAndURL = "⬆️ Sending \(httpMethodType) to: \(url)"
-        self.printLineArray.append(formattedMethodTypeAndURL)
+        self.output.write(formattedMethodTypeAndURL)
     }
     
     private func printHeaders(_ headers: [String: String]) {
         let formattedHeaders = "🧠 Headers: \(headers)"
-        self.printLineArray.append(formattedHeaders)
+        self.output.write(formattedHeaders)
     }
     
     private func printBody(_ body: String?) {
         let formattedBody = "🏋️ Body: None"
-        self.printLineArray.append(formattedBody)
+        self.output.write(formattedBody)
     }
     
 }

@@ -15,10 +15,10 @@ class ConsoleLogOutputMock: LogOutputProtocol {
     var writeCallCount = 0
     
     // string
-    var writeStringParameterReceived: String?
+    var writeStringParametersReceived: [String] = []
     
     func write(_ string: String) {
         self.writeCallCount += 1
-        self.writeStringParameterReceived = string
+        self.writeStringParametersReceived.append(string)
     }
 }
