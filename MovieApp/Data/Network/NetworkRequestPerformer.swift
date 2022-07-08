@@ -14,8 +14,13 @@ protocol NetworkRequestPerformerProtocol {
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask
 }
 
-//private class NetworkRequestPerformer: NetworkRequestPerformerProtocol {
-//    func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
-//        return URLSessionTask()
-//    }
-//}
+class NetworkRequestPerformer: NetworkRequestPerformerProtocol {
+    // TODO: Replace URLRequest here with NetworkRequest?
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
+        return URLSessionTask()
+    }
+    
+    func request(_ request: NetworkRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
+        return URLSessionTask()
+    }
+}

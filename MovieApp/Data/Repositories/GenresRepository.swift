@@ -18,7 +18,6 @@ class Repository<GenericDataTransferService: DataTransferServiceProtocol> {
 extension Repository where GenericDataTransferService.GenericDecodable == GenresResponseDTO {
     @discardableResult
     func getMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
-        
         let request = URLRequest(url: URL(string: "www.example.com")!)
         return self.dataTransferService.request(request: request, completion: { (result: Result<GenresResponseDTO, DataTransferError>) in
             

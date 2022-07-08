@@ -8,7 +8,6 @@
 import XCTest
 @testable import MovieApp
 
-
 class DataTransferServiceTests: XCTestCase {
     
     typealias Sut = DataTransferService<GenresResponseDTO>
@@ -235,7 +234,6 @@ class DataTransferServiceTests: XCTestCase {
         // then
         thenEnsureNetworkServiceCalled(numberOfTimes: 2)
     }
-    
     
     func test_Decoding_whenPerformsSuccessfulRequest_shouldDecodeDataReceivedFromNetwork() {
         // when
