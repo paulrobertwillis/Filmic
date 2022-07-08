@@ -825,7 +825,7 @@ class NetworkLogPrinterTests: XCTestCase {
         status == 200 ? "🟢" : "🔴"
     }
 
-    struct FormattedRequestStrings: FormattedStringsProtocol {
+    private struct FormattedRequestStrings: FormattedStringsProtocol {
         var log: Log
         
         func dateTime() -> String {
@@ -867,7 +867,7 @@ class NetworkLogPrinterTests: XCTestCase {
         }
     }
     
-    struct FormattedResponseStrings: FormattedStringsProtocol {
+    private struct FormattedResponseStrings: FormattedStringsProtocol {
         var log: Log
         
         func dateTime() -> String {
@@ -921,7 +921,7 @@ class NetworkLogPrinterTests: XCTestCase {
     }
 }
 
-protocol FormattedStringsProtocol {
+private protocol FormattedStringsProtocol {
     var log: Log { get }
     func dateTime() -> String
     func requestName() -> String

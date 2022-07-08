@@ -49,7 +49,7 @@ class NetworkLoggerTests: XCTestCase {
     
     // MARK: - Tests
     
-    func test_NetworkLogger_whenLoggingResponseStatus_shouldCreateLog() {
+    func test_LogCreation_whenLoggingResponseStatus_shouldCreateLog() {
         // given
         givenSuccessfulResponse()
         
@@ -60,7 +60,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogsCreated(count: 1)
     }
     
-    func test_NetworkLogger_whenLoggingMultipleResponseStatuses_shouldCreateMultipleLogs() {
+    func test_LogCreation_whenLoggingMultipleResponseStatuses_shouldCreateMultipleLogs() {
         // given
         givenSuccessfulResponse()
         
@@ -72,7 +72,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogsCreated(count: 2)
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainSuccessStatusCode() {
+    func test_StatusCodeState_whenLoggingSuccessfulResponse_logShouldContainSuccessStatusCode() {
         // given
         givenSuccessfulResponse()
 
@@ -83,7 +83,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogStatusCode(is: 200)
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldNotContainSuccessfulStatusCode() {
+    func test_StatusCodeState_whenLoggingFailedResponse_logShouldNotContainSuccessfulStatusCode() {
         // given
         givenFailedResponse()
 
@@ -94,7 +94,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogStatusCodeIsNotSuccess()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainHTTPResponseStatusCodeDescription() {
+    func test_StatusCodeDescriptionLogic_whenLoggingSuccessfulResponse_logShouldContainHTTPResponseStatusCodeDescription() {
         // given
         givenSuccessfulResponse()
         
@@ -105,7 +105,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsSuccessfulStatusCodeDescription()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainHTTPResponseStatusCodeDescription() {
+    func test_StatusCodeDescriptionLogic_whenLoggingFailedResponse_logShouldContainHTTPResponseStatusCodeDescription() {
         // given
         givenFailedResponse()
 
@@ -116,7 +116,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsFailedStatusCodeDescription()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainEmptyHTTPResponseStatusCodeDescriptionIfResponseStatusCodeNotRecognised() {
+    func test_StatusCodeDescriptionLogic_whenLoggingFailedResponse_logShouldContainEmptyHTTPResponseStatusCodeDescriptionIfResponseStatusCodeNotRecognised() {
         // given
         givenFailedResponseWithUnrecognisedStatusCode()
         
@@ -127,7 +127,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsEmptyStringAsStatusCodeDescription()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldBeResponseLog() {
+    func test_LogType_whenLoggingSuccessfulResponse_logShouldBeResponseLog() {
         // given
         givenSuccessfulResponse()
         
@@ -138,7 +138,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogTypeIsResponse()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldBeResponseLog() {
+    func test_LogType_whenLoggingFailedResponse_logShouldBeResponseLog() {
         // given
         givenFailedResponse()
         
@@ -149,7 +149,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogTypeIsResponse()
     }
 
-    func test_NetworkLogger_whenLoggingRequest_logShouldBeRequestLog() {
+    func test_LogType_whenLoggingRequest_logShouldBeRequestLog() {
         // given
         givenRequest()
         
@@ -160,7 +160,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogTypeIsRequest()
     }
     
-    func test_NetworkLogger_whenLoggingRequest_logShouldContainRequestURL() {
+    func test_LogFormatting_whenLoggingRequest_logShouldContainRequestURL() {
         // given
         givenRequest()
         
@@ -171,7 +171,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsRequestURL()
     }
     
-    func test_NetworkLogger_whenLoggingRequest_logShouldContainRequestHeaders() {
+    func test_LogFormatting_whenLoggingRequest_logShouldContainRequestHeaders() {
         // given
         givenRequest()
         
@@ -182,7 +182,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsExpectedRequestHeaders()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainResponseHeaders() {
+    func test_LogFormatting_whenLoggingSuccessfulResponse_logShouldContainResponseHeaders() {
         // given
         givenSuccessfulResponse()
         
@@ -193,7 +193,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsExpectedResponseHeaders()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainResponseHeaders() {
+    func test_LogFormatting_whenLoggingFailedResponse_logShouldContainResponseHeaders() {
         // given
         givenFailedResponse()
         
@@ -204,7 +204,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsExpectedResponseHeaders()
     }
     
-    func test_NetworkLogger_whenLoggingRequest_logShouldContainTimeAndDateRequestWasMade() {
+    func test_LogFormatting_whenLoggingRequest_logShouldContainTimeAndDateRequestWasMade() {
         // given
         givenRequest()
         
@@ -215,7 +215,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsTimeAndDate()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainTimeAndDateResponseWasReceived() {
+    func test_LogFormatting_whenLoggingSuccessfulResponse_logShouldContainTimeAndDateResponseWasReceived() {
         // given
         givenSuccessfulResponse()
         
@@ -226,7 +226,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsTimeAndDate()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainTimeAndDateResponseWasReceived() {
+    func test_LogFormatting_whenLoggingFailedResponse_logShouldContainTimeAndDateResponseWasReceived() {
         // given
         givenFailedResponse()
         
@@ -237,7 +237,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsTimeAndDate()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainAssociatedResponseError() {
+    func test_LogFormatting_whenLoggingFailedResponse_logShouldContainAssociatedResponseError() {
         // given
         givenFailedResponse()
         
@@ -248,7 +248,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsErrorDescriptionForFailedResponse()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldNotContainAnyResponseError() {
+    func test_LogFormatting_whenLoggingSuccessfulResponse_logShouldNotContainAnyResponseError() {
         // given
         givenSuccessfulResponse()
         
@@ -259,7 +259,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogDoesNotContainErrorDescription()
     }
     
-    func test_NetworkLogger_whenLoggingRequest_logShouldContainNameOfNetworkRequestBeingPerformed() {
+    func test_LogFormatting_whenLoggingRequest_logShouldContainNameOfNetworkRequestBeingPerformed() {
         // given
         givenRequest(ofType: .getMovieGenres)
         
@@ -270,7 +270,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
     }
     
-    func test_NetworkLogger_whenLoggingMultipleRequests_logsShouldContainNamesOfAllNetworkRequestsBeingPerformed() {
+    func test_LogFormatting_whenLoggingMultipleRequests_logsShouldContainNamesOfAllNetworkRequestsBeingPerformed() {
         // given
         givenRequest(ofType: .getPopularMovies)
         
@@ -290,7 +290,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfNetworkRequestBeingPerformed()
     }
 
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainNameOfRequestThatResultedInResponse() {
+    func test_LogFormatting_whenLoggingSuccessfulResponse_logShouldContainNameOfRequestThatResultedInResponse() {
         // given
         givenRequest(ofType: .getMovieGenres)
         givenSuccessfulResponse(ofType: .getMovieGenres)
@@ -302,7 +302,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfRequestThatResultedInResponse()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainNameOfRequestThatResultedInResponse() {
+    func test_LogFormatting_whenLoggingFailedResponse_logShouldContainNameOfRequestThatResultedInResponse() {
         // given
         givenRequest(ofType: .getMovieGenres)
         givenFailedResponse(ofType: .getMovieGenres)
@@ -314,7 +314,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsNameOfRequestThatResultedInResponse()
     }
     
-    func test_NetworkLogger_whenLoggingGetRequest_logShouldContainHTTPMethodTypeOfRequest() {
+    func test_LogFormatting_whenLoggingGetRequest_logShouldContainHTTPMethodTypeOfRequest() {
         // given
         givenGetRequest()
         
@@ -325,7 +325,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsGetHTTPMethodType()
     }
     
-    func test_NetworkLogger_whenLoggingPostRequest_logShouldContainHTTPMethodTypeOfRequest() {
+    func test_LogFormatting_whenLoggingPostRequest_logShouldContainHTTPMethodTypeOfRequest() {
         // given
         givenPostRequest()
         
@@ -336,7 +336,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsPostHTTPMethodType()
     }
     
-    func test_NetworkLogger_whenLoggingDeleteRequest_logShouldContainHTTPMethodTypeOfRequest() {
+    func test_LogFormatting_whenLoggingDeleteRequest_logShouldContainHTTPMethodTypeOfRequest() {
         // given
         givenDeleteRequest()
         
@@ -347,7 +347,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsDeleteHTTPMethodType()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponse_logShouldContainBodyOfResponseAsJson() {
+    func test_LogFormatting_whenLoggingSuccessfulResponse_logShouldContainBodyOfResponseAsJson() {
         // given
         self.successResponseData = TMDBResponseMocks.Genres.getGenres.successResponse()
         givenSuccessfulResponse(withData: successResponseData)
@@ -359,7 +359,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogContainsBodyOfResponseAsJSON()
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponse_logShouldContainNoBody() {
+    func test_LogFormatting_whenLoggingFailedResponse_logShouldContainNoBody() {
         // given
         givenFailedResponse()
         
@@ -370,7 +370,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogBodyIsNil()
     }
     
-    func test_NetworkLogger_whenLoggingRequest_logShouldContainNoBody() {
+    func test_LogFormatting_whenLoggingRequest_logShouldContainNoBody() {
         // given
         givenRequest()
         
@@ -381,7 +381,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogBodyIsNil()
     }
     
-    func test_NetworkLogger_whenLoggingRequestInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
+    func test_LogPrinting_whenLoggingRequestInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
         // given
         givenRequest()
         
@@ -392,7 +392,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsurePrinterIsCalled(numberOfTimes: 1)
     }
     
-    func test_NetworkLogger_whenLoggingMultipleRequestsInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
+    func test_LogPrinting_whenLoggingMultipleRequestsInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
         // given
         givenRequest()
         
@@ -405,7 +405,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsurePrinterIsCalled(numberOfTimes: 3)
     }
     
-    func test_NetworkLogger_whenLoggingRequestInDebug_shouldPassLogToPrinter() {
+    func test_LogPrinting_whenLoggingRequestInDebug_shouldPassLogToPrinter() {
         // given
         givenRequest()
         
@@ -416,7 +416,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogIsPassedToPrinter()
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
+    func test_LogPrinting_whenLoggingSuccessfulResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
         // given
         givenSuccessfulResponse()
         
@@ -427,7 +427,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsurePrinterIsCalled(numberOfTimes: 1)
     }
     
-    func test_NetworkLogger_whenLoggingMultipleSuccessfulResponsesInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
+    func test_LogPrinting_whenLoggingMultipleSuccessfulResponsesInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
         // given
         givenSuccessfulResponse()
 
@@ -440,7 +440,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsurePrinterIsCalled(numberOfTimes: 3)
     }
     
-    func test_NetworkLogger_whenLoggingSuccessfulResponseInDebug_shouldPassLogToPrinter() {
+    func test_LogPrinting_whenLoggingSuccessfulResponseInDebug_shouldPassLogToPrinter() {
         // given
         givenSuccessfulResponse()
 
@@ -451,7 +451,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsureLogIsPassedToPrinter()
     }
 
-    func test_NetworkLogger_whenLoggingFailedResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
+    func test_LogPrinting_whenLoggingFailedResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
         // given
         givenFailedResponse()
         
@@ -462,7 +462,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsurePrinterIsCalled(numberOfTimes: 1)
     }
     
-    func test_NetworkLogger_whenLoggingMultipleFailedResponsesInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
+    func test_LogPrinting_whenLoggingMultipleFailedResponsesInDebug_shouldCallPrinterMultipleTimesToPrintLogs() {
         // given
         givenFailedResponse()
 
@@ -475,7 +475,7 @@ class NetworkLoggerTests: XCTestCase {
         thenEnsurePrinterIsCalled(numberOfTimes: 3)
     }
     
-    func test_NetworkLogger_whenLoggingFailedResponseInDebug_shouldPassLogToPrinter() {
+    func test_LogPrinting_whenLoggingFailedResponseInDebug_shouldPassLogToPrinter() {
         // given
         givenFailedResponse()
 
