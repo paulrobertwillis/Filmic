@@ -689,38 +689,9 @@ class NetworkLoggerTests: XCTestCase {
     }
 }
 
-// TODO: Tests
+// MARK: - Data Extension
 
-/*
- Log records URL Request details such as
-        ===
-        - Time/Date
-        - Request Type e.g. GetMovieGenresRequest
-        - Sending [GET/POST/DELETE] to [target URL]
-        - Headers:
-        - Body: None
-        ===
- */
-
-/*
- Log URL Response details such as
-        ===
-        - Time/Date
-        - Request Type
-        - Received from [target URL]
-        - Status (e.g. 200, 404)
-        - Parsing (OK? Error?)
-        - Headers:
-        - Body: [Raw JSON]
- */
-
-// TODO: Create log printer
-
-// Log Printer should pretty print Log items with emojis and formatting
-
-
-
-extension Data {
+private extension Data {
     func toJsonString() -> String? {
         return String(data: self, encoding: .utf8)
     }
