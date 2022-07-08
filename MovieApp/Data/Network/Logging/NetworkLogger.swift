@@ -14,11 +14,7 @@ protocol NetworkLoggerProtocol {
 }
 
 class NetworkLogger {
-    
-    // MARK: - Public Properties
-    
-    var logs: [Log] = []
-    
+        
     // MARK: - Private Properties
     
     private let printer: NetworkLogPrinterProtocol
@@ -41,7 +37,6 @@ extension NetworkLogger: NetworkLoggerProtocol {
                       headers: request.urlRequest.allHTTPHeaderFields
         )
         
-        self.logs.append(log)
         self.printer.writeLog(log)
     }
     
@@ -60,7 +55,6 @@ extension NetworkLogger: NetworkLoggerProtocol {
                       body: self.convertJsonToString(response.data)
         )
         
-        self.logs.append(log)
         self.printer.writeLog(log)
     }
     

@@ -485,11 +485,7 @@ class NetworkLoggerTests: XCTestCase {
         // then
         thenEnsureLogIsPassedToPrinter()
     }
-    
-    
-    
-    // TODO: Change "NetworkLogger" in these test names to something specific to the thing being tested, e.g. LogBody or LogType or ContainsFormattedDate
-    
+        
     // MARK: - Given
     
     private func givenRequest(ofType type: RequestName = .get) {
@@ -590,7 +586,7 @@ class NetworkLoggerTests: XCTestCase {
     // MARK: - Then
     
     private func thenEnsureLogsCreated(count: Int) {
-        XCTAssertEqual(self.sut?.logs.count, count)
+        XCTAssertEqual(self.printer?.recordLogCallCount, count)
     }
     
     private func thenEnsureLogStatusCode(is status: Int) {
@@ -684,7 +680,7 @@ class NetworkLoggerTests: XCTestCase {
     // MARK: - Helpers
     
     private func lastLogCreated() -> Log? {
-        self.sut?.logs.last
+        self.printer?.recordLogParameterReceived
     }
 }
 
