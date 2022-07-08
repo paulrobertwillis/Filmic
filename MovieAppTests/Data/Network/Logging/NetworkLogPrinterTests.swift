@@ -390,7 +390,6 @@ class NetworkLogPrinterTests: XCTestCase {
     
     private func thenEnsurePrintsBodySectionExactlyOnce() {
         guard let output = self.output else { XCTFail(); return }
-        guard let log = self.requestLog else { XCTFail(); return }
         
         let formattedBody = "🏋️ Body: None"
         let occurrences = output.writeStringParametersReceived.filter { $0 == formattedBody }.count

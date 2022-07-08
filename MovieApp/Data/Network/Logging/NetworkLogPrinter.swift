@@ -13,6 +13,14 @@ protocol NetworkLogPrinterProtocol {
 
 class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
+    enum SectionEmojis: String {
+        case dateTime = "🕔"
+        case requestName = "⌨️"
+        case sendingRequest = "⬆️"
+        case headers = "🧠"
+        case body = "🏋️"
+    }
+    
     // MARK: - Private Properties
     
     private let output: LogOutputProtocol
@@ -53,30 +61,29 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     }
     
     private func printDateTime(_ date: Date) {
-        let formattedDateTime = "🕔 \(date)"
+        let formattedDateTime = "\(SectionEmojis.dateTime.rawValue) \(date)"
         self.output.write(formattedDateTime)
     }
     
     private func printRequestName(_ requestName: String) {
-        let formattedRequestName = "⌨️ Request Name: \(requestName)"
+        let formattedRequestName = "\(SectionEmojis.requestName.rawValue) Request Name: \(requestName)"
         self.output.write(formattedRequestName)
     }
     
     private func printHTTPMethodTypeAndURL(httpMethodType: String, url: String) {
-        let formattedMethodTypeAndURL = "⬆️ Sending \(httpMethodType) to: \(url)"
+        let formattedMethodTypeAndURL = "\(SectionEmojis.sendingRequest.rawValue) Sending \(httpMethodType) to: \(url)"
         self.output.write(formattedMethodTypeAndURL)
     }
     
     private func printHeaders(_ headers: [String: String]) {
-        let formattedHeaders = "🧠 Headers: \(headers)"
+        let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers: \(headers)"
         self.output.write(formattedHeaders)
     }
     
     private func printBody(_ body: String?) {
-        let formattedBody = "🏋️ Body: None"
+        let formattedBody = "\(SectionEmojis.body.rawValue) Body: None"
         self.output.write(formattedBody)
     }
-    
 }
 
 // TODO: Move emoji to enum PrinterEmojis with case for each section
