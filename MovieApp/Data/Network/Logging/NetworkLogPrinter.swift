@@ -37,8 +37,6 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         for line in printLineArray {
             print(line)
         }
-        
-        NSLog("This is an error")
     }
     
     private func printDivider() {
@@ -73,3 +71,25 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
 }
 
 // TODO: Move emoji to enum PrinterEmojis with case for each section
+
+protocol LogOutputProtocol {
+    func write(_ string: String)
+}
+
+class ConsoleLogOutput: LogOutputProtocol {
+    func write(_ string: String) {
+        print(string)
+    }
+}
+
+class FileLogOutput: LogOutputProtocol {
+    func write(_ string: String) {
+        // do later when want to do to file
+    }
+}
+
+
+// create mock LogOutput and put the array there
+
+// for prod/dev, can have different targets or a switch ...? By default, just use ifdebug.
+

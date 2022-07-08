@@ -17,6 +17,9 @@ class NetworkLogPrinterTests: XCTestCase {
     private var requestLog: Log?
     private var responseLog: Log?
     
+    private var formattedRequestStrings: FormattedRequestStrings?
+    private var formattedResponseStrings: FormattedResponseStrings?
+    
     // MARK: - Lifecycle
     
     override func setUp() {
@@ -28,6 +31,9 @@ class NetworkLogPrinterTests: XCTestCase {
         
         self.requestLog = nil
         self.responseLog = nil
+        
+        self.formattedRequestStrings = nil
+        self.formattedResponseStrings = nil
     }
     
     // MARK: - Tests
@@ -50,41 +56,174 @@ class NetworkLogPrinterTests: XCTestCase {
         // when
         whenPrintRequest()
 
-        let formattedDateTime = "🕔 \(requestLog!.dateTime.description)"
-
         // then
-        XCTAssertTrue(self.sut!.printLineArray.contains(formattedDateTime))
+        XCTAssertTrue(self.sut!.printLineArray.contains(self.formattedRequestStrings!.dateTime()))
     }
     
     func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintRequestNameSectionAsFormattedString() {
+        // given
+        givenRequestLogCreated()
+        
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        XCTAssertTrue(self.sut!.printLineArray.contains(self.formattedRequestStrings!.requestName()))
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequestWithMethodTypeAndUrl_shouldPrintSendingRequestSectionAsFormattedString() {
+        // given
+        givenRequestLogCreatedWithMethodTypeAndUrl()
+        
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        XCTAssertTrue(self.sut!.printLineArray.contains(self.formattedRequestStrings!.httpMethodTypeAndUrl()))
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequestWithHeaders_shouldPrintRequestHeadersSectionAsFormattedString() {
+        // given
+        givenRequestLogCreatedWithHeaders()
+        
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        XCTAssertTrue(self.sut!.printLineArray.contains(self.formattedRequestStrings!.headers()))
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintRequestBodySectionAsNone() {
+        // given
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        XCTAssertTrue(self.sut!.printLineArray.contains(self.formattedRequestStrings!.body()))
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintLastSectionAsDashedDivider() {
+        // given
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        XCTAssertEqual(self.sut?.printLineArray.last, "----")
+    }
+
+    func test_NetworkLogPrinter_whenPrintsRequestWithNoMethodType_shouldNotPrintSendingRequestSectionIfMethodTypeIsNil() {
+        // given
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
+
+        XCTAssertFalse(self.sut!.printLineArray.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequestWithNoUrl_shouldNotPrintSendingRequestSectionIfUrlIsNil() {
+        // given
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        // then
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
+
+        XCTAssertFalse(self.sut!.printLineArray.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+    }
+
+    
+    func test_NetworkLogPrinter_whenPrintsRequestWithNoHeaders_shouldNotPrintSectionIfHeadersIsNil() {
+        // given
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        let formattedHeaders = "🧠 Headers: \(String(describing: requestLog!.headers))"
+
+        // then
+        XCTAssertFalse(self.sut!.printLineArray.contains(formattedHeaders), "should only print this line if headers property is not nil")
+    }
+
+    func test_NetworkLogPrinter_whenPrintsRequestWithDateTime_shouldPrintDateTimeSectionExactlyOnce() {
+        // given
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        let formattedDateTime = "🕔 \(requestLog!.dateTime.description)"
+        let occurrences = self.sut?.printLineArray.filter { $0 == formattedDateTime }.count
+
+        // then
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequestWithRequestName_shouldPrintRequestNameSectionExactlyOnce() {
+        // givne
+        givenRequestLogCreated()
+
+        // when
+        whenPrintRequest(requestLog)
+
+        let formattedRequestName = "⌨️ Request Name: \(requestLog!.requestName)"
+        let occurrences = self.sut?.printLineArray.filter { $0 == formattedRequestName }.count
+
+        // then
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    func test_NetworkLogPrinter_whenPrintsRequestWithMethodTypeAndNoURL_shouldNotPrintSendingRequestSection() {
+        // given
         let requestLog = Log(logType: .request,
+                             requestName: .getMovieGenres,
+                             httpMethodType: "GET",
+                             url: nil
+        )
+
+        // when
+        whenPrintRequest(requestLog)
+
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog.httpMethodType)) to: \(String(describing: requestLog.url))"
+        let occurrences = self.sut?.printLineArray.filter { $0 == formattedMethodTypeAndURL }.count
+
+        // then
+        XCTAssertEqual(occurrences, 0)
+    }
+    
+    // MARK: - Given
+    
+    private func givenRequestLogCreated() {
+        let log = Log(logType: .request,
                              requestName: .getMovieGenres,
                              url: URL(string: "www.example.com")
         )
-        
-        whenPrintRequest(requestLog)
-
-        let formattedRequestName = "⌨️ Request Name: \(requestLog.requestName)"
-        
-        XCTAssertTrue(self.sut!.printLineArray.contains(formattedRequestName))
+        self.requestLog = log
+        self.formattedRequestStrings = FormattedRequestStrings(log: log)
     }
     
-    func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintSendingRequestSectionAsFormattedString() {
-        let requestLog = Log(logType: .request,
+    private func givenRequestLogCreatedWithMethodTypeAndUrl() {
+        let log = Log(logType: .request,
                              requestName: .getMovieGenres,
                              httpMethodType: "GET",
                              url: URL(string: "www.example.com")
         )
-        
-        whenPrintRequest(requestLog)
-
-        let formattedMethodTypeAndURL = "⬆️ Sending \(requestLog.httpMethodType!) to: \(requestLog.url!)"
-
-        XCTAssertTrue(self.sut!.printLineArray.contains(formattedMethodTypeAndURL))
+        self.requestLog = log
+        self.formattedRequestStrings = FormattedRequestStrings(log: log)
     }
     
-    func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintRequestHeadersSectionAsFormattedString() {
-        let requestLog = Log(logType: .request,
+    private func givenRequestLogCreatedWithHeaders() {
+        let log = Log(logType: .request,
                              requestName: .getMovieGenres,
                              url: URL(string: "www.example.com"),
                              headers: [
@@ -93,130 +232,8 @@ class NetworkLogPrinterTests: XCTestCase {
                                 "Example-Header": "Value"
                              ]
         )
-        
-        whenPrintRequest(requestLog)
-
-        let formattedHeaders = "🧠 Headers: \(requestLog.headers!)"
-
-        XCTAssertTrue(self.sut!.printLineArray.contains(formattedHeaders))
-    }
-    
-    func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintRequestBodySectionAsNone() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-        
-        whenPrintRequest(requestLog)
-
-        let formattedBody = "🏋️ Body: None"
-
-        XCTAssertTrue(self.sut!.printLineArray.contains(formattedBody))
-    }
-    
-    func test_NetworkLogPrinter_whenPrintsRequest_shouldPrintLastSectionAsDashedDivider() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-        
-        whenPrintRequest(requestLog)
-
-        XCTAssertEqual(self.sut?.printLineArray.last, "----")
-    }
-
-    func test_NetworkLogPrinter_whenPrintsRequestWithNoMethodType_shouldNotPrintSendingRequestSectionIfMethodTypeIsNil() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-        
-        whenPrintRequest(requestLog)
-
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog.httpMethodType)) to: \(String(describing: requestLog.url))"
-
-        XCTAssertFalse(self.sut!.printLineArray.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
-    }
-    
-    func test_NetworkLogPrinter_whenPrintsRequestWithNoUrl_shouldNotPrintSendingRequestSectionIfUrlIsNil() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-        
-        whenPrintRequest(requestLog)
-
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog.httpMethodType)) to: \(String(describing: requestLog.url))"
-
-        XCTAssertFalse(self.sut!.printLineArray.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
-    }
-
-    
-    func test_NetworkLogPrinter_whenPrintsRequestWithNoHeaders_shouldNotPrintSectionIfHeadersIsNil() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-
-        whenPrintRequest(requestLog)
-
-        let formattedHeaders = "🧠 Headers: \(String(describing: requestLog.headers))"
-
-        XCTAssertFalse(self.sut!.printLineArray.contains(formattedHeaders), "should only print this line if headers property is not nil")
-    }
-
-    func test_NetworkLogPrinter_whenPrintsRequestWithDateTime_shouldPrintDateTimeSectionExactlyOnce() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-
-        whenPrintRequest(requestLog)
-
-        let formattedDateTime = "🕔 \(requestLog.dateTime.description)"
-        let occurrences = self.sut?.printLineArray.filter { $0 == formattedDateTime }.count
-
-        XCTAssertEqual(occurrences, 1)
-    }
-    
-    func test_NetworkLogPrinter_whenPrintsRequestWithRequestName_shouldPrintRequestNameSectionExactlyOnce() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
-
-        whenPrintRequest(requestLog)
-
-        let formattedRequestName = "⌨️ Request Name: \(requestLog.requestName)"
-        let occurrences = self.sut?.printLineArray.filter { $0 == formattedRequestName }.count
-
-        XCTAssertEqual(occurrences, 1)
-    }
-    
-    func test_NetworkLogPrinter_whenPrintsRequestWithMethodTypeAndNoURL_shouldNotPrintSendingRequestSection() {
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             httpMethodType: "GET",
-                             url: nil
-        )
-
-        whenPrintRequest(requestLog)
-
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog.httpMethodType)) to: \(String(describing: requestLog.url))"
-        let occurrences = self.sut?.printLineArray.filter { $0 == formattedMethodTypeAndURL }.count
-
-        XCTAssertEqual(occurrences, 0)
-    }
-    
-    
-    
-    // MARK: - Given
-    
-    private func givenRequestLogCreated() {
-        self.requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             url: URL(string: "www.example.com")
-        )
+        self.requestLog = log
+        self.formattedRequestStrings = FormattedRequestStrings(log: log)
     }
     
     // MARK: - When
@@ -235,11 +252,86 @@ class NetworkLogPrinterTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func formattedDateTime(for log: Log) -> String {
-        "🕔 \(log.dateTime.description)"
+    struct FormattedRequestStrings {
+        let log: Log
+        
+        func dateTime() -> String {
+            "🕔 \(self.log.dateTime.description)"
+        }
+        
+        func requestName() -> String {
+            "⌨️ Request Name: \(self.log.requestName)"
+        }
+        
+        func httpMethodTypeAndUrl() -> String {
+            guard
+                let httpMethodType = self.log.httpMethodType,
+                let url = self.log.url
+            else {
+                XCTFail()
+                return ""
+            }
+            
+            return "⬆️ Sending \(httpMethodType) to: \(url)"
+        }
+        
+        func headers() -> String {
+            guard let headers = self.log.headers else {
+                XCTFail()
+                return ""
+            }
+            
+            return "🧠 Headers: \(String(describing: headers))"
+        }
+        
+        func body() -> String {
+            "🏋️ Body: None"
+        }
     }
-
-
+    
+    struct FormattedResponseStrings {
+        
+    }
+        
+//    private func formattedDateTime(for logType: Log.LogType) -> String {
+//        if logType == .request {
+//            return "🕔 \(self.requestLog!.dateTime.description)"
+//        } else {
+//            return "🕔 \(self.responseLog!.dateTime.description)"
+//        }
+//    }
+//
+//    private func formattedRequestName(for logType: Log.LogType) -> String {
+//        if logType == .request {
+//            return "⌨️ Request Name: \(requestLog!.requestName)"
+//        } else {
+//            return "⌨️ Request Name: \(responseLog!.requestName)"
+//        }
+//    }
+//
+//    private func formattedMethodTypeAndURL(for logType: Log.LogType) -> String {
+//        if logType == .request {
+//            return "⬆️ Sending \(requestLog!.httpMethodType!) to: \(requestLog!.url!)"
+//        } else {
+//            return "⬆️ Sending \(responseLog!.httpMethodType!) to: \(responseLog!.url!)"
+//        }
+//    }
+//
+//    private func formattedHeaders(for logType: Log.LogType) -> String {
+//        if logType == .request {
+//            return "🧠 Headers: \(String(describing: requestLog!.headers))"
+//        } else {
+//            return "🧠 Headers: \(String(describing: responseLog!.headers))"
+//        }
+//    }
+//
+//    private func formattedBody(for logType: Log.LogType) -> String {
+//        if logType == .request {
+//            return "🏋️ Body: None"
+//        } else {
+//            return ""
+//        }
+//    }
 }
 
 // should handle optionals!
