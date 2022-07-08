@@ -11,7 +11,7 @@ protocol NetworkLogPrinterProtocol {
     func writeLog(_ log: Log)
 }
 
-class NetworkLogPrinter: NetworkLogPrinterProtocol {
+class NetworkLogPrinter {
     
     private enum SectionEmojis: String {
         case dateTime = "🕔"
@@ -34,9 +34,11 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     init(output: LogOutputProtocol) {
         self.output = output
     }
-    
-    // MARK: - API
-    
+}
+
+// MARK: - NetworkLogPrinterProtocol
+
+extension NetworkLogPrinter: NetworkLogPrinterProtocol {
     func writeLog(_ log: Log) {
         self.writeDividerSection()
         self.writeDateTimeSection(with: log.dateTime)
@@ -46,34 +48,38 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         self.writeHeadersSection(with: log.headers)
         self.writeBodySection(with: log.body)
         self.writeDividerSection()
-
     }
-    
-    // MARK: - Helpers
-        
-    
-    // MARK: Divider Section
-    
+}
+
+// MARK: - Divider Section
+
+extension NetworkLogPrinter {
     private func writeDividerSection() {
         self.output.write("----")
     }
-    
-    // MARK: Date/Time Section
-    
+}
+
+// MARK: - Date/Time Section
+
+extension NetworkLogPrinter {
     private func writeDateTimeSection(with date: Date) {
         let formattedDateTime = "\(SectionEmojis.dateTime.rawValue) \(date)"
         self.output.write(formattedDateTime)
     }
-    
-    // MARK: Request Name Section
-    
+}
+
+// MARK: - Request Name Section
+
+extension NetworkLogPrinter {
     private func writeRequestNameSection(with requestName: String) {
         let formattedRequestName = "\(SectionEmojis.requestName.rawValue) Request Name: \(requestName)"
         self.output.write(formattedRequestName)
     }
+}
 
-    // MARK: Data Transfer Section
-    
+// MARK: - Data Transfer Section
+
+extension NetworkLogPrinter {
     private func writeDataTransferSection(for log: Log) {
         guard let formattedDataTransferSection = formattedDataTransferSectionFromLog(log) else {
             return
@@ -103,9 +109,11 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
 
         return "\(SectionEmojis.receivingRequest.rawValue) Received from \(url)"
     }
-    
-    // MARK: Status Section
-    
+}
+
+// MARK: - Status Section
+
+extension NetworkLogPrinter {
     private func writeStatusSection(for log: Log) {
         guard let formattedStatusSection = formattedStatusSectionFromLog(log) else {
             return
@@ -131,9 +139,11 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
 
         return "\(SectionEmojis.status.rawValue) Status: \(status) \(statusEmoji) -- \(statusDescription)"
     }
-    
-    // MARK: Headers Section
-    
+}
+
+// MARK: - Headers Section
+
+extension NetworkLogPrinter {
     private func writeHeadersSection(with headers: [String: String]?) {
         switch headers {
         case .some(let headers):
@@ -144,9 +154,11 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
             self.output.write(formattedHeaders)
         }
     }
-    
-    // MARK: Body Section
-    
+}
+
+// MARK: - Body Section
+
+extension NetworkLogPrinter {
     private func writeBodySection(with body: String?) {
         body == nil ? self.writeEmptyBodySection() : self.writeSuccessResponseBodySection(body!)
     }
@@ -161,22 +173,3 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         self.output.write(formattedBody)
     }
 }
-
-protocol LogOutputProtocol {
-    func write(_ string: String)
-}
-
-class ConsoleLogOutput: LogOutputProtocol {
-    func write(_ string: String) {
-        print(string)
-    }
-}
-
-class FileLogOutput: LogOutputProtocol {
-    func write(_ string: String) {
-        // do later when want to do to file
-    }
-}
-
-// for prod/dev, can have different targets or a switch ...? By default, just use ifdebug.
-

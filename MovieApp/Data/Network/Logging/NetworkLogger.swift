@@ -67,7 +67,6 @@ extension NetworkLogger: NetworkLoggerProtocol {
     }
 }
 
-
 struct HTTPResponse {
     public static let statusCodes: [Int: String] = [
         200: "OK",
