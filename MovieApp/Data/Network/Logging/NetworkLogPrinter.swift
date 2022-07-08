@@ -21,9 +21,14 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         
         self.printRequestName(log.requestName)
         
-        self.printHTTPMethodTypeAndURL(httpMethodType: log.httpMethodType, url: log.url)
+        if let httpMethodType = log.httpMethodType,
+           let url = log.url {
+            self.printHTTPMethodTypeAndURL(httpMethodType: httpMethodType, url: url)
+        }
         
-        self.printHeaders(log.headers)
+        if let headers = log.headers {
+            self.printHeaders(headers)
+        }
 
         self.printBody(log.body)
         
@@ -32,6 +37,8 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         for line in printLineArray {
             print(line)
         }
+        
+        NSLog("This is an error")
     }
     
     private func printDivider() {
@@ -48,12 +55,12 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         self.printLineArray.append(formattedRequestName)
     }
     
-    private func printHTTPMethodTypeAndURL(httpMethodType: String?, url: String?) {
+    private func printHTTPMethodTypeAndURL(httpMethodType: String, url: String) {
         let formattedMethodTypeAndURL = "⬆️ Sending \(httpMethodType) to: \(url)"
         self.printLineArray.append(formattedMethodTypeAndURL)
     }
     
-    private func printHeaders(_ headers: [String: String]?) {
+    private func printHeaders(_ headers: [String: String]) {
         let formattedHeaders = "🧠 Headers: \(headers)"
         self.printLineArray.append(formattedHeaders)
     }
