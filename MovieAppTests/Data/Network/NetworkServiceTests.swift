@@ -393,7 +393,7 @@ class NetworkServiceTests: XCTestCase {
     private func createRequestStub() {
         self.request = URLRequest(url: URL(string: "www.test.com")!)
     }
-
+    
     private func createSuccessResponseStub() -> HTTPURLResponse? {
         HTTPURLResponse(url: URL(string: "test_url")!,
                                        statusCode: 200,

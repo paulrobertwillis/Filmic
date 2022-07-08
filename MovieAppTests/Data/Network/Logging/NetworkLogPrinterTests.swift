@@ -31,6 +31,7 @@ class NetworkLogPrinterTests: XCTestCase {
     }
     
     override func tearDown() {
+        self.output = nil
         self.sut = nil
         
         self.requestLog = nil
