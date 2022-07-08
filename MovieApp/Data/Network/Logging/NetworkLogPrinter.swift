@@ -147,7 +147,16 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     // MARK: Body Section
     
     private func writeBodySection(_ body: String?) {
+        body == nil ? self.writeEmptyBodySection() : self.writeSuccessResponseBodySection(body!)
+    }
+    
+    private func writeEmptyBodySection() {
         let formattedBody = "\(SectionEmojis.body.rawValue) Body: None"
+        self.output.write(formattedBody)
+    }
+    
+    private func writeSuccessResponseBodySection(_ body: String) {
+        let formattedBody = "\(SectionEmojis.body.rawValue) Body: \(body)"
         self.output.write(formattedBody)
     }
 }

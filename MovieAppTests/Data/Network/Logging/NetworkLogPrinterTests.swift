@@ -279,17 +279,31 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintResponse()
 
         // then
-        // thenEnsurePrintsStatusSectionAsFormattedString
-        guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
-
-        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.status()))
+        thenEnsurePrintsStatusSectionAsFormattedString()
     }
 
-    
-    
-    
-    
+    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintHeadersSectionAsFormattedString() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsHeadersSectionAsFormattedString()
+    }
+
+    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintBodySectionAsFormattedString() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsBodySectionAsFormattedString()
+    }
+
     
     
     
@@ -349,6 +363,11 @@ class NetworkLogPrinterTests: XCTestCase {
                       url: URL(string: "www.example.com"),
                       status: 200,
                       statusDescription: "OK",
+                      headers: [
+                        "Date": "Thu, 07 Jul 2022 15:51:16 GMT",
+                        "Gateway-Status": "OK",
+                        "Example-Header": "Value"
+                      ],
                       body: TMDBResponseMocks.Genres.getGenres.successResponse().toJsonString()
         )
         self.responseLog = log
@@ -387,32 +406,46 @@ class NetworkLogPrinterTests: XCTestCase {
     
     private func thenEnsurePrintsDateTimeSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+        guard let formattedStrings = self.formattedStringsFromLogType() else { XCTFail(); return }
 
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.dateTime()))
     }
     
     private func thenEnsurePrintsRequestNameSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+        guard let formattedStrings = self.formattedStringsFromLogType() else { XCTFail(); return }
         
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.requestName()))
     }
         
     private func thenEnsurePrintsDataTransferRequestSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+        guard let formattedStrings = self.formattedStringsFromLogType() else { XCTFail(); return }
         
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.httpMethodTypeAndUrl()))
     }
     
+    private func thenEnsurePrintsStatusSectionAsFormattedString() {
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedStringsFromLogType() else { XCTFail(); return }
+
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.status()))
+    }
+    
     private func thenEnsurePrintsHeadersSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+        guard let formattedStrings = self.formattedStringsFromLogType() else { XCTFail(); return }
 
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.headers()))
     }
     
+    private func thenEnsurePrintsBodySectionAsFormattedString() {
+        guard let output = self.output else { XCTFail(); return }
+        guard let formattedStrings = self.formattedStringsFromLogType() else { XCTFail(); return }
+        
+        XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.body()))
+    }
+
     private func thenEnsurePrintsRequestBodySectionAsNone() {
         guard let output = self.output else { XCTFail(); return }
         guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
@@ -587,11 +620,21 @@ class NetworkLogPrinterTests: XCTestCase {
         }
         
         func headers() -> String {
-            ""
+            guard let headers = self.log.headers else {
+                XCTFail("headers must be non optional")
+                return ""
+            }
+            
+            return "🧠 Headers: \(String(describing: headers))"
         }
         
         func body() -> String {
-            ""
+            guard let body = self.log.body else {
+                XCTFail("body must be non optional")
+                return ""
+            }
+            
+            return "🏋️ Body: \(body)"
         }
     }
 }
