@@ -20,5 +20,7 @@ class ConsoleLogOutputMock: LogOutputProtocol {
     func write(_ string: String) {
         self.writeCallCount += 1
         self.writeStringParametersReceived.append(string)
+        
+        print(string)
     }
 }

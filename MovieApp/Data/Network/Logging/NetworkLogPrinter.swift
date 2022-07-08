@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkLogPrinterProtocol {
-    func printToDebugArea(_ log: Log)
+    func recordLog(_ log: Log)
 }
 
 class NetworkLogPrinter: NetworkLogPrinterProtocol {
@@ -17,6 +17,7 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
         case dateTime = "🕔"
         case requestName = "⌨️"
         case sendingRequest = "⬆️"
+        case receivingRequest = "⬇️"
         case headers = "🧠"
         case body = "🏋️"
     }
@@ -33,54 +34,83 @@ class NetworkLogPrinter: NetworkLogPrinterProtocol {
     
     // MARK: - API
     
-    func printToDebugArea(_ log: Log) {
-        self.printDivider()
-        
-        self.printDateTime(log.dateTime)
-        
-        self.printRequestName(log.requestName)
-        
-        if let httpMethodType = log.httpMethodType,
-           let url = log.url {
-            self.printHTTPMethodTypeAndURL(httpMethodType: httpMethodType, url: url)
+    func recordLog(_ log: Log) {
+        switch log.logType {
+        case .request:
+            self.recordRequest(log)
+        case .response:
+            self.recordResponse(log)
         }
-        
-        if let headers = log.headers {
-            self.printHeaders(headers)
-        }
-
-        self.printBody(log.body)
-        
-        self.printDivider()
     }
     
     // MARK: - Helpers
     
-    private func printDivider() {
+    private func recordRequest(_ log: Log) {
+        self.printDividerSection()
+        self.printDateTimeSection(log.dateTime)
+        self.printRequestNameSection(log.requestName)
+        
+        if let httpMethodType = log.httpMethodType,
+           let url = log.url {
+            self.printDataTransferSection(httpMethodType: httpMethodType, url: url)
+        }
+        
+        if let headers = log.headers {
+            self.printHeadersSection(headers)
+        }
+
+        self.printBodySection(log.body)
+        self.printDividerSection()
+    }
+    
+    private func recordResponse(_ log: Log) {
+        self.printDividerSection()
+        self.printDateTimeSection(log.dateTime)
+        self.printRequestNameSection(log.requestName)
+        
+        if let url = log.url {
+            self.printResponseDataTransferSection(url: url)
+        }
+        
+        if let headers = log.headers {
+            self.printHeadersSection(headers)
+        }
+
+        self.printBodySection(log.body)
+        self.printDividerSection()
+
+    }
+    
+    private func printDividerSection() {
         self.output.write("----")
     }
     
-    private func printDateTime(_ date: Date) {
+    private func printDateTimeSection(_ date: Date) {
         let formattedDateTime = "\(SectionEmojis.dateTime.rawValue) \(date)"
         self.output.write(formattedDateTime)
     }
     
-    private func printRequestName(_ requestName: String) {
+    private func printRequestNameSection(_ requestName: String) {
         let formattedRequestName = "\(SectionEmojis.requestName.rawValue) Request Name: \(requestName)"
         self.output.write(formattedRequestName)
     }
     
-    private func printHTTPMethodTypeAndURL(httpMethodType: String, url: String) {
+    private func printDataTransferSection(httpMethodType: String, url: String) {
         let formattedMethodTypeAndURL = "\(SectionEmojis.sendingRequest.rawValue) Sending \(httpMethodType) to: \(url)"
         self.output.write(formattedMethodTypeAndURL)
     }
     
-    private func printHeaders(_ headers: [String: String]) {
+    private func printResponseDataTransferSection(url: String) {
+        let formattedMethodTypeAndURL = "\(SectionEmojis.receivingRequest.rawValue) Received from \(url)"
+        self.output.write(formattedMethodTypeAndURL)
+    }
+    
+    private func printHeadersSection(_ headers: [String: String]) {
         let formattedHeaders = "\(SectionEmojis.headers.rawValue) Headers: \(headers)"
         self.output.write(formattedHeaders)
     }
     
-    private func printBody(_ body: String?) {
+    private func printBodySection(_ body: String?) {
         let formattedBody = "\(SectionEmojis.body.rawValue) Body: None"
         self.output.write(formattedBody)
     }

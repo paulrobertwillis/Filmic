@@ -674,11 +674,11 @@ class NetworkLoggerTests: XCTestCase {
     }
     
     private func thenEnsurePrinterIsCalled(numberOfTimes: Int) {
-        XCTAssertEqual(self.printer?.printToDebugAreaCallCount, numberOfTimes)
+        XCTAssertEqual(self.printer?.recordLogCallCount, numberOfTimes)
     }
 
     private func thenEnsureLogIsPassedToPrinter() {
-        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
+        XCTAssertEqual(self.printer?.recordLogParameterReceived, self.lastLogCreated())
     }
 
     // MARK: - Helpers
@@ -690,7 +690,7 @@ class NetworkLoggerTests: XCTestCase {
 
 // MARK: - Data Extension
 
-private extension Data {
+internal extension Data {
     func toJsonString() -> String? {
         return String(data: self, encoding: .utf8)
     }

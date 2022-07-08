@@ -13,13 +13,13 @@ class NetworkLogPrinterMock: NetworkLogPrinterProtocol {
     
     // MARK: - printToDebugArea
     
-    var printToDebugAreaCallCount = 0
+    var recordLogCallCount = 0
     
     // log
-    var printToDebugAreaLogParameterReceived: Log?
+    var recordLogParameterReceived: Log?
     
-    func printToDebugArea(_ log: Log) {
-        self.printToDebugAreaCallCount += 1
-        self.printToDebugAreaLogParameterReceived = log
+    func recordLog(_ log: Log) {
+        self.recordLogCallCount += 1
+        self.recordLogParameterReceived = log
     }
 }

@@ -21,6 +21,8 @@ class NetworkLogPrinterTests: XCTestCase {
     private var formattedRequestStrings: FormattedRequestStrings?
     private var formattedResponseStrings: FormattedResponseStrings?
     
+    private var logType: Log.LogType?
+    
     // MARK: - Lifecycle
     
     override func setUp() {
@@ -36,9 +38,11 @@ class NetworkLogPrinterTests: XCTestCase {
         
         self.formattedRequestStrings = nil
         self.formattedResponseStrings = nil
+        
+        self.logType = nil
     }
     
-    // MARK: - Tests: Request SectionFormatting
+    // MARK: - Tests: Request Section Formatting
     
     func test_RequestSectionFormatting_whenPrintsRequest_shouldPrintFirstSectionAsDashedDivider() {
         // given
@@ -81,7 +85,7 @@ class NetworkLogPrinterTests: XCTestCase {
         whenPrintRequest()
         
         // then
-        thenEnsurePrintsSendingRequestSectionAsFormattedString()
+        thenEnsurePrintsDataTransferRequestSectionAsFormattedString()
     }
     
     func test_RequestSectionFormatting_whenPrintsRequestWithHeaders_shouldPrintRequestHeadersSectionAsFormattedString() {
@@ -117,7 +121,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsLastSectionAsDashedDivider()
     }
     
-    // MARK: - Optional Handling
+    // MARK: - Tests: Request Optional Handling
     
     func test_OptionalHandling_whenPrintsRequestWithNoMethodType_shouldNotPrintSendingRequestSectionIfMethodTypeIsNil() {
         // given
@@ -164,7 +168,7 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsureDoesNotPrintHeadersSection()
     }
     
-    // MARK: - Tests: Output Call Count
+    // MARK: - Tests: Request Output Call Count
     
     func test_OutputCallCount_whenPrintsRequest_shouldPrintDateTimeSectionExactlyOnce() {
         // given
@@ -221,7 +225,64 @@ class NetworkLogPrinterTests: XCTestCase {
         thenEnsurePrintsBodySectionExactlyOnce()
     }
     
-    // MARK: - Given
+    // MARK: - Tests: Response Section Formatting
+    
+    func test_ResponseSectionFormatting_whenPrintsResponse_shouldPrintFirstSectionAsDashedDivider() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+        
+        // then
+        thenEnsurePrintsFirstSectionAsDashedDivider()
+    }
+
+    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintDateTimeSectionAsFormattedString() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+        
+        // then
+        thenEnsurePrintsDateTimeSectionAsFormattedString()
+    }
+
+    func test_ResponseSectionFormatting_whenPrintsSuccessfulResponse_shouldPrintRequestNameSectionAsFormattedString() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+
+        // then
+        thenEnsurePrintsRequestNameSectionAsFormattedString()
+    }
+
+    func test_ResponseSectionFormatting_whenPrintsResponseWithMethodTypeAndUrl_shouldPrintSendingRequestSectionAsFormattedString() {
+        // given
+        givenSuccessfulResponseLogCreated()
+        
+        // when
+        whenPrintResponse()
+        
+        // then
+        thenEnsurePrintsDataTransferRequestSectionAsFormattedString()
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - Given: Request Logs
     
     private func givenRequestLogCreated() {
         let log = Log(logType: .request,
@@ -266,15 +327,39 @@ class NetworkLogPrinterTests: XCTestCase {
         self.formattedRequestStrings = FormattedRequestStrings(log: log)
     }
     
+    // MARK: - Given: Response Logs
+
+    private func givenSuccessfulResponseLogCreated() {
+        let log = Log(logType: .response,
+                      requestName: .getMovieGenres,
+                      url: URL(string: "www.example.com"),
+                      status: 200,
+                      body: TMDBResponseMocks.Genres.getGenres.successResponse().toJsonString()
+        )
+        self.responseLog = log
+        self.formattedResponseStrings = FormattedResponseStrings(log: log)
+    }
+    
     // MARK: - When
     
     private func whenPrintRequest(_ log: Log? = nil) {
         if let log = log {
-            self.sut?.printToDebugArea(log)
+            self.sut?.recordLog(log)
         } else {
-            self.sut?.printToDebugArea(self.requestLog!)
+            self.sut?.recordLog(self.requestLog!)
         }
         
+        self.logType = .request
+    }
+    
+    private func whenPrintResponse(_ log: Log? = nil) {
+        if let log = log {
+            self.sut?.recordLog(log)
+        } else {
+            self.sut?.recordLog(self.responseLog!)
+        }
+        
+        self.logType = .response
     }
     
     // MARK: - Then: EnsurePrintsFormattedStrings
@@ -287,29 +372,29 @@ class NetworkLogPrinterTests: XCTestCase {
     
     private func thenEnsurePrintsDateTimeSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
-        
+        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.dateTime()))
     }
     
     private func thenEnsurePrintsRequestNameSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
         
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.requestName()))
     }
-    
-    private func thenEnsurePrintsSendingRequestSectionAsFormattedString() {
+        
+    private func thenEnsurePrintsDataTransferRequestSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
+        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
         
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.httpMethodTypeAndUrl()))
     }
     
     private func thenEnsurePrintsHeadersSectionAsFormattedString() {
         guard let output = self.output else { XCTFail(); return }
-        guard let formattedStrings = self.formattedRequestStrings else { XCTFail(); return }
-        
+        guard let formattedStrings = formattedStringsFromLogType() else { XCTFail(); return }
+
         XCTAssertTrue(output.writeStringParametersReceived.contains(formattedStrings.headers()))
     }
     
@@ -399,8 +484,21 @@ class NetworkLogPrinterTests: XCTestCase {
     
     // MARK: - Helpers
     
-    struct FormattedRequestStrings {
-        let log: Log
+    private func formattedStringsFromLogType() -> FormattedStringsProtocol? {
+        guard let logType = self.logType else { XCTFail(); return nil }
+
+        switch logType {
+        case .request:
+            return self.formattedRequestStrings
+        case .response:
+            return self.formattedResponseStrings
+        }
+    }
+
+    
+    
+    struct FormattedRequestStrings: FormattedStringsProtocol {
+        var log: Log
         
         func dateTime() -> String {
             "🕔 \(self.log.dateTime.description)"
@@ -436,10 +534,45 @@ class NetworkLogPrinterTests: XCTestCase {
         }
     }
     
-    struct FormattedResponseStrings {
+    struct FormattedResponseStrings: FormattedStringsProtocol {
+        var log: Log
         
+        func dateTime() -> String {
+            "🕔 \(self.log.dateTime.description)"
+        }
+        
+        func requestName() -> String {
+            "⌨️ Request Name: \(self.log.requestName)"
+        }
+        
+        func httpMethodTypeAndUrl() -> String {
+            guard let url = self.log.url else {
+                XCTFail()
+                return ""
+            }
+            
+            return "⬇️ Received from \(url)"
+        }
+        
+        func headers() -> String {
+            ""
+        }
+        
+        func body() -> String {
+            ""
+        }
     }
 }
+
+protocol FormattedStringsProtocol {
+    var log: Log { get }
+    func dateTime() -> String
+    func requestName() -> String
+    func httpMethodTypeAndUrl() -> String
+    func headers() -> String
+    func body() -> String
+}
+
 
 // should handle optionals!
 
