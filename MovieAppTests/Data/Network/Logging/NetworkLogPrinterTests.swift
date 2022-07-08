@@ -67,7 +67,7 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
         
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
         thenEnsurePrintsRequestNameSectionAsFormattedString()
@@ -78,7 +78,7 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreatedWithMethodTypeAndUrl()
         
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
         thenEnsurePrintsSendingRequestSectionAsFormattedString()
@@ -89,7 +89,7 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreatedWithHeaders()
         
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
         thenEnsurePrintsHeadersSectionAsFormattedString()
@@ -100,7 +100,7 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
         thenEnsurePrintsRequestBodySectionAsNone()
@@ -111,7 +111,7 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
         thenEnsurePrintsLastSectionAsDashedDivider()
@@ -122,12 +122,10 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
-
-        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+        thenEnsureDoesNotPrintSendingRequestSectionIfMethodTypeIsNil()
     }
     
     func test_NetworkLogPrinter_whenPrintsRequestWithNoUrl_shouldNotPrintSendingRequestSectionIfUrlIsNil() {
@@ -135,26 +133,22 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
+        whenPrintRequest()
 
         // then
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
-
-        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+        thenEnsureDoesNotPrintSendingRequestSectionIfUrlIsNil()
     }
 
     
-    func test_NetworkLogPrinter_whenPrintsRequestWithNoHeaders_shouldNotPrintSectionIfHeadersIsNil() {
+    func test_NetworkLogPrinter_whenPrintsRequestWithNoHeaders_shouldNotPrintHeadersSectionIfHeadersIsNil() {
         // given
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
-
-        let formattedHeaders = "🧠 Headers: \(String(describing: requestLog!.headers))"
+        whenPrintRequest()
 
         // then
-        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedHeaders), "should only print this line if headers property is not nil")
+        thenEnsureDoesNotPrintHeadersSectionIfHeadersIsNil()
     }
 
     func test_NetworkLogPrinter_whenPrintsRequestWithDateTime_shouldPrintDateTimeSectionExactlyOnce() {
@@ -162,13 +156,10 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
-
-        let formattedDateTime = "🕔 \(requestLog!.dateTime.description)"
-        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
+        whenPrintRequest()
 
         // then
-        XCTAssertEqual(occurrences, 1)
+        thenEnsurePrintsDateTimeSectionExactlyOnce()
     }
     
     func test_NetworkLogPrinter_whenPrintsRequestWithRequestName_shouldPrintRequestNameSectionExactlyOnce() {
@@ -176,31 +167,21 @@ class NetworkLogPrinterTests: XCTestCase {
         givenRequestLogCreated()
 
         // when
-        whenPrintRequest(requestLog)
-
-        let formattedRequestName = "⌨️ Request Name: \(requestLog!.requestName)"
-        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
+        whenPrintRequest()
 
         // then
-        XCTAssertEqual(occurrences, 1)
+        thenEnsurePrintsRequestNameSectionExactlyOnce()
     }
     
     func test_NetworkLogPrinter_whenPrintsRequestWithMethodTypeAndNoURL_shouldNotPrintSendingRequestSection() {
         // given
-        let requestLog = Log(logType: .request,
-                             requestName: .getMovieGenres,
-                             httpMethodType: "GET",
-                             url: nil
-        )
+        givenRequestLogCreatedWithMethodTypeAndNoUrl()
 
         // when
-        whenPrintRequest(requestLog)
-
-        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog.httpMethodType)) to: \(String(describing: requestLog.url))"
-        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedMethodTypeAndURL }.count
+        whenPrintRequest()
 
         // then
-        XCTAssertEqual(occurrences, 0)
+        thenEnsureDoesNotPrintSendingRequestSection()
     }
     
     // MARK: - Given
@@ -219,6 +200,16 @@ class NetworkLogPrinterTests: XCTestCase {
                              requestName: .getMovieGenres,
                              httpMethodType: "GET",
                              url: URL(string: "www.example.com")
+        )
+        self.requestLog = log
+        self.formattedRequestStrings = FormattedRequestStrings(log: log)
+    }
+    
+    private func givenRequestLogCreatedWithMethodTypeAndNoUrl() {
+        let log = Log(logType: .request,
+                             requestName: .getMovieGenres,
+                             httpMethodType: "GET",
+                             url: nil
         )
         self.requestLog = log
         self.formattedRequestStrings = FormattedRequestStrings(log: log)
@@ -278,7 +269,46 @@ class NetworkLogPrinterTests: XCTestCase {
         XCTAssertEqual(self.output!.writeStringParametersReceived.last, "----")
     }
     
+    private func thenEnsureDoesNotPrintSendingRequestSectionIfMethodTypeIsNil() {
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
+
+        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+    }
     
+    private func thenEnsureDoesNotPrintSendingRequestSectionIfUrlIsNil() {
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: requestLog!.httpMethodType)) to: \(String(describing: requestLog!.url))"
+
+        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedMethodTypeAndURL), "should only print this line if both httpMethodType and Url are not nil")
+    }
+    
+    private func thenEnsureDoesNotPrintHeadersSectionIfHeadersIsNil() {
+        let formattedHeaders = "🧠 Headers: \(String(describing: requestLog!.headers))"
+
+        XCTAssertFalse(self.output!.writeStringParametersReceived.contains(formattedHeaders), "should only print this line if headers property is not nil")
+    }
+    
+    private func thenEnsurePrintsDateTimeSectionExactlyOnce() {
+        let formattedDateTime = "🕔 \(requestLog!.dateTime.description)"
+        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedDateTime }.count
+
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    private func thenEnsurePrintsRequestNameSectionExactlyOnce() {
+        let formattedRequestName = "⌨️ Request Name: \(requestLog!.requestName)"
+        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedRequestName }.count
+
+        // then
+        XCTAssertEqual(occurrences, 1)
+    }
+    
+    private func thenEnsureDoesNotPrintSendingRequestSection() {
+        let formattedMethodTypeAndURL = "⬆️ Sending \(String(describing: self.requestLog!.httpMethodType)) to: \(String(describing: self.requestLog!.url))"
+        let occurrences = self.output!.writeStringParametersReceived.filter { $0 == formattedMethodTypeAndURL }.count
+
+        // then
+        XCTAssertEqual(occurrences, 0)
+    }
 
     // MARK: - Helpers
     
