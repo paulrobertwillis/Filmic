@@ -414,7 +414,7 @@ class NetworkLoggerTests: XCTestCase {
         whenRequestIsLogged()
         
         // then
-        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
+        thenEnsureLogIsPassedToPrinter()
     }
     
     func test_NetworkLogger_whenLoggingSuccessfulResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
@@ -449,7 +449,7 @@ class NetworkLoggerTests: XCTestCase {
         whenResponseIsLogged()
 
         // then
-        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
+        thenEnsureLogIsPassedToPrinter()
     }
 
     func test_NetworkLogger_whenLoggingFailedResponseInDebug_shouldCallPrinterExactlyOnceToPrintLog() {
@@ -484,7 +484,7 @@ class NetworkLoggerTests: XCTestCase {
         whenResponseIsLogged()
 
         // then
-        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
+        thenEnsureLogIsPassedToPrinter()
     }
     
     
@@ -676,6 +676,10 @@ class NetworkLoggerTests: XCTestCase {
     
     private func thenEnsurePrinterIsCalled(numberOfTimes: Int) {
         XCTAssertEqual(self.printer?.printToDebugAreaCallCount, numberOfTimes)
+    }
+
+    private func thenEnsureLogIsPassedToPrinter() {
+        XCTAssertEqual(self.printer?.printToDebugAreaLogParameterReceived, self.lastLogCreated())
     }
 
     // MARK: - Helpers
