@@ -35,7 +35,7 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
         self.networkService = networkService
     }
         
-    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func request(request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         
         let dataSessionTask = self.networkService.request(request: request) { result in
             switch result {
