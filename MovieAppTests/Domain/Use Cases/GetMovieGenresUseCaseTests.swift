@@ -28,7 +28,7 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     // MARK: - Setup
     override func setUp() {
         self.repository = GenresRepositoryMock()
-        self.sut = GetMovieGenresUseCase(repository: repository!)
+        self.sut = GetMovieGenresUseCase(repository: self.repository!)
     }
     
     override func tearDown() {
@@ -43,7 +43,6 @@ class GetMovieGenresUseCaseTests: XCTestCase {
         
     func test_GetMovieGenresUseCase_whenExecutes_shouldCallRepositoryOnce() {
         // given
-        givenUseCaseIsInitialised()
         
         // when
         whenUseCaseRequestsGenres()
@@ -55,7 +54,6 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     func test_GetMovieGenresUseCase_whenSuccessfullyGetsMovieGenres_shouldReturnGenresWithSuccess() {
         // given
         givenExpectedSuccess()
-        givenUseCaseIsInitialised()
              
         // when
         whenUseCaseRequestsGenres()
@@ -67,7 +65,6 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     func test_GetMovieGenresUseCase_whenFailsToGetMovieGenres_shouldReturnErrorWithFailure() {
         // given
         givenExpectedFailure()
-        givenUseCaseIsInitialised()
         
         // when
         whenUseCaseRequestsGenres()
@@ -77,9 +74,6 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     }
     
     func test_GetMovieGenresUseCase_whenGetsMovieGenres_shouldReturnTask() {
-        // given
-        givenUseCaseIsInitialised()
-        
         // when
         whenUseCaseRequestsGenres()
         
@@ -95,10 +89,6 @@ class GetMovieGenresUseCaseTests: XCTestCase {
     
     private func givenExpectedFailure() {
         self.repository?.getMovieGenresCompletionReturnValue = .failure(GetMovieGenresUseCaseSuccessTestError.failedFetching)
-    }
-
-    private func givenUseCaseIsInitialised() {
-        self.sut = GetMovieGenresUseCase(repository: repository!)
     }
     
     // MARK: - When

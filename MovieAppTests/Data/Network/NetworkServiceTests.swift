@@ -138,7 +138,21 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureURLResponseIsReturnedInFailedResult()
     }
     
-    func test_NetworkService_whenPerformsSuccessfulRequest_shouldCallRequestPerformerExactlyOnce() {
+    func test_CompletionHandler_whenPerformsSuccessfulRequest_shouldReturnDataInCompletionHandler() {
+        // given
+        createRequestStub()
+        givenRequestWillSucceed()
+        
+        // when
+        whenNetworkRequestIsPerformed()
+        
+        // then
+        thenEnsureDataIsReturnedInCompletionHandler()
+    }
+    
+    // MARK: - Tests: RequestPerformerCallCount
+    
+    func test_RequestPerformerCallCount_whenPerformsSuccessfulRequest_shouldCallRequestPerformerExactlyOnce() {
         // given
         givenRequestWillSucceed()
         
@@ -149,7 +163,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureRequestPerformerCalled(numberOfTimes: 1)
     }
     
-    func test_NetworkService_whenPerformsFailedRequest_shouldCallRequestPerformerExactlyOnce() {
+    func test_RequestPerformerCallCount_whenPerformsFailedRequest_shouldCallRequestPerformerExactlyOnce() {
         // given
         givenRequestWillFail()
         
@@ -160,7 +174,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureRequestPerformerCalled(numberOfTimes: 1)
     }
     
-    func test_NetworkService_whenPerformsMultipleRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
+    func test_RequestPerformerCallCount_whenPerformsMultipleRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
         // given
         givenRequestWillFail()
         
@@ -172,7 +186,7 @@ class NetworkServiceTests: XCTestCase {
         thenEnsureRequestPerformerCalled(numberOfTimes: 2)
     }
     
-    func test_NetworkService_whenPerformsChainOfFailingAndSucceedingRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
+    func test_RequestPerformerCallCount_whenPerformsChainOfFailingAndSucceedingRequests_shouldCallRequestPerformerTheSameNumberOfTimes() {
         // given
         createRequestStub()
         
@@ -186,119 +200,139 @@ class NetworkServiceTests: XCTestCase {
         // then
         thenEnsureRequestPerformerCalled(numberOfTimes: 5)
     }
+            
+    // MARK: - Tests: LoggingRequestCallCount
     
-    func test_NetworkService_whenPerformsSuccessfulRequest_shouldReturnDataInCompletionHandler() {
+    func test_LoggingRequestCallCount_whenPerformsSuccessfulRequest_shouldCallLoggerToLogRequestExactlyOnce() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogRequest(numberOfTimes: 1)
+    }
+    
+    func test_LoggingRequestCallCount_whenPerformsFailedRequest_shouldCallLoggerToLogRequestExactlyOnce() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogRequest(numberOfTimes: 1)
+    }
+    
+    func test_LoggingRequestCallCount_whenPerformsMultipleSuccessfulRequests_shouldCallLoggerToLogRequestMultipleTimes() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogRequest(numberOfTimes: 2)
+    }
+    
+    func test_LoggingRequestCallCount_whenPerformsMultipleFailedRequests_shouldCallLoggerToLogRequestMultipleTimes() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogRequest(numberOfTimes: 2)
+    }
+
+    func test_LoggingRequestCallCount_whenPerformsMultipleSuccessfulAndFailedRequests_shouldCallLoggerToLogRequestMultipleTimes() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogRequest(numberOfTimes: 4)
+    }
+    
+    // MARK: - Tests: LoggingResponseCallCount
+    
+    func test_LoggingResponseCallCount_whenPerformsSuccessfulRequest_shouldCallLoggerToLogResponseExactlyOnce() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogResponse(numberOfTimes: 1)
+    }
+    
+    func test_LoggingResponseCallCount_whenPerformsFailedRequest_shouldCallLoggerToLogResponseExactlyOnce() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        
+        // then
+        thenEnsureLoggerCalledToLogResponse(numberOfTimes: 1)
+    }
+    
+    func test_LoggingResponseCallCount_whenPerformsMultipleSuccessfulRequests_shouldCallLoggerToLogResponseMultipleTimes() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogResponse(numberOfTimes: 2)
+    }
+    
+    func test_LoggingResponseCallCount_whenPerformsMultipleFailedRequests_shouldCallLoggerToLogResponseMultipleTimes() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogResponse(numberOfTimes: 2)
+    }
+
+    func test_LoggingResponseCallCount_whenPerformsMultipleSuccessfulAndFailedRequests_shouldCallLoggerToLogResponseMultipleTimes() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+        whenFailedNetworkRequestIsPerformed()
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureLoggerCalledToLogResponse(numberOfTimes: 4)
+    }
+    
+    // TODO: Test that NetworkService passes specific requests and logs to the logger
+    
+    // MARK: - Tests: LogsCorrectRequests
+    
+    func test_LoggingCorrectRequest_whenPerformsSuccessfulRequest_shouldPassCorrectRequestToLogger() {
+        // when
+        whenSuccessfulNetworkRequestIsPerformed()
+
+        // then
+        thenEnsureCorrectRequestIsPassedToLogger()
+    }
+        
+    func test_LoggingCorrectRequest_whenPerformsFailedRequest_shouldPassCorrectRequestToLogger() {
+        // when
+        whenFailedNetworkRequestIsPerformed()
+
+        // then
+        XCTAssertEqual(self.request, self.logger.logRequestParameterReceived?.urlRequest)
+    }
+
+    // MARK: - Tests: LogsCorrectResponses
+    
+    func test_LoggingCorrectResponse_whenPerformsSuccessfulRequest_shouldPassCorrectResponseToLogger() {
         // given
-        createRequestStub()
-        givenRequestWillSucceed()
-        
-        // when
-        whenNetworkRequestIsPerformed()
-        
-        // then
-//        thenEnsureDataIsReturnedInCompletionHandler()
-        XCTAssertNotNil(self.returnedData)
-    }
-    
-    
-    
-    // URLResponse should match expectations:
-    /*
-     200: Success
-     401: Unauthorised
-     404: Resource not found
-     */
-        
-    // should include data in error code
-    
-    // data in an error should be logged to console for now
-    
-    // should contain services for logging, error handling, decoding, etc.
-    
-    // data in an error should eventually be saved to file somewhere
-    
-    // NeworkService should have NetworkConfiguration that contains base URL, etc.
-    
-    
-    
-    
-    func test_Logging_whenPerformsSuccessfulRequest_shouldLogResponse() {
-        // when
         whenSuccessfulNetworkRequestIsPerformed()
 
         // then
-        XCTAssertEqual(1, self.logger.logResponseCallCount)
+        thenEnsureCorrectResponseIsPassedToLogger()
     }
     
-    func test_Logging_whenPerformsFailedRequest_shouldLogResponse() {
+    func test_LoggingCorrectResponse_whenPerformsFailedRequest_shouldPassCorrectResponseToLogger() {
         // when
-        whenFailedNetworkRequestIsPerformed()
-        
-        // then
-        XCTAssertEqual(1, self.logger.logResponseCallCount)
-    }
-    
-    func test_Logging_whenPerformsMultipleSuccessfulRequests_shouldLogResponseMultipleTimes() {
-        // when
-        whenSuccessfulNetworkRequestIsPerformed()
-        whenSuccessfulNetworkRequestIsPerformed()
-
-        // then
-        XCTAssertEqual(2, self.logger.logResponseCallCount)
-    }
-    
-    func test_Logging_whenPerformsMultipleFailedRequests_shouldLogResponseMultipleTimes() {
-        // when
-        whenFailedNetworkRequestIsPerformed()
         whenFailedNetworkRequestIsPerformed()
 
         // then
-        XCTAssertEqual(2, self.logger.logResponseCallCount)
+        thenEnsureCorrectResponseIsPassedToLogger()
     }
 
-    func test_Logging_whenPerformsMultipleSuccessfulAndFailedRequests_shouldLogResponseMultipleTimes() {
-        // when
-        whenFailedNetworkRequestIsPerformed()
-        whenSuccessfulNetworkRequestIsPerformed()
-        whenFailedNetworkRequestIsPerformed()
-        whenSuccessfulNetworkRequestIsPerformed()
-
-        // then
-        XCTAssertEqual(4, self.logger.logResponseCallCount)
-    }
-
-    
-    // TODO: Network Logger
-    // successful request should log time request made
-    
-    // successful request should log request type
-    
-    // successful request should log method type (.get, .post etc.)
-    
-    // successful request should log headers
-    
-    // successful request should log body
-    
-    
-    // successful response should log time received
-
-    // successful response should log request type
-    
-    // successful response should log url response received from
-    
-    // successful response should log status and whether success
-    
-    // successful response should log whether data was successfully parsed
-    
-    // successful response should log headers
-    
-    // successful response should log body
-    
-    // unsuccessful response should log as above, plus a description of status code e.g. 404 Resource not found
-    
-    
-    
-    
     // MARK: - Given
         
     private func givenRequestWillSucceed() {
@@ -375,6 +409,26 @@ class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(expectedCalls, actualCalls)
     }
     
+    private func thenEnsureDataIsReturnedInCompletionHandler() {
+        XCTAssertNotNil(self.returnedData)
+    }
+    
+    private func thenEnsureLoggerCalledToLogRequest(numberOfTimes expectedCalls: Int) {
+        XCTAssertEqual(expectedCalls, self.logger.logRequestCallsCount)
+    }
+
+    private func thenEnsureLoggerCalledToLogResponse(numberOfTimes expectedCalls: Int) {
+        XCTAssertEqual(expectedCalls, self.logger.logResponseCallsCount)
+    }
+    
+    private func thenEnsureCorrectRequestIsPassedToLogger() {
+        XCTAssertEqual(self.request, self.logger.logRequestParameterReceived?.urlRequest)
+    }
+
+    private func thenEnsureCorrectResponseIsPassedToLogger() {
+        XCTAssertEqual(self.networkRequestPerformer?.response, self.logger.logResponseParameterReceived?.urlResponse)
+    }
+    
     // MARK: - Helpers
     
     private func initialiseNetworkService() {
@@ -409,3 +463,8 @@ class NetworkServiceTests: XCTestCase {
     }
 }
 
+
+// TODO: NetworkService should have NetworkConfiguration that contains base URL, etc.
+
+// TODO: Network Logger
+// successful response should log whether data was successfully parsed

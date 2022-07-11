@@ -18,11 +18,9 @@ class DataTransferServiceMock<GenericDecodable: Decodable>: DataTransferServiceP
     func request(request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         self.requestCallsCount += 1
         
-        guard let requestCompletionReturnValue = requestCompletionReturnValue else {
-            return URLSessionTask()
+        if let requestCompletionReturnValue = requestCompletionReturnValue {
+            completion(requestCompletionReturnValue)
         }
-
-        completion(requestCompletionReturnValue)
 
         return URLSessionTask()
     }

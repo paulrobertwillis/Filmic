@@ -12,31 +12,41 @@ class NetworkLoggerMock: NetworkLoggerProtocol {
     
     // MARK: - log(_ request: URLRequest)
     
-    func log(_ request: NetworkRequest) {
+    var logRequestCallsCount: Int = 0
+    
+    // response
+    var logRequestParameterReceived: NetworkRequest?
         
+    var mostRecentRequestLog: Log?
+    var requestLogs: [Log] = []
+    
+    func log(_ request: NetworkRequest) {
+        self.logRequestCallsCount += 1
+        self.logRequestParameterReceived = request
+
     }
     
     
     
     // MARK: - log(_ response: HTTPURLResponse)
     
-    var logResponseCallCount: Int = 0
+    var logResponseCallsCount: Int = 0
     
     // response
     var logResponseParameterReceived: NetworkResponse?
     
     // withError
-    var logWithErrorParameterReceived: Error?
+    var logRequestWithErrorParameterReceived: Error?
     
-    var mostRecentLog: Log?
-    var logs: [Log] = []
+    var mostRecentResponseLog: Log?
+    var responseLogs: [Log] = []
 
     func log(_ response: NetworkResponse) {
         self.log(response, withError: nil)
     }
     
     func log(_ response: NetworkResponse, withError error: Error?) {
-        self.logResponseCallCount += 1
+        self.logResponseCallsCount += 1
         self.logResponseParameterReceived = response
     }
 }

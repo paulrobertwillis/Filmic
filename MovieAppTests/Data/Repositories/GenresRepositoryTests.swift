@@ -11,11 +11,7 @@ import XCTest
 class GenresRepositoryTests: XCTestCase {
     
     typealias GenreDataTransferServiceMock = DataTransferServiceMock<GenresResponseDTO>
-    
-    enum GenresRepositorySuccessTestError: Error {
-        case failedFetching
-    }
-    
+        
     private var dataTransferService: GenreDataTransferServiceMock?
     private var sut: Repository<GenreDataTransferServiceMock>?
     private var resultValue: Result<[Genre], Error>?
@@ -30,6 +26,7 @@ class GenresRepositoryTests: XCTestCase {
     
     override func setUp() {
         self.dataTransferService = DataTransferServiceMock()
+        self.sut = .init(dataTransferService: self.dataTransferService!)
     }
     
     override func tearDown() {
@@ -48,9 +45,6 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Tests
     
     func test_GenresRepository_whenGetsMovieGenres_shouldCallDataTransferServiceOnce() {
-        // given
-        givenGenresRepositoryIsInitialised()
-        
         // when
         whenGenresRepositoryRequestsGenres()
         
@@ -61,7 +55,6 @@ class GenresRepositoryTests: XCTestCase {
     func test_GenresRepository_whenSuccessfullyGetsResultFromDataTransferService_shouldMapDTOToDomainObject() {
         // given
         givenExpectedSuccess()
-        givenGenresRepositoryIsInitialised()
         
         // when
         whenGenresRepositoryRequestsGenres()
@@ -73,7 +66,6 @@ class GenresRepositoryTests: XCTestCase {
     func test_GenresRepository_whenSuccessfullyGetsResultFromDataTransferService_shouldReturnGenresWithSuccess() {
         // given
         givenExpectedSuccess()
-        givenGenresRepositoryIsInitialised()
         
         // when
         whenGenresRepositoryRequestsGenres()
@@ -96,8 +88,6 @@ class GenresRepositoryTests: XCTestCase {
 //    }
     
     func test_GenresRepository_whenGetsMovieGenres_shouldReturnTask() {
-        givenGenresRepositoryIsInitialised()
-        
         // when
         whenGenresRepositoryRequestsGenres()
                 
@@ -117,11 +107,7 @@ class GenresRepositoryTests: XCTestCase {
     private func givenExpectedFailure() {
         self.dataTransferService?.requestCompletionReturnValue = .failure(DataTransferError.missingData)
     }
-    
-    private func givenGenresRepositoryIsInitialised() {
-        self.sut = .init(dataTransferService: self.dataTransferService!)
-    }
-    
+        
     // MARK: - When
     
     func whenGenresRepositoryRequestsGenres() {

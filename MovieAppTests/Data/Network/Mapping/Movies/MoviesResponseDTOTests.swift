@@ -21,7 +21,7 @@ class MoviesResponseDTOTests: XCTestCase {
         XCTAssertEqual(actual, expected)
     }
     
-    let movies = [
+    private let movies = [
         MoviesResponseDTO.MovieDTO(
             id: 50,
             title: "movie1",
