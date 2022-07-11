@@ -59,11 +59,14 @@ extension NetworkLogger: NetworkLoggerProtocol {
     }
     
     private func convertJsonToString(_ data: Data?) -> String? {
-        guard let data = data else {
+        guard let data = data,
+              let object = try? JSONSerialization.jsonObject(with: data),
+              let serialisedData = try? JSONSerialization.data(withJSONObject: object, options: .prettyPrinted)
+        else {
             return nil
         }
         
-        return String(data: data, encoding: .utf8)
+        return String(data: serialisedData, encoding: .utf8)
     }
 }
 

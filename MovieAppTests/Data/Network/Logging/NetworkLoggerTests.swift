@@ -688,6 +688,12 @@ class NetworkLoggerTests: XCTestCase {
 
 internal extension Data {
     func toJsonString() -> String? {
-        return String(data: self, encoding: .utf8)
+        guard let object = try? JSONSerialization.jsonObject(with: self),
+              let serialisedData = try? JSONSerialization.data(withJSONObject: object, options: .prettyPrinted)
+        else {
+            return nil
+        }
+        
+        return String(data: serialisedData, encoding: .utf8)
     }
 }
