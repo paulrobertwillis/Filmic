@@ -24,3 +24,5 @@ class FileLogOutput: LogOutputProtocol {
         // do later when want to do to file
     }
 }
+
+// MARK: - Check to see if OLG logs passwords and private keys?

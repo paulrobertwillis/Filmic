@@ -14,6 +14,27 @@ class SearchCollectionViewController: UICollectionViewController {
         let cellNib = UINib(nibName: CollectionViewCell.reuseIdentifier, bundle: nil)
         self.collectionView.register(cellNib, forCellWithReuseIdentifier: CollectionViewCell.reuseIdentifier)
         
+        
+        let networkRequestPerformer = NetworkRequestPerformer()
+        let output = ConsoleLogOutput()
+        let printer = NetworkLogPrinter(output: output)
+        let logger = NetworkLogger(printer: printer)
+        let networkService = NetworkService(networkRequestPerformer: networkRequestPerformer, logger: logger)
+        
+        let dataTransferService = DataTransferService<GenresResponseDTO>(networkService: networkService)
+        let repository = GenresRepository(dataTransferService: dataTransferService)
+        let useCase = GetMovieGenresUseCase(repository: repository)
+        
+        useCase.execute { result in
+            switch result {
+            case .success(let genres):
+                print(genres)
+            case .failure(let error):
+                print(error)
+            }
+        }
+
+        
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
