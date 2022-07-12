@@ -34,6 +34,7 @@
 		698EC3FB2878E2CE008DCF21 /* LogOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3FA2878E2CE008DCF21 /* LogOutput.swift */; };
 		698EC3FE2878E63E008DCF21 /* NetworkRequestPerformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3FD2878E63E008DCF21 /* NetworkRequestPerformer.swift */; };
 		698EC4012878E8B9008DCF21 /* NetworkRequestPerformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC4002878E8B9008DCF21 /* NetworkRequestPerformerTests.swift */; };
+		698EC417287D992E008DCF21 /* CoreDataStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 698EC415287D992E008DCF21 /* CoreDataStorage.xcdatamodeld */; };
 		69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */; };
 		69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7319286E02A4009C5F3E /* DataTransferService.swift */; };
 		69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */; };
@@ -98,6 +99,7 @@
 		698EC3FA2878E2CE008DCF21 /* LogOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutput.swift; sourceTree = "<group>"; };
 		698EC3FD2878E63E008DCF21 /* NetworkRequestPerformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestPerformer.swift; sourceTree = "<group>"; };
 		698EC4002878E8B9008DCF21 /* NetworkRequestPerformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestPerformerTests.swift; sourceTree = "<group>"; };
+		698EC416287D992E008DCF21 /* CoreDataStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStorage.xcdatamodel; sourceTree = "<group>"; };
 		69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69AD7319286E02A4009C5F3E /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
 		69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferServiceTests.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		692F0921285A688100780F72 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				698EC413287D8DED008DCF21 /* PersistentStorages */,
 				6964BA252869E91A00844047 /* Repositories */,
 				692F0923285A69C100780F72 /* Network */,
 			);
@@ -413,6 +416,22 @@
 			path = DataTransferService;
 			sourceTree = "<group>";
 		};
+		698EC413287D8DED008DCF21 /* PersistentStorages */ = {
+			isa = PBXGroup;
+			children = (
+				698EC414287D98FB008DCF21 /* CoreDataStorage */,
+			);
+			path = PersistentStorages;
+			sourceTree = "<group>";
+		};
+		698EC414287D98FB008DCF21 /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				698EC415287D992E008DCF21 /* CoreDataStorage.xcdatamodeld */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
 		69AD7316286DFA6F009C5F3E /* Genres */ = {
 			isa = PBXGroup;
 			children = (
@@ -598,6 +617,7 @@
 				69D8441D2862052100A651F1 /* AppConfiguration.swift in Sources */,
 				69F6239E2877A9D80059307F /* Log.swift in Sources */,
 				69D8442228621E4400A651F1 /* GetMovieGenresUseCase.swift in Sources */,
+				698EC417287D992E008DCF21 /* CoreDataStorage.xcdatamodeld in Sources */,
 				69D844182861E09F00A651F1 /* Movie.swift in Sources */,
 				692F0927285A69DB00780F72 /* MoviesResponseDTO+Mapping.swift in Sources */,
 				69D8441F2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift in Sources */,
@@ -923,6 +943,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		698EC415287D992E008DCF21 /* CoreDataStorage.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				698EC416287D992E008DCF21 /* CoreDataStorage.xcdatamodel */,
+			);
+			currentVersion = 698EC416287D992E008DCF21 /* CoreDataStorage.xcdatamodel */;
+			path = CoreDataStorage.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 695D8E9C28562032008B583A /* Project object */;
 }

@@ -9,8 +9,6 @@ import XCTest
 @testable import MovieApp
 
 class GenresRepositoryTests: XCTestCase {
-    
-//    typealias GenreDataTransferServiceMock = DataTransferServiceMock<GenresResponseDTO>
         
     private var dataTransferService: GenresDataTransferMock?
     private var sut: GenresRepository?
@@ -18,9 +16,10 @@ class GenresRepositoryTests: XCTestCase {
     private var task: URLSessionTask?
     
     private var expectedGenresResponseDTO: GenresResponseDTO?
-    private var expectedGenres = [Genre(id: Genre.Identifier(28), name: "Action")]
+    private var expectedGenres: [Genre]?
     
     private var returnedGenresResponseDTO: GenresResponseDTO?
+    private var returnedGenres: [Genre]?
     
     // MARK: - Setup
     
@@ -36,8 +35,10 @@ class GenresRepositoryTests: XCTestCase {
         self.task = nil
         
         self.expectedGenresResponseDTO = nil
+        self.expectedGenres = nil
         
         self.returnedGenresResponseDTO = nil
+        self.returnedGenres = nil
         
         super.tearDown()
     }
@@ -46,29 +47,29 @@ class GenresRepositoryTests: XCTestCase {
     
     func test_DataTransferServiceCallCount_whenGetsMovieGenres_shouldCallDataTransferServiceOnce() {
         // when
-        whenGenresRepositoryRequestsGenres()
+        whenGenresRepositoryCalledToRequestsGenres()
         
         // then
         thenEnsureDataTransferServiceCalledExactlyOnce()
     }
     
-    func test_Mapping_whenSuccessfullyGetsResultFromDataTransferService_shouldMapDTOToDomainObject() {
+    func test_Mapping_whenSuccessfullyGetsResult_shouldMapDTOToDomainObject() {
         // given
         givenExpectedSuccess()
         
         // when
-        whenGenresRepositoryRequestsGenres()
+        whenGenresRepositoryCalledToRequestsGenres()
         
         // then
         thenEnsureDTOIsMappedToDomainObject()
     }
     
-    func test_ReturningGenres_whenSuccessfullyGetsResultFromDataTransferService_shouldReturnGenresWithSuccess() {
+    func test_ReturningGenres_whenSuccessfullyGetsResult_shouldReturnGenresWithSuccess() {
         // given
         givenExpectedSuccess()
         
         // when
-        whenGenresRepositoryRequestsGenres()
+        whenGenresRepositoryCalledToRequestsGenres()
         
         // then
         thenEnsureGenresAreFetched()
@@ -79,30 +80,69 @@ class GenresRepositoryTests: XCTestCase {
         givenExpectedFailure()
 
         // when
-        whenGenresRepositoryRequestsGenres()
+        whenGenresRepositoryCalledToRequestsGenres()
 
         // then
         thenEnsureFailureResultIsReturnedWithError()
     }
     
-    func test_ReturningTask_whenGetsMovieGenres_shouldReturnTask() {
+    func test_ReturningTask_whenSuccessfullyGetsMovieGenres_shouldReturnTask() {
         // when
-        whenGenresRepositoryRequestsGenres()
-                
+        whenGenresRepositoryCalledToRequestsGenres()
+        
         // then
         thenEnsureTaskIsReturned()
     }
     
     // MARK: - Tests: Caching
+        
+    func test_Caching_whenSuccessfullyGetsMovieGenres_shouldCacheResponse() {
+        // given
+        givenExpectedSuccess()
+        
+        // when
+        whenGenresRepositoryCalledToRequestsGenres()
+        
+        // then
+        XCTAssertEqual(self.sut?.cache.count, 1)
+    }
     
+    func test_Caching_whenCalledToGetMovieGenres_shouldReturnResponseFromCacheIfMatchingResponseIsCached() {
+        // given
+        self.expectedGenresResponseDTO = self.createGenresResponseDTO()
+        self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
+        
+        self.sut?.cache.append(self.expectedGenresResponseDTO!)
+        
+        // when
+        whenGenresRepositoryCalledToRequestsGenres()
+        
+        // then
+        XCTAssertEqual(self.returnedGenres, self.expectedGenres)
+        XCTAssertEqual(self.dataTransferService?.requestCallsCount, 0)
+    }
     
-    
+    func test_Caching_whenCalledMultipleTimesToGetMovieGenres_shouldHaveExactlyOneGenresResponseDTOCached() {
+        // given
+        self.expectedGenresResponseDTO = self.createGenresResponseDTO()
+        self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
+        
+        self.sut?.cache.append(self.expectedGenresResponseDTO!)
+        
+        // when
+        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestsGenres()
+
+        // then
+        XCTAssertEqual(self.sut?.cache.count, 1)
+    }
+        
     // MARK: - Given
         
     private func givenExpectedSuccess() {
-        self.expectedGenresResponseDTO = GenresResponseDTO(genres: [
-                                                                GenresResponseDTO.GenreDTO(id: 28, name: "Action")
-                                                            ])
+        self.expectedGenresResponseDTO = self.createGenresResponseDTO()
+        self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
+        
         self.dataTransferService?.requestCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
     }
     
@@ -112,9 +152,10 @@ class GenresRepositoryTests: XCTestCase {
         
     // MARK: - When
     
-    func whenGenresRepositoryRequestsGenres() {
+    func whenGenresRepositoryCalledToRequestsGenres() {
         self.task = self.sut?.getMovieGenres { result in
             self.resultValue = result
+            self.returnedGenres = try? result.get()
         }
     }
     
@@ -148,5 +189,50 @@ class GenresRepositoryTests: XCTestCase {
     
     private func unwrapResult() throws -> [Genre]? {
         return try self.resultValue?.get()
+    }
+    
+    // MARK: - Creation
+    
+    private func createAGenreDTO() -> GenresResponseDTO.GenreDTO {
+        let randomIdentifier = Int.random(in: 1...100)
+        let randomString = String.random()
+        
+        return GenresResponseDTO.GenreDTO(id: randomIdentifier, name: randomString)
+    }
+    
+    private func createGenreDTOs() -> [GenresResponseDTO.GenreDTO] {
+        var genreDTOs: [GenresResponseDTO.GenreDTO] = []
+
+        for _ in Int.randomRange() {
+            genreDTOs.append(self.createAGenreDTO())
+        }
+        
+        return genreDTOs
+    }
+    
+    private func createGenresResponseDTO() -> GenresResponseDTO {
+        GenresResponseDTO(genres: self.createGenreDTOs())
+    }
+}
+
+extension String {
+
+    static func random(length: Int = 20) -> String {
+        let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        var randomString: String = ""
+
+        for _ in 0..<length {
+            let randomValue = arc4random_uniform(UInt32(base.count))
+            randomString += "\(base[base.index(base.startIndex, offsetBy: Int(randomValue))])"
+        }
+        return randomString
+    }
+}
+
+extension Int {
+    
+    static func randomRange(upto endValue: Int = 10) -> ClosedRange<Int> {
+        let randomInt = Int.random(in: 1...endValue)
+        return 1...randomInt
     }
 }

@@ -26,12 +26,6 @@ class SearchCollectionViewController: UICollectionViewController {
         let useCase = GetMovieGenresUseCase(repository: repository)
         
         useCase.execute { result in
-            switch result {
-            case .success(let genres):
-                print(genres)
-            case .failure(let error):
-                print(error)
-            }
         }
 
         

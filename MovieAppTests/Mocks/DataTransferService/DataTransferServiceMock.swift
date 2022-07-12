@@ -23,7 +23,7 @@ class GenresDataTransferMock: DataTransferService<GenresResponseDTO> {
     // completion parameter
     var requestCompletionReturnValue: ResultValue?
 
-    override func request(request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
+    override func request(_ request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         self.requestCallsCount += 1
         
         if let requestCompletionReturnValue = requestCompletionReturnValue {

@@ -9,7 +9,8 @@ import Foundation
 
 class GenresRepository: GenresRepositoryProtocol {
     
-    fileprivate let dataTransferService: DataTransferService<GenresResponseDTO>
+    private let dataTransferService: DataTransferService<GenresResponseDTO>
+    public var cache: [GenresResponseDTO] = []
     
     init(dataTransferService: DataTransferService<GenresResponseDTO>) {
         self.dataTransferService = dataTransferService
@@ -18,17 +19,25 @@ class GenresRepository: GenresRepositoryProtocol {
     @discardableResult
     func getMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
         let request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/genre/movie/list?api_key=87c18a6eca3e6995e82fab7f60b9a8a7&language=en-US")!)
-        return self.dataTransferService.request(request: request, completion: { (result: Result<GenresResponseDTO, DataTransferError>) in
+        
+        if !cache.isEmpty {
+            completion(.success(cache[0].genres.map { $0.toDomain() }))
+            return URLSessionTask()
+        } else {
             
-//            result.mapSuccess()
-            
-            switch result {
-            case .success(let response):
-                completion(.success(response.genres.map { $0.toDomain() }))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        })
+            return self.dataTransferService.request(request, completion: { (result: Result<GenresResponseDTO, DataTransferError>) in
+                
+                //            result.mapSuccess()
+                
+                switch result {
+                case .success(let response):
+                    completion(.success(response.genres.map { $0.toDomain() }))
+                    self.cache.append(response)
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            })
+        }
     }
 }
 
@@ -36,3 +45,4 @@ class GenresRepository: GenresRepositoryProtocol {
 // look at map and how to handle failures. Combine's Publishers map will also have lots of things to use
 
 // MARK: - Make extension for mapSuccess() on result value
+
