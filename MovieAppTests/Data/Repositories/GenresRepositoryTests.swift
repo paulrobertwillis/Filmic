@@ -9,8 +9,13 @@ import XCTest
 @testable import MovieApp
 
 class GenresRepositoryTests: XCTestCase {
+    
+    private enum GenresRepositoryTestsError: Error {
+        case someError
+    }
         
     private var dataTransferService: GenresDataTransferMock?
+    private var cache: GenresResponseStorageMock?
     private var sut: GenresRepository?
     private var resultValue: Result<[Genre], Error>?
     private var task: URLSessionTask?
@@ -25,11 +30,13 @@ class GenresRepositoryTests: XCTestCase {
     
     override func setUp() {
         self.dataTransferService = GenresDataTransferMock()
-        self.sut = .init(dataTransferService: self.dataTransferService!)
+        self.cache = GenresResponseStorageMock()
+        self.sut = .init(dataTransferService: self.dataTransferService!, cache: self.cache!)
     }
     
     override func tearDown() {
         self.dataTransferService = nil
+        self.cache = nil
         self.sut = nil
         self.resultValue = nil
         self.task = nil
@@ -45,42 +52,49 @@ class GenresRepositoryTests: XCTestCase {
     
     // MARK: - Tests
     
-    func test_DataTransferServiceCallCount_whenGetsMovieGenres_shouldCallDataTransferServiceOnce() {
+    func test_DataTransferServiceCallCount_whenPerformsFailedRequestToCache_shouldCallDataTransferServiceExactlyOnce() {
+        // given
+        // givenNoGenresInCache
+        self.cache?.getResponseCompletionReturnValue = .failure(GenresRepositoryTestsError.someError)
+        
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
         
         // then
         thenEnsureDataTransferServiceCalledExactlyOnce()
     }
     
-    func test_Mapping_whenSuccessfullyGetsResult_shouldMapDTOToDomainObject() {
+    func test_Mapping_whenPerformsSuccessfulRequestToDataTransferService_shouldMapDTOToDomainObject() {
         // given
-        givenExpectedSuccess()
+        self.cache?.getResponseCompletionReturnValue = .failure(GenresRepositoryTestsError.someError)
+        givenExpectedSuccessOfDataTransferService()
         
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
         
         // then
         thenEnsureDTOIsMappedToDomainObject()
     }
     
-    func test_ReturningGenres_whenSuccessfullyGetsResult_shouldReturnGenresWithSuccess() {
+    func test_ReturningGenres_whenPerformsSuccessfulRequestToDataTransferService_shouldReturnGenresInCompletionHandlerSuccessResult() {
         // given
-        givenExpectedSuccess()
+        self.cache?.getResponseCompletionReturnValue = .failure(GenresRepositoryTestsError.someError)
+        givenExpectedSuccessOfDataTransferService()
         
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
         
         // then
         thenEnsureGenresAreFetched()
     }
     
-    func test_ReturningFailure_whenFailsToGetMovieGenres_shouldReturnFailureResultWithError() {
+    func test_ReturningFailure_whenPerformsFailedRequestToDataTransferService_shouldReturnErrorInCompletionHandlerFailureResult() {
         // given
-        givenExpectedFailure()
+        self.cache?.getResponseCompletionReturnValue = .failure(GenresRepositoryTestsError.someError)
+        givenExpectedFailureOfDataTransferService()
 
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
 
         // then
         thenEnsureFailureResultIsReturnedWithError()
@@ -88,7 +102,7 @@ class GenresRepositoryTests: XCTestCase {
     
     func test_ReturningTask_whenSuccessfullyGetsMovieGenres_shouldReturnTask() {
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
         
         // then
         thenEnsureTaskIsReturned()
@@ -96,15 +110,16 @@ class GenresRepositoryTests: XCTestCase {
     
     // MARK: - Tests: Caching
         
-    func test_Caching_whenSuccessfullyGetsMovieGenres_shouldCacheResponse() {
+    func test_Caching_whenSuccessfullyGetsMovieGenres_shouldSaveResponseToCache() {
         // given
-        givenExpectedSuccess()
+        self.cache?.getResponseCompletionReturnValue = .failure(GenresRepositoryTestsError.someError)
+        givenExpectedSuccessOfDataTransferService()
         
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
         
         // then
-        XCTAssertEqual(self.sut?.cache.count, 1)
+        XCTAssertEqual(self.cache?.saveReceivedResponse, self.expectedGenresResponseDTO)
     }
     
     func test_Caching_whenCalledToGetMovieGenres_shouldReturnResponseFromCacheIfMatchingResponseIsCached() {
@@ -112,47 +127,61 @@ class GenresRepositoryTests: XCTestCase {
         self.expectedGenresResponseDTO = self.createGenresResponseDTO()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
         
-        self.sut?.cache.append(self.expectedGenresResponseDTO!)
+        self.cache?.getResponseCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
         
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
         
         // then
         XCTAssertEqual(self.returnedGenres, self.expectedGenres)
-        XCTAssertEqual(self.dataTransferService?.requestCallsCount, 0)
     }
     
-    func test_Caching_whenCalledMultipleTimesToGetMovieGenres_shouldHaveExactlyOneGenresResponseDTOCached() {
+    func test_DataTransferCallCount_whenPerformsSuccessfulRequestToCache_shouldNotCallDataTransferService() {
         // given
         self.expectedGenresResponseDTO = self.createGenresResponseDTO()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
         
-        self.sut?.cache.append(self.expectedGenresResponseDTO!)
-        
+        self.cache?.getResponseCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
+
         // when
-        whenGenresRepositoryCalledToRequestsGenres()
-        whenGenresRepositoryCalledToRequestsGenres()
+        whenGenresRepositoryCalledToRequestGenres()
 
         // then
-        XCTAssertEqual(self.sut?.cache.count, 1)
+        XCTAssertEqual(self.dataTransferService?.requestCallsCount, 0)
     }
+    
+    // TODO: Move this to testing of GenresResponseStorage
+//    func test_Caching_whenCalledMultipleTimesToGetMovieGenres_shouldHaveExactlyOneGenresResponseDTOCached() {
+//        // given
+//        self.expectedGenresResponseDTO = self.createGenresResponseDTO()
+//        self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
+//
+//        self.sut?.cache.append(self.expectedGenresResponseDTO!)
+//
+//        // when
+//        whenGenresRepositoryCalledToRequestGenres()
+//        whenGenresRepositoryCalledToRequestGenres()
+//
+//        // then
+//        XCTAssertEqual(self.sut?.cache.count, 1)
+//    }
         
     // MARK: - Given
         
-    private func givenExpectedSuccess() {
+    private func givenExpectedSuccessOfDataTransferService() {
         self.expectedGenresResponseDTO = self.createGenresResponseDTO()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
         
         self.dataTransferService?.requestCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
     }
     
-    private func givenExpectedFailure() {
+    private func givenExpectedFailureOfDataTransferService() {
         self.dataTransferService?.requestCompletionReturnValue = .failure(DataTransferError.missingData)
     }
         
     // MARK: - When
     
-    func whenGenresRepositoryCalledToRequestsGenres() {
+    func whenGenresRepositoryCalledToRequestGenres() {
         self.task = self.sut?.getMovieGenres { result in
             self.resultValue = result
             self.returnedGenres = try? result.get()

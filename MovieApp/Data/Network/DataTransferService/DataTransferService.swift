@@ -19,6 +19,7 @@ protocol DataTransferServiceProtocol {
     typealias ResultValue = (Result<GenericDecodable, DataTransferError>)
     typealias CompletionHandler = (ResultValue) -> Void
 
+    @discardableResult
     func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
@@ -35,6 +36,7 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
         self.networkService = networkService
     }
         
+    @discardableResult
     func request(_ request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         
         let dataSessionTask = self.networkService.request(request: request) { result in

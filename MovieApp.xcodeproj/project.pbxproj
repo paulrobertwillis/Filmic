@@ -35,6 +35,9 @@
 		698EC3FE2878E63E008DCF21 /* NetworkRequestPerformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC3FD2878E63E008DCF21 /* NetworkRequestPerformer.swift */; };
 		698EC4012878E8B9008DCF21 /* NetworkRequestPerformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC4002878E8B9008DCF21 /* NetworkRequestPerformerTests.swift */; };
 		698EC417287D992E008DCF21 /* CoreDataStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 698EC415287D992E008DCF21 /* CoreDataStorage.xcdatamodeld */; };
+		698EC420287E2F5A008DCF21 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC41F287E2F5A008DCF21 /* CoreDataStorage.swift */; };
+		698EC422287E3064008DCF21 /* MovieGenresResponseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC421287E3064008DCF21 /* MovieGenresResponseStorage.swift */; };
+		698EC425287E37CF008DCF21 /* GenresResponseStorageMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC424287E37CF008DCF21 /* GenresResponseStorageMock.swift */; };
 		69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */; };
 		69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7319286E02A4009C5F3E /* DataTransferService.swift */; };
 		69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */; };
@@ -100,6 +103,9 @@
 		698EC3FD2878E63E008DCF21 /* NetworkRequestPerformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestPerformer.swift; sourceTree = "<group>"; };
 		698EC4002878E8B9008DCF21 /* NetworkRequestPerformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestPerformerTests.swift; sourceTree = "<group>"; };
 		698EC416287D992E008DCF21 /* CoreDataStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStorage.xcdatamodel; sourceTree = "<group>"; };
+		698EC41F287E2F5A008DCF21 /* CoreDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStorage.swift; sourceTree = "<group>"; };
+		698EC421287E3064008DCF21 /* MovieGenresResponseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieGenresResponseStorage.swift; sourceTree = "<group>"; };
+		698EC424287E37CF008DCF21 /* GenresResponseStorageMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresResponseStorageMock.swift; sourceTree = "<group>"; };
 		69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69AD7319286E02A4009C5F3E /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
 		69AD731B286E02C1009C5F3E /* DataTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferServiceTests.swift; sourceTree = "<group>"; };
@@ -420,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				698EC414287D98FB008DCF21 /* CoreDataStorage */,
+				698EC421287E3064008DCF21 /* MovieGenresResponseStorage.swift */,
 			);
 			path = PersistentStorages;
 			sourceTree = "<group>";
@@ -428,8 +435,17 @@
 			isa = PBXGroup;
 			children = (
 				698EC415287D992E008DCF21 /* CoreDataStorage.xcdatamodeld */,
+				698EC41F287E2F5A008DCF21 /* CoreDataStorage.swift */,
 			);
 			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		698EC423287E37B2008DCF21 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				698EC424287E37CF008DCF21 /* GenresResponseStorageMock.swift */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		69AD7316286DFA6F009C5F3E /* Genres */ = {
@@ -504,6 +520,7 @@
 		69F83F04286CADE9001A5FAF /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
+				698EC423287E37B2008DCF21 /* CoreData */,
 				698EC3F42877B332008DCF21 /* DataTransferService */,
 				698EC3F32877B32C008DCF21 /* Network */,
 				698EC3F22877B322008DCF21 /* Repositories */,
@@ -628,8 +645,10 @@
 				698EC3FE2878E63E008DCF21 /* NetworkRequestPerformer.swift in Sources */,
 				6964BA35286A0AE900844047 /* GenresRepository.swift in Sources */,
 				695D8EAC28562032008B583A /* ViewController.swift in Sources */,
+				698EC420287E2F5A008DCF21 /* CoreDataStorage.swift in Sources */,
 				69F62399287648DA0059307F /* NetworkLogger.swift in Sources */,
 				6964BA2B2869EAD600844047 /* GetTopRatedMoviesUseCase.swift in Sources */,
+				698EC422287E3064008DCF21 /* MovieGenresResponseStorage.swift in Sources */,
 				698EC3FB2878E2CE008DCF21 /* LogOutput.swift in Sources */,
 				69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */,
 				695D8EA828562032008B583A /* AppDelegate.swift in Sources */,
@@ -650,6 +669,7 @@
 				698EC4012878E8B9008DCF21 /* NetworkRequestPerformerTests.swift in Sources */,
 				69F83F06286CADF7001A5FAF /* NetworkServiceMock.swift in Sources */,
 				69AD7327286F3723009C5F3E /* TMDBResponseMocks.swift in Sources */,
+				698EC425287E37CF008DCF21 /* GenresResponseStorageMock.swift in Sources */,
 				6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */,
 				69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */,
 				6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */,

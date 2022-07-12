@@ -10,34 +10,37 @@ import Foundation
 class GenresRepository: GenresRepositoryProtocol {
     
     private let dataTransferService: DataTransferService<GenresResponseDTO>
-    public var cache: [GenresResponseDTO] = []
+    private let cache: GenresResponseStorageProtocol
     
-    init(dataTransferService: DataTransferService<GenresResponseDTO>) {
+    init(dataTransferService: DataTransferService<GenresResponseDTO>, cache: GenresResponseStorageProtocol) {
         self.dataTransferService = dataTransferService
+        self.cache = cache
     }
     
     @discardableResult
     func getMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
         let request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/genre/movie/list?api_key=87c18a6eca3e6995e82fab7f60b9a8a7&language=en-US")!)
         
-        if !cache.isEmpty {
-            completion(.success(cache[0].genres.map { $0.toDomain() }))
-            return URLSessionTask()
-        } else {
-            
-            return self.dataTransferService.request(request, completion: { (result: Result<GenresResponseDTO, DataTransferError>) in
-                
-                //            result.mapSuccess()
-                
-                switch result {
-                case .success(let response):
-                    completion(.success(response.genres.map { $0.toDomain() }))
-                    self.cache.append(response)
-                case .failure(let error):
-                    completion(.failure(error))
+        self.cache.getResponse(for: request) { result in
+            if case let .success(responseDTO) = result {
+                completion(.success(responseDTO.genres.map { $0.toDomain() }))
+            } else {
+                self.dataTransferService.request(request) { (result: Result<GenresResponseDTO, DataTransferError>) in
+                    
+                    // result.mapSuccess()
+                    
+                    switch result {
+                    case .success(let responseDTO):
+                        completion(.success(responseDTO.genres.map { $0.toDomain() }))
+                        self.cache.save(response: responseDTO, for: request)
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
-            })
+            }
         }
+        
+        return URLSessionTask()
     }
 }
 
