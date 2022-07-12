@@ -7,14 +7,6 @@
 
 import Foundation
 
-//class Repository<GenericDataTransferService: DataTransferServiceProtocol> {
-//    fileprivate let dataTransferService: GenericDataTransferService
-//
-//    init(dataTransferService: GenericDataTransferService) {
-//        self.dataTransferService = dataTransferService
-//    }
-//}
-
 class GenresRepository: GenresRepositoryProtocol {
     
     fileprivate let dataTransferService: DataTransferService<GenresResponseDTO>

@@ -44,7 +44,7 @@ class GenresRepositoryTests: XCTestCase {
     
     // MARK: - Tests
     
-    func test_GenresRepository_whenGetsMovieGenres_shouldCallDataTransferServiceOnce() {
+    func test_DataTransferServiceCallCount_whenGetsMovieGenres_shouldCallDataTransferServiceOnce() {
         // when
         whenGenresRepositoryRequestsGenres()
         
@@ -52,7 +52,7 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureDataTransferServiceCalledExactlyOnce()
     }
     
-    func test_GenresRepository_whenSuccessfullyGetsResultFromDataTransferService_shouldMapDTOToDomainObject() {
+    func test_Mapping_whenSuccessfullyGetsResultFromDataTransferService_shouldMapDTOToDomainObject() {
         // given
         givenExpectedSuccess()
         
@@ -63,7 +63,7 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureDTOIsMappedToDomainObject()
     }
     
-    func test_GenresRepository_whenSuccessfullyGetsResultFromDataTransferService_shouldReturnGenresWithSuccess() {
+    func test_ReturningGenres_whenSuccessfullyGetsResultFromDataTransferService_shouldReturnGenresWithSuccess() {
         // given
         givenExpectedSuccess()
         
@@ -74,26 +74,28 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureGenresAreFetched()
     }
     
-    // TODO: Find out how to refactor to include errors
-//    func test_GenresRepository_whenFailsToGetMovieGenres_shouldReturnErrorWithFailure() {
-//        // given
-//        givenExpectedFailure()
-//        givenGenresRepositoryIsInitialised()
-//
-//        // when
-//        whenGenresRepositoryRequestsGenres()
-//
-//        // then
-//        thenEnsureFailureResultIsReturned()
-//    }
+    func test_ReturningFailure_whenFailsToGetMovieGenres_shouldReturnFailureResultWithError() {
+        // given
+        givenExpectedFailure()
+
+        // when
+        whenGenresRepositoryRequestsGenres()
+
+        // then
+        thenEnsureFailureResultIsReturnedWithError()
+    }
     
-    func test_GenresRepository_whenGetsMovieGenres_shouldReturnTask() {
+    func test_ReturningTask_whenGetsMovieGenres_shouldReturnTask() {
         // when
         whenGenresRepositoryRequestsGenres()
                 
         // then
         thenEnsureTaskIsReturned()
     }
+    
+    // MARK: - Tests: Caching
+    
+    
     
     // MARK: - Given
         
@@ -127,11 +129,11 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertEqual(self.expectedGenres, returnedGenres)
     }
     
-//    private func thenEnsureFailureResultIsReturned() {
-//        XCTAssertThrowsError(try unwrapResult(), "A GenresRepositorySuccessTestError should have been thrown but no Error was thrown") { error in
-//            XCTAssertEqual(error as? NetworkError, NetworkError.someError)
-//        }
-//    }
+    private func thenEnsureFailureResultIsReturnedWithError() {
+        XCTAssertThrowsError(try unwrapResult(), "") { error in
+            XCTAssertNotNil(error)
+        }
+    }
     
     private func thenEnsureTaskIsReturned() {
         XCTAssertNotNil(self.task)

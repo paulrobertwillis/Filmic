@@ -86,3 +86,5 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
         completion(.failure(resolvedError))
     }
 }
+
+// TODO: Extract DataTransferErrorResolver
