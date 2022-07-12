@@ -7,15 +7,21 @@
 
 import Foundation
 
-class Repository<GenericDataTransferService: DataTransferServiceProtocol> {
-    fileprivate let dataTransferService: GenericDataTransferService
+//class Repository<GenericDataTransferService: DataTransferServiceProtocol> {
+//    fileprivate let dataTransferService: GenericDataTransferService
+//
+//    init(dataTransferService: GenericDataTransferService) {
+//        self.dataTransferService = dataTransferService
+//    }
+//}
+
+class GenresRepository: GenresRepositoryProtocol {
     
-    init(dataTransferService: GenericDataTransferService) {
+    fileprivate let dataTransferService: DataTransferService<GenresResponseDTO>
+    
+    init(dataTransferService: DataTransferService<GenresResponseDTO>) {
         self.dataTransferService = dataTransferService
     }
-}
-
-class GenresRepository: Repository<DataTransferService<GenresResponseDTO>>, GenresRepositoryProtocol {
     
     @discardableResult
     func getMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) -> URLSessionTask? {

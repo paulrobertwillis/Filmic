@@ -8,14 +8,22 @@
 import Foundation
 @testable import MovieApp
 
-class DataTransferServiceMock<GenericDecodable: Decodable>: DataTransferServiceProtocol {
+class GenresDataTransferMock: DataTransferService<GenresResponseDTO> {
+    
+    // MARK: - Lifecycle
+    
+    init() {
+        super.init(networkService: NetworkServiceMock())
+    }
+    
+    // MARK: - request(request, completion)
     
     var requestCallsCount = 0
     
     // completion parameter
     var requestCompletionReturnValue: ResultValue?
 
-    func request(request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
+    override func request(request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         self.requestCallsCount += 1
         
         if let requestCompletionReturnValue = requestCompletionReturnValue {
@@ -24,4 +32,5 @@ class DataTransferServiceMock<GenericDecodable: Decodable>: DataTransferServiceP
 
         return URLSessionTask()
     }
+
 }

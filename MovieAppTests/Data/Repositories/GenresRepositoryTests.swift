@@ -12,7 +12,7 @@ class GenresRepositoryTests: XCTestCase {
     
 //    typealias GenreDataTransferServiceMock = DataTransferServiceMock<GenresResponseDTO>
         
-    private var dataTransferService: DataTransferServiceMock<GenresResponseDTO>?
+    private var dataTransferService: GenresDataTransferMock?
     private var sut: GenresRepository?
     private var resultValue: Result<[Genre], Error>?
     private var task: URLSessionTask?
@@ -25,12 +25,8 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Setup
     
     override func setUp() {
-        self.dataTransferService = DataTransferServiceMock<GenresResponseDTO>()
-        
-        let generic = DataTransferService<GenresResponseDTO>(networkService: NetworkServiceMock())
-        
-        
-        self.sut = .init(dataTransferService: generic)
+        self.dataTransferService = GenresDataTransferMock()
+        self.sut = .init(dataTransferService: self.dataTransferService!)
     }
     
     override func tearDown() {
