@@ -12,7 +12,7 @@ class GenresResponseStorageTests: XCTestCase {
     
     // MARK: Private Properties
     
-    private var sut: GenresResponseStorage?
+    private var sut: CoreDataGenresResponseStorage?
     
     private var expectedGenresResponseDTO: GenresResponseDTO?
     private var returnedGenresResponseDTO: GenresResponseDTO?
@@ -26,7 +26,7 @@ class GenresResponseStorageTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.sut = GenresResponseStorage()
+        self.sut = CoreDataGenresResponseStorage()
         
         self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
 
