@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+enum GenreType: String, Encodable {
+    case movie
+    case tv
+}
+
+struct GenresRequestDTO: Encodable {
+    let type: GenreType
+}
