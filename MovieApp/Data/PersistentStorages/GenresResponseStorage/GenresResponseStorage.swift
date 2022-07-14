@@ -1,5 +1,5 @@
 //
-//  MovieGenresResponseStorage.swift
+//  GenresResponseStorage.swift
 //  MovieApp
 //
 //  Created by Paul on 12/07/2022.
@@ -8,14 +8,15 @@
 import CoreData
 
 protocol GenresResponseStorageProtocol {
-    typealias ResultValue = (Result<GenresResponseDTO, Error>)
-    typealias GenresResponseStorageCompletionHandler = (ResultValue) -> Void
+    typealias GenresResponseStorageResultValue = (Result<GenresResponseDTO, CoreDataStorageError>)
+    typealias GenresResponseStorageCompletionHandler = (GenresResponseStorageResultValue) -> Void
+    
     func getResponse(for request: URLRequest, completion: @escaping GenresResponseStorageCompletionHandler)
-    func save(response: GenresResponseDTO, for requestDTO: URLRequest)
+    func save(response: GenresResponseDTO, for request: URLRequest)
 }
 
 class GenresResponseStorage {
-    public var cache: [URLRequest : GenresResponseDTO] = [:]
+    private var cache: [URLRequest : GenresResponseDTO] = [:]
 }
 
 // MARK: - GenresResponseStorageProtocol
@@ -25,15 +26,11 @@ extension GenresResponseStorage: GenresResponseStorageProtocol {
         if let returnValue = self.cache[request] {
             completion(.success(returnValue))
         } else {
-            completion(.failure(GenresResponseStorageError.readError))
+            completion(.failure(CoreDataStorageError.readError))
         }
     }
         
-    func save(response: GenresResponseDTO, for requestDTO: URLRequest) {
-        self.cache[requestDTO] = response
+    func save(response: GenresResponseDTO, for request: URLRequest) {
+        self.cache[request] = response
     }
-}
-
-private enum GenresResponseStorageError: Error {
-    case readError
 }

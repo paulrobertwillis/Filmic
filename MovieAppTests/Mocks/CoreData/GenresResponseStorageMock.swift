@@ -18,7 +18,7 @@ class GenresResponseStorageMock: GenresResponseStorageProtocol {
     var getResponseReceivedRequest: URLRequest?
     
     // completion parameter
-    var getResponseCompletionReturnValue: ResultValue?
+    var getResponseCompletionReturnValue: GenresResponseStorageResultValue?
     
     func getResponse(for request: URLRequest, completion: @escaping GenresResponseStorageCompletionHandler) {
         self.getResponseCallCount += 1
@@ -36,8 +36,12 @@ class GenresResponseStorageMock: GenresResponseStorageProtocol {
     // response parameter
     var saveReceivedResponse: GenresResponseDTO?
     
-    func save(response: GenresResponseDTO, for requestDTO: URLRequest) {
+    // request parameter
+    var saveReceivedRequest: URLRequest?
+    
+    func save(response: GenresResponseDTO, for request: URLRequest) {
         self.saveCallCount += 1
         self.saveReceivedResponse = response
+        self.saveReceivedRequest = request
     }
 }

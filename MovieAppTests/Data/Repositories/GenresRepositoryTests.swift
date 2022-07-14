@@ -9,11 +9,7 @@ import XCTest
 @testable import MovieApp
 
 class GenresRepositoryTests: XCTestCase {
-    
-    private enum GenresRepositoryTestsError: Error {
-        case someError
-    }
-        
+            
     private var dataTransferService: GenresDataTransferMock?
     private var cache: GenresResponseStorageMock?
     private var sut: GenresRepository?
@@ -341,18 +337,18 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Given
 
     private func givenExpectedFailedRequestToCache() {
-        self.cache?.getResponseCompletionReturnValue = .failure(GenresRepositoryTestsError.someError)
+        self.cache?.getResponseCompletionReturnValue = .failure(.readError)
     }
     
     private func givenExpectedSuccessfulRequestToCache() {
-        self.expectedGenresResponseDTO = self.createGenresResponseDTO()
+        self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
 
         self.cache?.getResponseCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
     }
 
     private func givenExpectedSuccessfulRequestToDataTransferService() {
-        self.expectedGenresResponseDTO = self.createGenresResponseDTO()
+        self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
         
         self.dataTransferService?.requestCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
@@ -439,29 +435,6 @@ class GenresRepositoryTests: XCTestCase {
     private func unwrapResult() throws -> [Genre]? {
         return try self.resultValue?.get()
     }
-    
-    // MARK: - Creation
-    
-    private func createAGenreDTO() -> GenresResponseDTO.GenreDTO {
-        let randomIdentifier = Int.random(in: 1...100)
-        let randomString = String.random()
-        
-        return GenresResponseDTO.GenreDTO(id: randomIdentifier, name: randomString)
-    }
-    
-    private func createGenreDTOs() -> [GenresResponseDTO.GenreDTO] {
-        var genreDTOs: [GenresResponseDTO.GenreDTO] = []
-
-        for _ in Int.randomRange() {
-            genreDTOs.append(self.createAGenreDTO())
-        }
-        
-        return genreDTOs
-    }
-    
-    private func createGenresResponseDTO() -> GenresResponseDTO {
-        GenresResponseDTO(genres: self.createGenreDTOs())
-    }
 }
 
 extension String {
@@ -484,4 +457,30 @@ extension Int {
         let randomInt = Int.random(in: 1...endValue)
         return 1...randomInt
     }
+}
+
+extension GenresResponseDTO {
+    public static func createStubGenresResponseDTO() -> GenresResponseDTO {
+        GenresResponseDTO(genres: GenresResponseDTO.GenreDTO.createStubGenreDTOs())
+    }
+}
+
+extension GenresResponseDTO.GenreDTO {
+    public static func createStubGenreDTO() -> GenresResponseDTO.GenreDTO {
+        let randomIdentifier = Int.random(in: 1...100)
+        let randomString = String.random()
+        
+        return GenresResponseDTO.GenreDTO(id: randomIdentifier, name: randomString)
+    }
+    
+    public static func createStubGenreDTOs() -> [GenresResponseDTO.GenreDTO] {
+        var genreDTOs: [GenresResponseDTO.GenreDTO] = []
+
+        for _ in Int.randomRange() {
+            genreDTOs.append(GenresResponseDTO.GenreDTO.createStubGenreDTO())
+        }
+        
+        return genreDTOs
+    }
+
 }
