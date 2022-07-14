@@ -14,11 +14,15 @@ class GenresResponseStorageMock: GenresResponseStorageProtocol {
     
     public var getResponseCallCount = 0
     
+    // request parameter
+    var getResponseReceivedRequest: URLRequest?
+    
     // completion parameter
     var getResponseCompletionReturnValue: ResultValue?
     
     func getResponse(for request: URLRequest, completion: @escaping GenresResponseStorageCompletionHandler) {
         self.getResponseCallCount += 1
+        self.getResponseReceivedRequest = request
         
         if let getResponseCompletionReturnValue = getResponseCompletionReturnValue {
             completion(getResponseCompletionReturnValue)

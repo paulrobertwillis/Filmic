@@ -18,12 +18,15 @@ class MoviesRepositoryMock: MoviesRepositoryProtocol {
     
     var getMoviesCallsCount = 0
     var getMoviesReturnValue: URLSessionTask?
+    
+    // request parameter
+    var getMoviesReceivedRequest: URLRequest?
 
     // completion parameter
     var getMoviesCompletionReturnValue: ResultValue? = .failure(MoviesRepositoryMockError.failedFetching)
     var getMoviesReceivedCompletion: CompletionHandler? = { _ in }
 
-    func getMovies(completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func getMovies(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
         self.getMoviesCallsCount += 1
         
         self.getMoviesReceivedCompletion = completion

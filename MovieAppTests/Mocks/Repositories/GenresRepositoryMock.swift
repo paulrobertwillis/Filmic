@@ -16,15 +16,22 @@ class GenresRepositoryMock: GenresRepositoryProtocol {
     var getMovieGenresReturnValue: URLSessionTask?
     var getMovieGenresClosure: ((CompletionHandler) -> URLSessionTask)?
     
+    // request parameter
+    var getMovieGenresReceivedRequest: URLRequest?
+    
     // completion parameter
     var getMovieGenresCompletionReturnValue: ResultValue? = .success([])
     var getMovieGenresReceivedCompletion: CompletionHandler? = { _ in }
     
-    func getMovieGenres(completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func getMovieGenres(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
         self.getMovieGenresCallsCount += 1
 
+        self.getMovieGenresReceivedRequest = request
         self.getMovieGenresReceivedCompletion = completion
-        completion(getMovieGenresCompletionReturnValue!)
+        
+        if let getMovieGenresCompletionReturnValue = getMovieGenresCompletionReturnValue {
+            completion(getMovieGenresCompletionReturnValue)
+        }
         
         return getMovieGenresClosure.map({ $0(completion) }) ?? getMovieGenresReturnValue
     }

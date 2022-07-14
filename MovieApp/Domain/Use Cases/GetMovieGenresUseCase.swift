@@ -33,9 +33,13 @@ class GetMovieGenresUseCase {
 extension GetMovieGenresUseCase: GetMovieGenresUseCaseProtocol {
     @discardableResult
     func execute(completion: @escaping CompletionHandler) -> URLSessionTask? {
-        self.repository.getMovieGenres { result in
+        let request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/genre/movie/list?api_key=87c18a6eca3e6995e82fab7f60b9a8a7&language=en-US")!)
+
+        
+        self.repository.getMovieGenres(request: request) { result in
             completion(result)
         }
+        
         return URLSessionTask()
     }
 }

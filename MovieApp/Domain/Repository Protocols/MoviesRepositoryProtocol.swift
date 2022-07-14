@@ -12,5 +12,5 @@ protocol MoviesRepositoryProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
     
     @discardableResult
-    func getMovies(completion: @escaping CompletionHandler) -> URLSessionTask?
+    func getMovies(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
