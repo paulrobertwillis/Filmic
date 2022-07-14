@@ -18,7 +18,7 @@ class GenresRepository: GenresRepositoryProtocol {
     }
     
     @discardableResult
-    func getMovieGenres(request: URLRequest, completion: @escaping (Result<[Genre], Error>) -> Void) -> URLSessionTask? {
+    func getMovieGenres(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
         
         self.cache.getResponse(for: request) { result in
             if case let .success(responseDTO) = result {
