@@ -67,7 +67,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryCalledToRequestGenres()
         
         // then
-        thenEnsureDTOIsMappedToDomainObject()
+        thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
     }
     
     func test_ReturningGenres_whenPerformsSuccessfulRequestToDataTransferService_shouldReturnGenresInCompletionHandlerSuccessResult() {
@@ -138,9 +138,7 @@ class GenresRepositoryTests: XCTestCase {
         // then
         thenEnsureRepositoryDoesNotCallDataTransferService()
     }
-    
-    // TODO: Tests for:
-    
+        
     func test_CacheCallCount_whenPerformsFailedRequestToCache_shouldRequestFromCacheExactlyOnce() {
         // given
         givenExpectedFailedRequestToCache()
@@ -163,7 +161,7 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureRepositoryRequestsFromCacheExactlyOnce()
     }
 
-    func test_CacheCallCount_whenPerformsSuccessfulRequestToCache_shouldNotSaveToCache() {
+    func test_CacheSavingBehaviour_whenPerformsSuccessfulRequestToCache_shouldNotAttemptToSaveToCache() {
         // given
         givenExpectedSuccessfulRequestToCache()
         
@@ -171,7 +169,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryCalledToRequestGenres()
         
         // then
-        thenEnsureRepositoryDoesNotSaveToCache()
+        thenEnsureRepositoryDoesNotAttemptToSaveToCache()
     }
     
     func test_DataTransferServiceCallCount_whenPerformsFailedRequestToCache_shouldCallDataTransferServiceExactlyOnce() {
@@ -196,7 +194,7 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureRepositoryDoesNotCallDataTransferService()
     }
 
-    func test_DataTransferServiceCallCount_whenPerformsFailedRequestToDataTransferService_shouldNotSaveToCache() {
+    func test_CacheSavingBehaviour_whenPerformsFailedRequestToDataTransferService_shouldNotSaveToCache() {
         // given
         givenExpectedFailedRequestToCache()
         givenExpectedFailedRequestToDataTransferService()
@@ -205,10 +203,10 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryCalledToRequestGenres()
         
         // then
-        thenEnsureRepositoryDoesNotSaveToCache()
+        thenEnsureRepositoryDoesNotAttemptToSaveToCache()
     }
 
-    func test_DataTransferServiceCallCount_whenPerformsSuccessfulRequestToDataTransferService_shouldRequestFromCacheExactlyOnce() {
+    func test_CacheCallCount_whenPerformsSuccessfulRequestToDataTransferService_shouldRequestFromCacheExactlyOnce() {
         // given
         givenExpectedFailedRequestToCache()
         givenExpectedSuccessfulRequestToDataTransferService()
@@ -220,7 +218,7 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureRepositoryRequestsFromCacheExactlyOnce()
     }
 
-    func test_DataTransferServiceCallCount_whenPerformsSuccessfulRequestToDataTransferService_shouldSaveToCacheExactlyOnce() {
+    func test_CacheSavingBehaviour_whenPerformsSuccessfulRequestToDataTransferService_shouldSaveToCacheExactlyOnce() {
         // given
         givenExpectedFailedRequestToCache()
         givenExpectedSuccessfulRequestToDataTransferService()
@@ -244,7 +242,6 @@ class GenresRepositoryTests: XCTestCase {
         thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
     }
 
-    // call count to dts for successful dts
     func test_DataTransferServiceCallCount_whenPerformsSuccessfulRequestToDataTransferService_shouldCallDataTransferServiceExactlyOnce() {
         // given
         givenExpectedFailedRequestToCache()
@@ -258,7 +255,7 @@ class GenresRepositoryTests: XCTestCase {
     }
 
     // sends request to cache for failed request
-    func test_DataTransferServiceCallCount_whenPerformsFailedRequestToCache_shouldPassCorrectRequestToCache() {
+    func test_CacheRequesting_whenPerformsFailedRequestToCache_shouldPassCorrectRequestToCache() {
         // given
         givenExpectedFailedRequestToCache()
         givenExpectedSuccessfulRequestToDataTransferService()
@@ -268,11 +265,11 @@ class GenresRepositoryTests: XCTestCase {
 
         // then
         // TODO: Pass in request to getMovieGenres, as right now it is hardcoded!
-        XCTAssertEqual(self.cache?.getResponseReceivedRequest, self.request)
+        thenEnsureRepositoryPassesReceivedRequestToCache()
     }
     
     // sends request to cache for successful request
-    func test_DataTransferServiceCallCount_whenPerformsSuccessfulRequestToCache_shouldPassCorrectRequest() {
+    func test_CacheRequesting_whenPerformsSuccessfulRequestToCache_shouldPassCorrectRequestToCache() {
         // given
         givenExpectedFailedRequestToCache()
         givenExpectedSuccessfulRequestToDataTransferService()
@@ -281,22 +278,47 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryCalledToRequestGenres()
         
         // then
-        XCTAssertEqual(self.dataTransferService?.requestCallsCount, 1)
+        thenEnsureRepositoryPassesReceivedRequestToCache()
     }
 
-    // sends request to dts for failed request
+    func test_DataTransferServiceRequesting_whenPerformsFailedRequestToDataTransferService_shouldPassCorrectRequestToDataTransferService() {
+        // given
+        givenExpectedFailedRequestToCache()
+        givenExpectedFailedRequestToDataTransferService()
+
+        // when
+        whenGenresRepositoryCalledToRequestGenres()
+        
+        // then
+        thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
+    }
     
-    // sends request to dts for successful request
-    
+    func test_DataTransferServiceRequesting_whenPerformsSuccessfulRequestToDataTransferService_shouldPassCorrectRequestToDataTransferService() {
+        // given
+        givenExpectedFailedRequestToCache()
+        givenExpectedSuccessfulRequestToDataTransferService()
+
+        // when
+        whenGenresRepositoryCalledToRequestGenres()
+        
+        // then
+        thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
+    }
+
     // successful cache response maps responseDTO to domain
+    func test_Mapping_whenPerformsSuccessfulRequestToCache_shouldMapSuccessResultToDomainObject() {
+        // given
+        givenExpectedSuccessfulRequestToCache()
+
+        // when
+        whenGenresRepositoryCalledToRequestGenres()
+        
+        // then
+        thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
+    }
     
-    // successful dts response maps responseDTO To domain
-    
+    // TODO: Tests for:
     // tests around the task that is being returned
-    
-    
-    
-    
     
     // TODO: Create separate tests for GenresResponseStorage
     
@@ -375,7 +397,7 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertNotNil(self.task)
     }
     
-    private func thenEnsureDTOIsMappedToDomainObject() {
+    private func thenEnsureSuccessResultReturnValueIsMappedToDomainObject() {
         let fetchedDomainObject = try? self.resultValue?.get()
         XCTAssertNotNil(fetchedDomainObject)
     }
@@ -396,12 +418,20 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertEqual(self.cache?.getResponseCallCount, 1)
     }
 
-    private func thenEnsureRepositoryDoesNotSaveToCache() {
+    private func thenEnsureRepositoryDoesNotAttemptToSaveToCache() {
         XCTAssertEqual(self.cache?.saveCallCount, 0)
     }
     
     private func thenEnsureRepositorySavesToCacheExactlyOnce() {
         XCTAssertEqual(self.cache?.saveCallCount, 1)
+    }
+
+    private func thenEnsureRepositoryPassesReceivedRequestToCache() {
+        XCTAssertEqual(self.cache?.getResponseReceivedRequest, self.request)
+    }
+
+    private func thenEnsureRepositoryPassesReceivedRequestToDataTransferService() {
+        XCTAssertEqual(self.dataTransferService?.requestReceivedRequest, self.request)
     }
 
     // MARK: - Helpers
