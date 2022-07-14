@@ -14,11 +14,11 @@ class CoreDataGenresResponseStorage {
     
     private var cache: [URLRequest : GenresResponseDTO] = [:]
     
-    private let coreDataStorage: CoreDataStorage
+    private let coreDataStorage: CoreDataStorageProtocol
     
     // MARK: - Lifecycle
     
-    init(coreDataStorage: CoreDataStorage = CoreDataStorage.shared) {
+    init(coreDataStorage: CoreDataStorageProtocol = CoreDataStorage.shared) {
         self.coreDataStorage = coreDataStorage
     }
     

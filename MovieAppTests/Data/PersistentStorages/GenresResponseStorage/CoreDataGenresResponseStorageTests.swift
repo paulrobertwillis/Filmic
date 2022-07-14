@@ -1,17 +1,19 @@
 //
-//  GenresResponseStorageTests.swift
+//  CoreDataGenresResponseStorageTests.swift
 //  MovieAppTests
 //
 //  Created by Paul on 14/07/2022.
 //
 
 import XCTest
+import CoreData
 @testable import MovieApp
 
 class GenresResponseStorageTests: XCTestCase {
     
     // MARK: Private Properties
     
+    private var coreDataStorage: CoreDataStorageMock?
     private var sut: CoreDataGenresResponseStorage?
     
     private var expectedGenresResponseDTO: GenresResponseDTO?
@@ -26,7 +28,7 @@ class GenresResponseStorageTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.sut = CoreDataGenresResponseStorage()
+        self.sut = CoreDataGenresResponseStorage(coreDataStorage: self.coreDataStorage!)
         
         self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
 
@@ -34,6 +36,7 @@ class GenresResponseStorageTests: XCTestCase {
     }
     
     override func tearDown() {
+        self.coreDataStorage = nil
         self.sut = nil
         
         self.expectedGenresResponseDTO = nil
@@ -137,3 +140,12 @@ class GenresResponseStorageTests: XCTestCase {
     }
 }
 
+class CoreDataStorageMock: CoreDataStorageProtocol {
+
+    
+    func saveContext(backgroundContext: NSManagedObjectContext?) {
+        
+    }
+    
+    
+}

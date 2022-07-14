@@ -38,7 +38,7 @@
 		698EC420287E2F5A008DCF21 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC41F287E2F5A008DCF21 /* CoreDataStorage.swift */; };
 		698EC422287E3064008DCF21 /* GenresResponseStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC421287E3064008DCF21 /* GenresResponseStorageProtocol.swift */; };
 		698EC425287E37CF008DCF21 /* GenresResponseStorageMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EC424287E37CF008DCF21 /* GenresResponseStorageMock.swift */; };
-		699B15132880B21B00814187 /* GenresResponseStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699B15122880B21B00814187 /* GenresResponseStorageTests.swift */; };
+		699B15132880B21B00814187 /* CoreDataGenresResponseStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699B15122880B21B00814187 /* CoreDataGenresResponseStorageTests.swift */; };
 		699B15172880C24A00814187 /* CoreDataGenresResponseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699B15162880C24A00814187 /* CoreDataGenresResponseStorage.swift */; };
 		699B15192880C3A500814187 /* GenresRequestDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699B15182880C3A500814187 /* GenresRequestDTO+Mapping.swift */; };
 		69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */; };
@@ -109,7 +109,7 @@
 		698EC41F287E2F5A008DCF21 /* CoreDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStorage.swift; sourceTree = "<group>"; };
 		698EC421287E3064008DCF21 /* GenresResponseStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresResponseStorageProtocol.swift; sourceTree = "<group>"; };
 		698EC424287E37CF008DCF21 /* GenresResponseStorageMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresResponseStorageMock.swift; sourceTree = "<group>"; };
-		699B15122880B21B00814187 /* GenresResponseStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresResponseStorageTests.swift; sourceTree = "<group>"; };
+		699B15122880B21B00814187 /* CoreDataGenresResponseStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGenresResponseStorageTests.swift; sourceTree = "<group>"; };
 		699B15162880C24A00814187 /* CoreDataGenresResponseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGenresResponseStorage.swift; sourceTree = "<group>"; };
 		699B15182880C3A500814187 /* GenresRequestDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresRequestDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69AD7317286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
@@ -483,7 +483,7 @@
 		699B15152880BC0E00814187 /* GenresResponseStorage */ = {
 			isa = PBXGroup;
 			children = (
-				699B15122880B21B00814187 /* GenresResponseStorageTests.swift */,
+				699B15122880B21B00814187 /* CoreDataGenresResponseStorageTests.swift */,
 			);
 			path = GenresResponseStorage;
 			sourceTree = "<group>";
@@ -719,7 +719,7 @@
 				69F6239528763E100059307F /* ResponseDecoderTests.swift in Sources */,
 				69AD7320286F1B8C009C5F3E /* DataTransferServiceMock.swift in Sources */,
 				69AD7322286F1BB3009C5F3E /* NetworkRequestPerformerMock.swift in Sources */,
-				699B15132880B21B00814187 /* GenresResponseStorageTests.swift in Sources */,
+				699B15132880B21B00814187 /* CoreDataGenresResponseStorageTests.swift in Sources */,
 				698EC3EF2877B2D0008DCF21 /* NetworkLogPrinterMock.swift in Sources */,
 				695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */,
 				69AD731E286F1B58009C5F3E /* GenresRepositoryMock.swift in Sources */,
