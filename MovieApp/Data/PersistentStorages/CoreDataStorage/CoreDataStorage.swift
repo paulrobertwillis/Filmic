@@ -14,16 +14,18 @@ enum CoreDataStorageError: Error {
 
 protocol CoreDataStorageProtocol {
     func saveContext(backgroundContext: NSManagedObjectContext?)
+    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void)
 }
 
 class CoreDataStorage {
+    public static let modelName = "DataModel"
     
     static let shared = CoreDataStorage()
     
     // MARK: - Core Data stack
     // taken from Apple Documentation: https://developer.apple.com/documentation/coredata/setting_up_a_core_data_stack
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "DataModel")
+        let container = NSPersistentContainer(name: CoreDataStorage.modelName)
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
@@ -46,6 +48,10 @@ extension CoreDataStorage: CoreDataStorageProtocol {
         } catch let error as NSError {
             print("Error: \(error), \(error.userInfo)")
         }
+    }
+    
+    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
+        
     }
 }
 
