@@ -28,6 +28,8 @@ class GenresResponseStorageTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
+        self.coreDataStorage = CoreDataStorageMock()
+        
         self.sut = CoreDataGenresResponseStorage(coreDataStorage: self.coreDataStorage!)
         
         self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
@@ -86,13 +88,6 @@ class GenresResponseStorageTests: XCTestCase {
         XCTAssertEqual(expectedGenresResponseDTO, returnedGenresResponseDTO)
     }
     
-    // if storage contains matching response for request, update existing value
-    
-    
-    // if storage does not contain matching response, save response. If storage called again with new response and same request, update existing value
-    
-    
-    
     // MARK: - Given
     
     private func givenGenresResponseStorageContainsMatchingResponseForRequest() {
@@ -138,14 +133,4 @@ class GenresResponseStorageTests: XCTestCase {
     private func thenEnsureCorrectErrorIsReturnedInFailureReturnValue() {
         XCTAssertEqual(.readError, self.returnedError)
     }
-}
-
-class CoreDataStorageMock: CoreDataStorageProtocol {
-
-    
-    func saveContext(backgroundContext: NSManagedObjectContext?) {
-        
-    }
-    
-    
 }

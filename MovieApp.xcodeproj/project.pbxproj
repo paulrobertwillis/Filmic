@@ -452,6 +452,7 @@
 		698EC423287E37B2008DCF21 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				69CFF42028919BE000EA4C70 /* CoreDataStorageMock.swift */,
 				698EC424287E37CF008DCF21 /* GenresResponseStorageMock.swift */,
 			);
 			path = CoreData;
@@ -469,7 +470,6 @@
 		699B15112880B1FD00814187 /* CoreDataStorage */ = {
 			isa = PBXGroup;
 			children = (
-				69CFF42028919BE000EA4C70 /* CoreDataStorageMock.swift */,
 			);
 			path = CoreDataStorage;
 			sourceTree = "<group>";

@@ -21,18 +21,13 @@ class CoreDataGenresResponseStorage {
     init(coreDataStorage: CoreDataStorageProtocol = CoreDataStorage.shared) {
         self.coreDataStorage = coreDataStorage
     }
-    
-    // MARK: - Helpers
-    
-//    private func fetchRequest(for requestDTO: GenresRequestDTO) -> NSFetchRequest<NSManagedObject> {
-//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "GenresResponseEntity")
-//    }
 }
 
 // MARK: - GenresResponseStorageProtocol
 
 extension CoreDataGenresResponseStorage: GenresResponseStorageProtocol {
     func getResponse(for request: URLRequest, completion: @escaping GenresResponseStorageCompletionHandler) {
+        
         if let returnValue = self.cache[request] {
             completion(.success(returnValue))
         } else {

@@ -14,7 +14,6 @@ enum CoreDataStorageError: Error {
 
 protocol CoreDataStorageProtocol {
     func saveContext(backgroundContext: NSManagedObjectContext?)
-    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void)
 }
 
 class CoreDataStorage {
@@ -48,10 +47,6 @@ extension CoreDataStorage: CoreDataStorageProtocol {
         } catch let error as NSError {
             print("Error: \(error), \(error.userInfo)")
         }
-    }
-    
-    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        
     }
 }
 
