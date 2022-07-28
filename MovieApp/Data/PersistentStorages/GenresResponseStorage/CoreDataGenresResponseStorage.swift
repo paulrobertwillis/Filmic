@@ -12,7 +12,7 @@ class CoreDataGenresResponseStorage {
     
     // MARK: - Private Properties
     
-    private var cache: [URLRequest : GenresResponseDTO] = [:]
+    private var cache: [GenresRequestDTO : GenresResponseDTO] = [:]
     
     private let coreDataStorage: CoreDataStorageProtocol
     
@@ -26,7 +26,7 @@ class CoreDataGenresResponseStorage {
 // MARK: - GenresResponseStorageProtocol
 
 extension CoreDataGenresResponseStorage: GenresResponseStorageProtocol {
-    func getResponse(for request: URLRequest, completion: @escaping GenresResponseStorageCompletionHandler) {
+    func getResponse(for request: GenresRequestDTO, completion: @escaping GenresResponseStorageCompletionHandler) {
         
         if let returnValue = self.cache[request] {
             completion(.success(returnValue))
@@ -35,7 +35,7 @@ extension CoreDataGenresResponseStorage: GenresResponseStorageProtocol {
         }
     }
         
-    func save(response: GenresResponseDTO, for request: URLRequest) {
+    func save(response: GenresResponseDTO, for request: GenresRequestDTO) {
         self.cache[request] = response
     }
 }

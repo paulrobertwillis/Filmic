@@ -12,6 +12,6 @@ enum GenreType: String, Encodable {
     case tv
 }
 
-struct GenresRequestDTO: Encodable {
+struct GenresRequestDTO: Encodable, Hashable {
     let type: GenreType
 }

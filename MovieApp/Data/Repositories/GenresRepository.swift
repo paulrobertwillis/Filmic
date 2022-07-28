@@ -19,8 +19,9 @@ class GenresRepository: GenresRepositoryProtocol {
     
     @discardableResult
     func getMovieGenres(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+        let requestDTO = GenresRequestDTO(type: .movie)
         
-        self.cache.getResponse(for: request) { result in
+        self.cache.getResponse(for: requestDTO) { result in
             if case let .success(responseDTO) = result {
                 completion(.success(responseDTO.genres.map { $0.toDomain() }))
             } else {
@@ -31,7 +32,7 @@ class GenresRepository: GenresRepositoryProtocol {
                     switch result {
                     case .success(let responseDTO):
                         completion(.success(responseDTO.genres.map { $0.toDomain() }))
-                        self.cache.save(response: responseDTO, for: request)
+                        self.cache.save(response: responseDTO, for: requestDTO)
                     case .failure(let error):
                         completion(.failure(error))
                     }

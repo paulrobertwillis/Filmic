@@ -17,6 +17,7 @@ class GenresRepositoryTests: XCTestCase {
     private var task: URLSessionTask?
     
     private var request: URLRequest?
+    private var requestDTO: GenresRequestDTO!
     
     private var expectedGenresResponseDTO: GenresResponseDTO?
     private var expectedGenres: [Genre]?
@@ -32,6 +33,7 @@ class GenresRepositoryTests: XCTestCase {
         self.sut = .init(dataTransferService: self.dataTransferService!, cache: self.cache!)
         
         self.request = URLRequest(url: URL(string: "www.example.com")!)
+        self.requestDTO = .init(type: .movie)
     }
     
     override func tearDown() {
@@ -42,6 +44,7 @@ class GenresRepositoryTests: XCTestCase {
         self.task = nil
         
         self.request = nil
+        self.requestDTO = nil
         
         self.expectedGenresResponseDTO = nil
         self.expectedGenres = nil
@@ -260,8 +263,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryCalledToRequestGenres()
 
         // then
-        // TODO: Pass in request to getMovieGenres, as right now it is hardcoded!
-        thenEnsureRepositoryPassesReceivedRequestToCache()
+        thenEnsureRepositoryPassesReceivedRequestDTOToCache()
     }
     
     // sends request to cache for successful request
@@ -274,7 +276,7 @@ class GenresRepositoryTests: XCTestCase {
         whenGenresRepositoryCalledToRequestGenres()
         
         // then
-        thenEnsureRepositoryPassesReceivedRequestToCache()
+        thenEnsureRepositoryPassesReceivedRequestDTOToCache()
     }
 
     func test_DataTransferServiceRequesting_whenPerformsFailedRequestToDataTransferService_shouldPassCorrectRequestToDataTransferService() {
@@ -399,7 +401,7 @@ class GenresRepositoryTests: XCTestCase {
     }
     
     private func thenEnsureResponseSavedToCache() {
-        XCTAssertEqual(self.cache?.saveReceivedResponse, self.expectedGenresResponseDTO)
+        XCTAssertEqual(self.cache?.saveReceivedResponseDTO, self.expectedGenresResponseDTO)
     }
     
     private func thenEnsureRepositoryReturnsCorrectResponse() {
@@ -422,8 +424,8 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertEqual(self.cache?.saveCallCount, 1)
     }
 
-    private func thenEnsureRepositoryPassesReceivedRequestToCache() {
-        XCTAssertEqual(self.cache?.getResponseReceivedRequest, self.request)
+    private func thenEnsureRepositoryPassesReceivedRequestDTOToCache() {
+        XCTAssertEqual(self.cache?.getResponseReceivedRequestDTO, self.requestDTO)
     }
 
     private func thenEnsureRepositoryPassesReceivedRequestToDataTransferService() {

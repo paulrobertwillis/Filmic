@@ -22,6 +22,7 @@ class GenresResponseStorageTests: XCTestCase {
     private var returnedError: CoreDataStorageError?
     
     private var request: URLRequest?
+    private var requestDTO: GenresRequestDTO!
     
     // MARK: - Lifecycle
     
@@ -35,6 +36,7 @@ class GenresResponseStorageTests: XCTestCase {
         self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
 
         self.request = URLRequest(url: URL(string: "www.example.com")!)
+        self.requestDTO = .init(type: .movie)
     }
     
     override func tearDown() {
@@ -91,22 +93,22 @@ class GenresResponseStorageTests: XCTestCase {
     // MARK: - Given
     
     private func givenGenresResponseStorageContainsMatchingResponseForRequest() {
-        self.sut?.save(response: self.expectedGenresResponseDTO!, for: self.request!)
+        self.sut?.save(response: self.expectedGenresResponseDTO!, for: self.requestDTO)
     }
     
     // MARK: - When
     
     private func whenResponseSaved() {
-        self.sut?.save(response: self.expectedGenresResponseDTO!, for: self.request!)
+        self.sut?.save(response: self.expectedGenresResponseDTO!, for: self.requestDTO)
     }
     
     private func whenResponseRequested() {
-        guard let request = self.request else {
+        guard let requestDTO = self.requestDTO else {
             XCTFail("request should be non optional at this point of execution")
             return
         }
         
-        self.sut?.getResponse(for: request) { result in
+        self.sut?.getResponse(for: requestDTO) { result in
             switch result {
             case .success(let genresResponseDTO):
                 self.returnedGenresResponseDTO = genresResponseDTO
