@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21A559" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="GenreResponseEntity" representedClassName="GenreResponseEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
         <relationship name="genresResponse" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GenresResponseEntity" inverseName="genres" inverseEntity="GenresResponseEntity"/>
     </entity>
     <entity name="GenresRequestEntity" representedClassName="GenresRequestEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="type" optional="YES" attributeType="String"/>
-        <relationship name="response" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GenresResponseEntity" inverseName="request" inverseEntity="GenresResponseEntity"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="genresResponse" maxCount="1" deletionRule="Nullify" destinationEntity="GenresResponseEntity" inverseName="request" inverseEntity="GenresResponseEntity"/>
     </entity>
     <entity name="GenresResponseEntity" representedClassName="GenresResponseEntity" syncable="YES" codeGenerationType="class">
-        <relationship name="genres" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GenreResponseEntity" inverseName="genresResponse" inverseEntity="GenreResponseEntity"/>
-        <relationship name="request" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GenresRequestEntity" inverseName="response" inverseEntity="GenresRequestEntity"/>
+        <relationship name="genres" maxCount="1" deletionRule="Nullify" destinationEntity="GenreResponseEntity" inverseName="genresResponse" inverseEntity="GenreResponseEntity"/>
+        <relationship name="request" maxCount="1" deletionRule="Nullify" destinationEntity="GenresRequestEntity" inverseName="genresResponse" inverseEntity="GenresRequestEntity"/>
     </entity>
     <elements>
-        <element name="GenresResponseEntity" positionX="-63" positionY="-18" width="128" height="59"/>
-        <element name="GenresRequestEntity" positionX="-54" positionY="0" width="128" height="59"/>
-        <element name="GenreResponseEntity" positionX="-45" positionY="27" width="128" height="74"/>
+        <element name="GenreResponseEntity" positionX="-752.53125" positionY="201.8828125" width="142.08203125" height="88"/>
+        <element name="GenresRequestEntity" positionX="-224.6484375" positionY="30.46484375" width="128" height="73"/>
+        <element name="GenresResponseEntity" positionX="-539.55078125" positionY="-69.76171875" width="128" height="73"/>
     </elements>
 </model>

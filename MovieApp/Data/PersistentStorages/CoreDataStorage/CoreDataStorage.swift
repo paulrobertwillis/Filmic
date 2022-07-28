@@ -17,11 +17,11 @@ protocol CoreDataStorageProtocol {
 }
 
 class CoreDataStorage {
-    public static let modelName = "DataModel"
+    public static let modelName = "CoreDataStorage"
     
     static let shared = CoreDataStorage()
     
-    // MARK: - Core Data stack
+    // MARK: - Core Data Stack
     // taken from Apple Documentation: https://developer.apple.com/documentation/coredata/setting_up_a_core_data_stack
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: CoreDataStorage.modelName)
