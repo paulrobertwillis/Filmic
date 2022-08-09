@@ -50,7 +50,7 @@
 		69AD7324286F1BD4009C5F3E /* MoviesRepositoryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7323286F1BD4009C5F3E /* MoviesRepositoryMock.swift */; };
 		69AD7327286F3723009C5F3E /* TMDBResponseMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AD7326286F3723009C5F3E /* TMDBResponseMocks.swift */; };
 		69CFF42128919BE000EA4C70 /* CoreDataStorageMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CFF42028919BE000EA4C70 /* CoreDataStorageMock.swift */; };
-		69CFF45228A01F6D00EA4C70 /* GenresResponseEntity+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CFF45128A01F6D00EA4C70 /* GenresResponseEntity+Mapping.swift */; };
+		69CFF45228A01F6D00EA4C70 /* GenresResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CFF45128A01F6D00EA4C70 /* GenresResponse+Mapping.swift */; };
 		69CFF48928A0247F00EA4C70 /* GenreResponse+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CFF48328A0247F00EA4C70 /* GenreResponse+CoreDataClass.swift */; };
 		69CFF48A28A0247F00EA4C70 /* GenreResponse+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CFF48428A0247F00EA4C70 /* GenreResponse+CoreDataProperties.swift */; };
 		69CFF48B28A0247F00EA4C70 /* GenresRequest+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CFF48528A0247F00EA4C70 /* GenresRequest+CoreDataClass.swift */; };
@@ -129,7 +129,7 @@
 		69AD7323286F1BD4009C5F3E /* MoviesRepositoryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesRepositoryMock.swift; sourceTree = "<group>"; };
 		69AD7326286F3723009C5F3E /* TMDBResponseMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBResponseMocks.swift; sourceTree = "<group>"; };
 		69CFF42028919BE000EA4C70 /* CoreDataStorageMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStorageMock.swift; sourceTree = "<group>"; };
-		69CFF45128A01F6D00EA4C70 /* GenresResponseEntity+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponseEntity+Mapping.swift"; sourceTree = "<group>"; };
+		69CFF45128A01F6D00EA4C70 /* GenresResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenresResponse+Mapping.swift"; sourceTree = "<group>"; };
 		69CFF48328A0247F00EA4C70 /* GenreResponse+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "GenreResponse+CoreDataClass.swift"; path = "MovieApp/Data/PersistentStorages/GenresResponseStorage/EntityMapping/GenreResponse/GenreResponse+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		69CFF48428A0247F00EA4C70 /* GenreResponse+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "GenreResponse+CoreDataProperties.swift"; path = "MovieApp/Data/PersistentStorages/GenresResponseStorage/EntityMapping/GenreResponse/GenreResponse+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		69CFF48528A0247F00EA4C70 /* GenresRequest+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "GenresRequest+CoreDataClass.swift"; path = "MovieApp/Data/PersistentStorages/GenresResponseStorage/EntityMapping/GenresRequest/GenresRequest+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -556,7 +556,7 @@
 			children = (
 				69CFF48728A0247F00EA4C70 /* GenresResponse+CoreDataClass.swift */,
 				69CFF48828A0247F00EA4C70 /* GenresResponse+CoreDataProperties.swift */,
-				69CFF45128A01F6D00EA4C70 /* GenresResponseEntity+Mapping.swift */,
+				69CFF45128A01F6D00EA4C70 /* GenresResponse+Mapping.swift */,
 			);
 			path = GenresResponse;
 			sourceTree = "<group>";
@@ -753,7 +753,7 @@
 				6964BA2B2869EAD600844047 /* GetTopRatedMoviesUseCase.swift in Sources */,
 				698EC422287E3064008DCF21 /* GenresResponseStorageProtocol.swift in Sources */,
 				698EC3FB2878E2CE008DCF21 /* LogOutput.swift in Sources */,
-				69CFF45228A01F6D00EA4C70 /* GenresResponseEntity+Mapping.swift in Sources */,
+				69CFF45228A01F6D00EA4C70 /* GenresResponse+Mapping.swift in Sources */,
 				69AD7318286DFA96009C5F3E /* GenresResponseDTO+Mapping.swift in Sources */,
 				695D8EA828562032008B583A /* AppDelegate.swift in Sources */,
 				692F0937285A7DCB00780F72 /* NetworkService.swift in Sources */,

@@ -10,10 +10,7 @@ import CoreData
 
 class CoreDataGenresResponseStorage {
     
-    // MARK: - Private Properties
-    
-    private var cache: [GenresRequestDTO : GenresResponseDTO] = [:]
-    
+    // MARK: - Private Properties    
     private let managedObjectContext: NSManagedObjectContext
     private let coreDataStorage: CoreDataStorageProtocol
     
@@ -29,33 +26,28 @@ class CoreDataGenresResponseStorage {
 
 extension CoreDataGenresResponseStorage: GenresResponseStorageProtocol {
     func getResponse(for requestDTO: GenresRequestDTO, completion: @escaping GenresResponseStorageCompletionHandler) {
+
+        // TODO: Use requestDTO here!
         
-        if let returnValue = self.cache[requestDTO] {
-            completion(.success(returnValue))
-        } else {
+        do {
+            let request = GenresResponse.createFetchRequest()
+            let genresResponse = try self.managedObjectContext.fetch(request).first
+            
+            if genresResponse == nil {
+                throw CoreDataStorageError.emptyStorageError
+            } else {
+                completion(.success(genresResponse!.toDTO()))
+            }
+            
+        } catch {
             completion(.failure(CoreDataStorageError.readError))
         }
     }
-        
+    
     func save(responseDTO: GenresResponseDTO, for requestDTO: GenresRequestDTO) {
-        self.cache[requestDTO] = responseDTO
-        
         let requestEntity = requestDTO.toEntity(in: self.managedObjectContext)
         requestEntity.genresResponse = responseDTO.toEntity(in: self.managedObjectContext)
         
         self.coreDataStorage.saveContext(backgroundContext: self.managedObjectContext)
     }
-    
-//    public func add(_ location: String, numberTested: Int32, numberPositive: Int32, numberNegative: Int32) -> PandemicReport {
-//      let report = PandemicReport(context: managedObjectContext)
-//      report.id = UUID()
-//      report.dateReported = Date()
-//      report.numberTested = numberTested
-//      report.numberNegative = numberNegative
-//      report.numberPositive = numberPositive
-//      report.location = location
-//
-//      coreDataStack.saveContext(managedObjectContext)
-//      return report
-//    }
 }

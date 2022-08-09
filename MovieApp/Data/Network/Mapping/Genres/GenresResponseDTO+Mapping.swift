@@ -7,8 +7,7 @@
 
 import Foundation
 
-// TODO: Remove public access
-public struct GenresResponseDTO: Decodable, Equatable {
+struct GenresResponseDTO: Decodable, Equatable {
     let genres: [GenreDTO]
 }
 

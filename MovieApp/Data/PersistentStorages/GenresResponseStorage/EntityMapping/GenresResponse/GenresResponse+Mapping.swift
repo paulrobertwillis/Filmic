@@ -1,5 +1,5 @@
 //
-//  GenresResponseEntity+Mapping.swift
+//  GenresResponse+Mapping.swift
 //  MovieApp
 //
 //  Created by Paul on 07/08/2022.
@@ -7,6 +7,19 @@
 
 import Foundation
 import CoreData
+
+extension GenresResponse {
+    func toDTO() -> GenresResponseDTO {
+        .init(genres: self.genres?.allObjects.map { ($0 as! GenreResponse).toDTO() } ?? [])
+    }
+}
+
+extension GenreResponse {
+    func toDTO() -> GenresResponseDTO.GenreDTO {
+        .init(id: Int(self.id),
+              name: self.name ?? "")
+    }
+}
 
 extension GenresRequestDTO {
     func toEntity(in context: NSManagedObjectContext) -> GenresRequest {

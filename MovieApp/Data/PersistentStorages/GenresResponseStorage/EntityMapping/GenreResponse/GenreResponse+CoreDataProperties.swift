@@ -12,8 +12,8 @@ import CoreData
 
 extension GenreResponse {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<GenreResponse> {
-        return NSFetchRequest<GenreResponse>(entityName: "GenreResponseEntity")
+    @nonobjc public class func createFetchRequest() -> NSFetchRequest<GenreResponse> {
+        return NSFetchRequest<GenreResponse>(entityName: "GenreResponse")
     }
 
     @NSManaged public var id: Int32

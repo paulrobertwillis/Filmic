@@ -10,6 +10,7 @@ import CoreData
 enum CoreDataStorageError: Error {
     case readError
     case saveError
+    case emptyStorageError
 }
 
 protocol CoreDataStorageProtocol {

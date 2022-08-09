@@ -12,8 +12,8 @@ import CoreData
 
 extension GenresRequest {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<GenresRequest> {
-        return NSFetchRequest<GenresRequest>(entityName: "GenresRequestEntity")
+    @nonobjc public class func createFetchRequest() -> NSFetchRequest<GenresRequest> {
+        return NSFetchRequest<GenresRequest>(entityName: "GenresRequest")
     }
 
     @NSManaged public var type: String?

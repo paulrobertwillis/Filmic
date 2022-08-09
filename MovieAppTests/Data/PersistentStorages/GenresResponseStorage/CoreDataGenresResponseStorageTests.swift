@@ -16,8 +16,8 @@ class GenresResponseStorageTests: XCTestCase {
     private var coreDataStorage: CoreDataStorageMock!
     private var sut: CoreDataGenresResponseStorage!
     
-    private var expectedGenresResponseDTO: GenresResponseDTO!
-    private var returnedGenresResponseDTO: GenresResponseDTO!
+    private var expectedGenresResponseDTO: GenresResponseDTO?
+    private var returnedGenresResponseDTO: GenresResponseDTO?
     
     private var returnedError: CoreDataStorageError!
     
@@ -33,7 +33,7 @@ class GenresResponseStorageTests: XCTestCase {
         self.sut = CoreDataGenresResponseStorage(managedObjectContext: self.coreDataStorage.mainContext, coreDataStorage: self.coreDataStorage)
         
         self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
-
+        
         self.request = URLRequest(url: URL(string: "www.example.com")!)
         self.requestDTO = .init(type: .movie)
     }
@@ -46,7 +46,7 @@ class GenresResponseStorageTests: XCTestCase {
         self.returnedGenresResponseDTO = nil
         
         self.request = nil
-
+        
         super.tearDown()
     }
     
@@ -54,7 +54,18 @@ class GenresResponseStorageTests: XCTestCase {
     
     func test_GettingResponse_whenStorageContainsMatchingResponseForRequest_shouldReturnCorrectResponseInSuccessResultValue() {
         // given
-        givenGenresResponseStorageContainsMatchingResponseForRequest()
+        self.sut.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
+
+        // when
+        whenResponseRequested()
+        
+        // then
+        thenEnsureCorrectResponseReturnedInSuccessReturnValue()
+    }
+    
+    func test_GettingResponse_givenStorageDoesNotContainMatchingResponseForRequest_whenResponseRequested_shouldReturnNilInSuccessResultValue() {
+        // given
+        givenGenresResponseStorageDoesNotContainMatchingResponseForRequest()
         
         // when
         whenResponseRequested()
@@ -63,9 +74,9 @@ class GenresResponseStorageTests: XCTestCase {
         thenEnsureCorrectResponseReturnedInSuccessReturnValue()
     }
     
-    func test_GettingResponse_whenStorageDoesNotContainMatchingResponseForRequest_shouldReturnErrorInFailureResultValue() {
+    func test_GettingResponse_whenCannotFetchResponseForRequest_shouldReturnErrorInFailureResultValue() {
         // when
-        whenResponseRequested()
+        whenFailsToFetchResponse()
         
         // then
         thenEnsureCorrectErrorIsReturnedInFailureReturnValue()
@@ -84,42 +95,56 @@ class GenresResponseStorageTests: XCTestCase {
     func test_SavingContext_whenStorageDoesNotContainMatchingResponseForRequest_shouldSaveResponseToStorage() {
         // given
         expectation(
-          forNotification: .NSManagedObjectContextDidSave,
-          object: self.coreDataStorage.mainContext) { _ in
-            return true
-        }
+            forNotification: .NSManagedObjectContextDidSave,
+            object: self.coreDataStorage.mainContext) { _ in
+                return true
+            }
         
         // when
         self.coreDataStorage.mainContext.perform {
-            self.sut.save(responseDTO: self.expectedGenresResponseDTO, for: self.requestDTO)
+            self.sut.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
         }
         
         // then
         waitForExpectations(timeout: 2.0) { error in
-          XCTAssertNil(error, "Save did not occur")
+            XCTAssertNil(error, "Save did not occur")
         }
     }
-
+    
+    // TODO: Test emptyStorageError of CoreDataStorage
+    
+    
     
     
     // MARK: - Given
     
-    private func givenGenresResponseStorageContainsMatchingResponseForRequest() {
-        self.sut?.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
+    private func givenGenresResponseStorageDoesNotContainMatchingResponseForRequest() {
+        self.expectedGenresResponseDTO = nil
     }
     
     // MARK: - When
     
     private func whenResponseSaved() {
-        self.sut?.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
+        self.sut.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
     }
     
     private func whenResponseRequested() {
-        self.sut?.getResponse(for: self.requestDTO) { result in
+        self.sut.getResponse(for: self.requestDTO) { result in
             switch result {
             case .success(let genresResponseDTO):
                 self.returnedGenresResponseDTO = genresResponseDTO
+                print(">>> \(genresResponseDTO.genres)")
             case .failure(let error):
+                self.returnedError = error
+            }
+        }
+    }
+    
+    private func whenFailsToFetchResponse() {
+        self.coreDataStorage.willFailToFetchResponse = true
+        
+        self.sut?.getResponse(for: self.requestDTO) { result in
+            if case let .failure(error) = result {
                 self.returnedError = error
             }
         }
