@@ -30,8 +30,7 @@ class GenresResponseStorageTests: XCTestCase {
         super.setUp()
         
         self.coreDataStorage = CoreDataStorageMock()
-        
-        self.sut = CoreDataGenresResponseStorage(coreDataStorage: self.coreDataStorage!)
+        self.sut = CoreDataGenresResponseStorage(managedObjectContext: self.coreDataStorage.mainContext, coreDataStorage: self.coreDataStorage)
         
         self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
 
@@ -83,37 +82,24 @@ class GenresResponseStorageTests: XCTestCase {
     }
     
     func test_SavingContext_whenStorageDoesNotContainMatchingResponseForRequest_shouldSaveResponseToStorage() {
-        // 1
-        let mainContext = self.coreDataStorage.mainContext
-        let sut = CoreDataGenresResponseStorage(managedObjectContext: mainContext, coreDataStorage: self.coreDataStorage)
-
-        let genresRequestDTO = GenresRequestDTO(type: .movie)
-
-        // 2
+        // given
         expectation(
           forNotification: .NSManagedObjectContextDidSave,
           object: self.coreDataStorage.mainContext) { _ in
             return true
         }
         
-        // 3
-        mainContext.perform {
-            sut.save(responseDTO: self.expectedGenresResponseDTO, for: genresRequestDTO)
+        // when
+        self.coreDataStorage.mainContext.perform {
+            self.sut.save(responseDTO: self.expectedGenresResponseDTO, for: self.requestDTO)
         }
         
-        // 4
+        // then
         waitForExpectations(timeout: 2.0) { error in
           XCTAssertNil(error, "Save did not occur")
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
     
     
     // MARK: - Given
