@@ -22,7 +22,7 @@ class SearchCollectionViewController: UICollectionViewController {
         let networkService = NetworkService(networkRequestPerformer: networkRequestPerformer, logger: logger)
         
         let dataTransferService = DataTransferService<GenresResponseDTO>(networkService: networkService)
-        let cache = CoreDataGenresResponseStorage()
+        let cache = CoreDataGenresResponseStorage(managedObjectContext: CoreDataStorage.shared.persistentContainer.viewContext)
         let repository = GenresRepository(dataTransferService: dataTransferService, cache: cache)
         let useCase = GetMovieGenresUseCase(repository: repository)
         

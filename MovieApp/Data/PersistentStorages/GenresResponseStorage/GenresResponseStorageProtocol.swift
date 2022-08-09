@@ -11,6 +11,6 @@ protocol GenresResponseStorageProtocol {
     typealias GenresResponseStorageResultValue = (Result<GenresResponseDTO, CoreDataStorageError>)
     typealias GenresResponseStorageCompletionHandler = (GenresResponseStorageResultValue) -> Void
     
-    func getResponse(for request: GenresRequestDTO, completion: @escaping GenresResponseStorageCompletionHandler)
-    func save(response: GenresResponseDTO, for request: GenresRequestDTO)
+    func getResponse(for requestDTO: GenresRequestDTO, completion: @escaping GenresResponseStorageCompletionHandler)
+    func save(responseDTO: GenresResponseDTO, for requestDTO: GenresRequestDTO)
 }

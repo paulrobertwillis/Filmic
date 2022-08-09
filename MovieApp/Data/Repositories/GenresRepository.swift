@@ -32,7 +32,7 @@ class GenresRepository: GenresRepositoryProtocol {
                     switch result {
                     case .success(let responseDTO):
                         completion(.success(responseDTO.genres.map { $0.toDomain() }))
-                        self.cache.save(response: responseDTO, for: requestDTO)
+                        self.cache.save(responseDTO: responseDTO, for: requestDTO)
                     case .failure(let error):
                         completion(.failure(error))
                     }

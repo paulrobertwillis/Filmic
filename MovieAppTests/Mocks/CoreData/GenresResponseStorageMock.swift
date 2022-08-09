@@ -39,9 +39,9 @@ class GenresResponseStorageMock: GenresResponseStorageProtocol {
     // requestDTO parameter
     var saveReceivedRequestDTO: GenresRequestDTO?
     
-    func save(response: GenresResponseDTO, for request: GenresRequestDTO) {
+    func save(responseDTO: GenresResponseDTO, for requestDTO: GenresRequestDTO) {
         self.saveCallCount += 1
-        self.saveReceivedResponseDTO = response
-        self.saveReceivedRequestDTO = request
+        self.saveReceivedResponseDTO = responseDTO
+        self.saveReceivedRequestDTO = requestDTO
     }
 }

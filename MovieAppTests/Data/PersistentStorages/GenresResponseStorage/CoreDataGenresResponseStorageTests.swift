@@ -13,15 +13,15 @@ class GenresResponseStorageTests: XCTestCase {
     
     // MARK: Private Properties
     
-    private var coreDataStorage: CoreDataStorageMock?
-    private var sut: CoreDataGenresResponseStorage?
+    private var coreDataStorage: CoreDataStorageMock!
+    private var sut: CoreDataGenresResponseStorage!
     
-    private var expectedGenresResponseDTO: GenresResponseDTO?
-    private var returnedGenresResponseDTO: GenresResponseDTO?
+    private var expectedGenresResponseDTO: GenresResponseDTO!
+    private var returnedGenresResponseDTO: GenresResponseDTO!
     
-    private var returnedError: CoreDataStorageError?
+    private var returnedError: CoreDataStorageError!
     
-    private var request: URLRequest?
+    private var request: URLRequest!
     private var requestDTO: GenresRequestDTO!
     
     // MARK: - Lifecycle
@@ -79,36 +79,57 @@ class GenresResponseStorageTests: XCTestCase {
         whenResponseRequested()
         
         // then
-        guard
-            let expectedGenresResponseDTO = expectedGenresResponseDTO,
-            let returnedGenresResponseDTO = returnedGenresResponseDTO
-        else {
-            XCTFail("expected and returned GenresResponseDTOs should be non optional at this point of execution")
-            return
-        }
-
-        XCTAssertEqual(expectedGenresResponseDTO, returnedGenresResponseDTO)
+        XCTAssertEqual(self.expectedGenresResponseDTO, self.returnedGenresResponseDTO)
     }
+    
+    func test_SavingContext_whenStorageDoesNotContainMatchingResponseForRequest_shouldSaveResponseToStorage() {
+        // 1
+        let mainContext = self.coreDataStorage.mainContext
+        let sut = CoreDataGenresResponseStorage(managedObjectContext: mainContext, coreDataStorage: self.coreDataStorage)
+
+        let genresRequestDTO = GenresRequestDTO(type: .movie)
+
+        // 2
+        expectation(
+          forNotification: .NSManagedObjectContextDidSave,
+          object: self.coreDataStorage.mainContext) { _ in
+            return true
+        }
+        
+        // 3
+        mainContext.perform {
+            sut.save(responseDTO: self.expectedGenresResponseDTO, for: genresRequestDTO)
+        }
+        
+        // 4
+        waitForExpectations(timeout: 2.0) { error in
+          XCTAssertNil(error, "Save did not occur")
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
     
     // MARK: - Given
     
     private func givenGenresResponseStorageContainsMatchingResponseForRequest() {
-        self.sut?.save(response: self.expectedGenresResponseDTO!, for: self.requestDTO)
+        self.sut?.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
     }
     
     // MARK: - When
     
     private func whenResponseSaved() {
-        self.sut?.save(response: self.expectedGenresResponseDTO!, for: self.requestDTO)
+        self.sut?.save(responseDTO: self.expectedGenresResponseDTO!, for: self.requestDTO)
     }
     
     private func whenResponseRequested() {
-        guard let requestDTO = self.requestDTO else {
-            XCTFail("request should be non optional at this point of execution")
-            return
-        }
-        
-        self.sut?.getResponse(for: requestDTO) { result in
+        self.sut?.getResponse(for: self.requestDTO) { result in
             switch result {
             case .success(let genresResponseDTO):
                 self.returnedGenresResponseDTO = genresResponseDTO
@@ -121,15 +142,7 @@ class GenresResponseStorageTests: XCTestCase {
     // MARK: - Then
     
     private func thenEnsureCorrectResponseReturnedInSuccessReturnValue() {
-        guard
-            let expectedGenresResponseDTO = expectedGenresResponseDTO,
-            let returnedGenresResponseDTO = returnedGenresResponseDTO
-        else {
-            XCTFail("expected and returned GenresResponseDTOs should be non optional at this point of execution")
-            return
-        }
-
-        XCTAssertEqual(expectedGenresResponseDTO, returnedGenresResponseDTO)
+        XCTAssertEqual(self.expectedGenresResponseDTO, self.returnedGenresResponseDTO)
     }
     
     private func thenEnsureCorrectErrorIsReturnedInFailureReturnValue() {
