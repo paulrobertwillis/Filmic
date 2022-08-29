@@ -22,7 +22,7 @@ class NetworkRequestPerformerMock: NetworkRequestPerformerProtocol {
         self.error = error
     }
 
-    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
+    func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask {
         self.requestCallsCount += 1
         
         completion(data, response, error)

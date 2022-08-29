@@ -37,7 +37,7 @@ protocol NetworkServiceProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
+    func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
 class NetworkService {
@@ -60,7 +60,7 @@ class NetworkService {
 extension NetworkService: NetworkServiceProtocol {
     
     @discardableResult
-    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
 //        let url = URL(string: "example.com")!
 //        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 //            // Parse the data in the response and use it
@@ -74,7 +74,7 @@ extension NetworkService: NetworkServiceProtocol {
 //        task.resume()
 //        return task
         
-        let task = self.networkRequestPerformer.request(request: request) { data, response, error in
+        let task = self.networkRequestPerformer.request(request) { data, response, error in
             
             if let response = response as? HTTPURLResponse {
                 let networkResponse = NetworkResponse(urlResponse: response, requestName: .unknown, data: data)

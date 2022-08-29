@@ -21,7 +21,7 @@ class NetworkServiceMock: NetworkServiceProtocol {
     // completion parameter
     var requestCompletionReturnValue: ResultValue = .success(nil)
 
-    func request(request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
+    func request(_ request: URLRequest, completion: CompletionHandler) -> URLSessionTask? {
         self.requestCallsCount += 1
         
         self.requestReceivedRequest = request
