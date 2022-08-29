@@ -74,7 +74,7 @@ extension NetworkService: NetworkServiceProtocol {
 //        task.resume()
 //        return task
         
-        _ = self.networkRequestPerformer.request(request: request) { data, response, error in
+        let task = self.networkRequestPerformer.request(request: request) { data, response, error in
             
             if let response = response as? HTTPURLResponse {
                 let networkResponse = NetworkResponse(urlResponse: response, requestName: .unknown, data: data)
@@ -92,12 +92,6 @@ extension NetworkService: NetworkServiceProtocol {
                 
                 completion (.failure(errorToBeReturned))
             } else {
-//                guard let data = data else { return }
-//                let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
-//                let genres = genresResponseDTO?.genres.map { $0.toDomain() }
-//
-//                guard let genres = genres else { return }
-                
                 completion(.success(data))
             }
         }
@@ -105,6 +99,6 @@ extension NetworkService: NetworkServiceProtocol {
         let loggableRequest = NetworkRequest(urlRequest: request, requestName: .getMovieGenres)
         self.logger.log(loggableRequest)
         
-        return URLSessionTask()
+        return task
     }
 }
