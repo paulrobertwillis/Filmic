@@ -23,6 +23,7 @@
 		695D8EE028564387008B583A /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 695D8EDF28564387008B583A /* CollectionViewCell.xib */; };
 		69638E4928C28982005D5E9D /* AppFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E4828C28982005D5E9D /* AppFlowCoordinator.swift */; };
 		69638E4C28C29813005D5E9D /* AppDependencyInjectionContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E4B28C29813005D5E9D /* AppDependencyInjectionContainer.swift */; };
+		69638E4F28C29F89005D5E9D /* StoryboardInstantiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E4E28C29F89005D5E9D /* StoryboardInstantiable.swift */; };
 		6964BA2B2869EAD600844047 /* GetTopRatedMoviesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2A2869EAD600844047 /* GetTopRatedMoviesUseCase.swift */; };
 		6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2C2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift */; };
 		6964BA2F2869EC3100844047 /* GenresRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */; };
@@ -104,6 +105,7 @@
 		695D8EDF28564387008B583A /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		69638E4828C28982005D5E9D /* AppFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlowCoordinator.swift; sourceTree = "<group>"; };
 		69638E4B28C29813005D5E9D /* AppDependencyInjectionContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyInjectionContainer.swift; sourceTree = "<group>"; };
+		69638E4E28C29F89005D5E9D /* StoryboardInstantiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstantiable.swift; sourceTree = "<group>"; };
 		6964BA2A2869EAD600844047 /* GetTopRatedMoviesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTopRatedMoviesUseCase.swift; sourceTree = "<group>"; };
 		6964BA2C2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTopRatedMoviesUseCaseTests.swift; sourceTree = "<group>"; };
 		6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 		692F091F285A687600780F72 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				69638E4D28C29F7E005D5E9D /* Utils */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -385,6 +388,14 @@
 				69638E4B28C29813005D5E9D /* AppDependencyInjectionContainer.swift */,
 			);
 			path = DependencyInjectionContainers;
+			sourceTree = "<group>";
+		};
+		69638E4D28C29F7E005D5E9D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				69638E4E28C29F89005D5E9D /* StoryboardInstantiable.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		6964BA242869E91300844047 /* Repositories */ = {
@@ -749,6 +760,7 @@
 				69638E4C28C29813005D5E9D /* AppDependencyInjectionContainer.swift in Sources */,
 				698EC417287D992E008DCF21 /* CoreDataStorage.xcdatamodeld in Sources */,
 				69D844182861E09F00A651F1 /* Movie.swift in Sources */,
+				69638E4F28C29F89005D5E9D /* StoryboardInstantiable.swift in Sources */,
 				69CFF48928A0247F00EA4C70 /* GenreResponse+CoreDataClass.swift in Sources */,
 				69CFF48D28A0247F00EA4C70 /* GenresResponse+CoreDataClass.swift in Sources */,
 				69CFF48B28A0247F00EA4C70 /* GenresRequest+CoreDataClass.swift in Sources */,
