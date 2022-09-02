@@ -30,6 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             navigationController: navigationController,
             appDependencyInjectionContainer: self.appDependencyInjectionContainer
         )
+        self.appFlowCoordinator?.start()
         
         self.window?.makeKeyAndVisible()
     }

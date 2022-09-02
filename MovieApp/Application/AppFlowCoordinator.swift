@@ -15,18 +15,21 @@ class AppFlowCoordinator {
     
     // MARK: - Private Properties
     
-    private let appDependencyInjectionContainer: AppDependencyInjectionContainer
+    private let appDIContainer: AppDependencyInjectionContainer
     
     // MARK: - Init
     
     init(navigationController: UINavigationController, appDependencyInjectionContainer: AppDependencyInjectionContainer) {
         self.navigationController = navigationController
-        self.appDependencyInjectionContainer = appDependencyInjectionContainer
+        self.appDIContainer = appDependencyInjectionContainer
     }
     
     // MARK: - API
     
     func start() {
+        let homepageSceneDIContainer = self.appDIContainer.makeHomepageSceneDependencyInjectionContainer()
+        let flowCoordinator = homepageSceneDIContainer.makeHomepageFlowCoordinator(navigationController: self.navigationController)
         
+        flowCoordinator.start()
     }
 }

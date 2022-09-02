@@ -27,5 +27,9 @@ class AppDependencyInjectionContainer: AppDependencyInjectionContainerProtocol {
     
     // MARK: - DependencyInjectionContainers of Scenes
     
-    
+    func makeHomepageSceneDependencyInjectionContainer() -> HomepageSceneDependencyInjectionContainer {
+        let dependencies = HomepageSceneDependencyInjectionContainer.Dependencies()
+        
+        return HomepageSceneDependencyInjectionContainer(dependencies: dependencies)
+    }
 }

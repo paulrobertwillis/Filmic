@@ -7,10 +7,23 @@
 
 import Foundation
 
+struct HomepageViewModelActions {
+    
+}
+
 protocol HomepageViewModelProtocol {
     
 }
 
 class HomepageViewModel: HomepageViewModelProtocol {
     
+    // MARK: - Private Properties
+    
+    private let actions: HomepageViewModelActions
+    
+    // MARK: - Init
+    
+    init(actions: HomepageViewModelActions) {
+        self.actions = actions
+    }
 }
