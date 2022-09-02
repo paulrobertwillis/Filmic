@@ -82,7 +82,6 @@ class GenresResponseStorageTests: XCTestCase {
         thenEnsureCorrectErrorIsReturnedInFailureReturnValue()
     }
     
-    // if storage does not contain matching response for request, save response
 //    func test_SavingResponse_whenStorageDoesNotContainMatchingResponseForRequest_shouldSaveResponseToStorage() {
 //        // when
 //        whenResponseSaved()
