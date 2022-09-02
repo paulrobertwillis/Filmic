@@ -351,7 +351,7 @@ class NetworkServiceTests: XCTestCase {
     // MARK: - When
     
     private func whenNetworkRequestIsPerformed() {
-        self.task = self.sut?.request(self.request!, completion: self.completion(_:))
+        self.task = self.sut?.request(request: self.request!, completion: self.completion(_:))
     }
     
     private func whenSuccessfulNetworkRequestIsPerformed() {

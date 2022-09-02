@@ -37,7 +37,7 @@ protocol NetworkServiceProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
 class NetworkService {
@@ -60,7 +60,7 @@ class NetworkService {
 extension NetworkService: NetworkServiceProtocol {
     
     @discardableResult
-    func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
+    func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
 //        let url = URL(string: "example.com")!
 //        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 //            // Parse the data in the response and use it
@@ -74,7 +74,7 @@ extension NetworkService: NetworkServiceProtocol {
 //        task.resume()
 //        return task
         
-        let task = self.networkRequestPerformer.request(request) { data, response, error in
+        _ = self.networkRequestPerformer.request(request: request) { data, response, error in
             
             if let response = response as? HTTPURLResponse {
                 let networkResponse = NetworkResponse(urlResponse: response, requestName: .unknown, data: data)
@@ -92,6 +92,12 @@ extension NetworkService: NetworkServiceProtocol {
                 
                 completion (.failure(errorToBeReturned))
             } else {
+//                guard let data = data else { return }
+//                let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
+//                let genres = genresResponseDTO?.genres.map { $0.toDomain() }
+//
+//                guard let genres = genres else { return }
+                
                 completion(.success(data))
             }
         }
@@ -99,6 +105,6 @@ extension NetworkService: NetworkServiceProtocol {
         let loggableRequest = NetworkRequest(urlRequest: request, requestName: .getMovieGenres)
         self.logger.log(loggableRequest)
         
-        return task
+        return URLSessionTask()
     }
 }
