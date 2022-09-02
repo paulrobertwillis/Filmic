@@ -50,7 +50,6 @@ class HomepageSceneDependencyInjectionContainer {
     func makeHomepageFlowCoordinator(navigationController: UINavigationController) -> HomepageFlowCoordinator {
         HomepageFlowCoordinator(navigationController: navigationController, dependencies: self)
     }
-    
 }
 
 extension HomepageSceneDependencyInjectionContainer: HomepageFlowCoordinatorDependencies {}

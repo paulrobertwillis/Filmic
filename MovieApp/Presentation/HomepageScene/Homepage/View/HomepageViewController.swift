@@ -13,11 +13,20 @@ class HomepageViewController: UIViewController, StoryboardInstantiable {
     
     private var viewModel: HomepageViewModelProtocol!
     
+    private var recommendedMoviesCollectionViewController: RecommendedMoviesCollectionViewController?
+    
     // MARK: - Lifecycle
     
     static func create(with viewModel: HomepageViewModelProtocol) -> HomepageViewController {
         let view = HomepageViewController.instantiateViewController()
         view.viewModel = viewModel
         return view
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == String(describing: RecommendedMoviesCollectionViewController.self),
+           let destinationViewController = segue.destination as? RecommendedMoviesCollectionViewController {
+            self.recommendedMoviesCollectionViewController = destinationViewController
+        }
     }
 }

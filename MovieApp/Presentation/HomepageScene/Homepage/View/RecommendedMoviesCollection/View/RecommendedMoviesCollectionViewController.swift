@@ -7,6 +7,8 @@
 
 import UIKit
 
-class RecommendedMoviesCollectionViewController: UIViewController {
+class RecommendedMoviesCollectionViewController: UICollectionViewController {
+    
+    
     
 }
