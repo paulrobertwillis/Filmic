@@ -1,5 +1,5 @@
 //
-//  MoviesResponseDTO.swift
+//  SearchMoviesResponseDTO.swift
 //  MovieApp
 //
 //  Created by Paul on 15/06/2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MoviesResponseDTO: Decodable, Equatable {
+struct SearchMoviesResponseDTO: Decodable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case page
         case totalPages = "total_pages"
@@ -18,7 +18,7 @@ struct MoviesResponseDTO: Decodable, Equatable {
     let movies: [MovieDTO]
 }
 
-extension MoviesResponseDTO {
+extension SearchMoviesResponseDTO {
     struct MovieDTO: Decodable, Equatable {
         private enum CodingKeys: String, CodingKey {
             case id
@@ -35,7 +35,7 @@ extension MoviesResponseDTO {
     }
 }
 
-extension MoviesResponseDTO {
+extension SearchMoviesResponseDTO {
     func toDomain() -> MoviesPage {
         return .init(
             page: self.page,
@@ -45,7 +45,7 @@ extension MoviesResponseDTO {
     }
 }
 
-extension MoviesResponseDTO.MovieDTO {
+extension SearchMoviesResponseDTO.MovieDTO {
     func toDomain() -> Movie {
         return .init(
             id: Movie.Identifier(id),

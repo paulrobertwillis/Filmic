@@ -1,5 +1,5 @@
 //
-//  MoviesResponseDTOTests.swift
+//  SearchMoviesResponseDTOTests.swift
 //  MovieAppTests
 //
 //  Created by Paul on 15/06/2022.
@@ -8,28 +8,28 @@
 import XCTest
 @testable import MovieApp
 
-class MoviesResponseDTOTests: XCTestCase {
+class SearchMoviesResponseDTOTests: XCTestCase {
 
-    func testMoviesResponseDTO_whenDecoded_shouldInitialise() {
+    func testSearchMoviesResponseDTO_whenDecoded_shouldInitialise() {
         // given
-        let expected = MoviesResponseDTO(page: 1, totalPages: 5, movies: self.movies)
+        let expected = SearchMoviesResponseDTO(page: 1, totalPages: 5, movies: self.movies)
         
         // when
-        let actual = try? JSONDecoder().decode(MoviesResponseDTO.self, from: self.moviesResponseDTO.data(using: .utf8)!)
+        let actual = try? JSONDecoder().decode(SearchMoviesResponseDTO.self, from: self.searchMoviesResponseDTO.data(using: .utf8)!)
         
         // then
         XCTAssertEqual(actual, expected)
     }
     
     private let movies = [
-        MoviesResponseDTO.MovieDTO(
+        SearchMoviesResponseDTO.MovieDTO(
             id: 50,
             title: "movie1",
             posterPath: "/posterpath1.jpg",
             overview: "movie1 overview",
             releaseDate: "2001-01-01"
         ),
-        MoviesResponseDTO.MovieDTO(
+        SearchMoviesResponseDTO.MovieDTO(
             id: 200,
             title: "movie2",
             posterPath: "/posterpath2.jpg",
@@ -38,7 +38,7 @@ class MoviesResponseDTOTests: XCTestCase {
         )
     ]
     
-    let moviesResponseDTO = """
+    let searchMoviesResponseDTO = """
         {
             "page": 1,
             "results": [

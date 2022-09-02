@@ -28,6 +28,8 @@ class GenresRepositoryTests: XCTestCase {
     // MARK: - Setup
     
     override func setUp() {
+        super.setUp()
+        
         self.dataTransferService = GenresDataTransferMock()
         self.cache = GenresResponseStorageMock()
         self.sut = .init(dataTransferService: self.dataTransferService!, cache: self.cache!)
