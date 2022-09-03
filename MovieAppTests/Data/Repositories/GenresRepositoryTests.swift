@@ -99,18 +99,18 @@ class GenresRepositoryTests: XCTestCase {
     
     func test_successfulRequestToCache() {
         // given
-        givenExpectedSuccessfulRequestToCache()
+        self.givenExpectedSuccessfulRequestToCache()
         
         // when
-        whenRepositoryCalledToRequestGenres()
+        self.whenRepositoryCalledToRequestGenres()
         
         // then
-        thenEnsureRepositoryReturnsCorrectResponse()
-        thenEnsureRepositoryDoesNotCallDataTransferService()
-        thenEnsureRepositoryRequestsFromCacheExactlyOnce()
-        thenEnsureRepositoryDoesNotAttemptToSaveToCache()
-        thenEnsureRepositoryPassesReceivedRequestDTOToCache()
-        thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
+        self.thenEnsureRepositoryReturnsCorrectResponse()
+        self.thenEnsureRepositoryDoesNotCallDataTransferService()
+        self.thenEnsureRepositoryRequestsFromCacheExactlyOnce()
+        self.thenEnsureRepositoryDoesNotAttemptToSaveToCache()
+        self.thenEnsureRepositoryPassesReceivedRequestDTOToCache()
+        self.thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
     }
                     
     // TODO: Tests for:
