@@ -367,7 +367,7 @@ class DataTransferServiceTests: XCTestCase {
     }
     
     private func performRequest() {
-        self.returnedURLSessionTask = sut?.request(self.urlRequest()!, completion: self.completion(_:))
+        self.returnedURLSessionTask = sut?.request(self.urlRequest()!, decoder: JSONResponseDecoder(), completion: self.completion(_:))
     }
     
     private func createMockSuccessfulResponseFromNetworkService() {

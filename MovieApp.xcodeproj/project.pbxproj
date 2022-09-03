@@ -45,6 +45,8 @@
 		69638E9928C3A266005D5E9D /* MoviesResponseDTOMock.json in Resources */ = {isa = PBXBuildFile; fileRef = 69638E9828C3A266005D5E9D /* MoviesResponseDTOMock.json */; };
 		69638E9B28C3A4B2005D5E9D /* GenreResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E9A28C3A4B2005D5E9D /* GenreResponseDTO.swift */; };
 		69638E9E28C3B03E005D5E9D /* MoviesDataTransferServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E9D28C3B03E005D5E9D /* MoviesDataTransferServiceMock.swift */; };
+		69638EA028C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E9F28C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift */; };
+		69638EA228C3BE1A005D5E9D /* ImagesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638EA128C3BE1A005D5E9D /* ImagesRepository.swift */; };
 		6964BA2B2869EAD600844047 /* GetTopRatedMoviesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2A2869EAD600844047 /* GetTopRatedMoviesUseCase.swift */; };
 		6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2C2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift */; };
 		6964BA2F2869EC3100844047 /* GenresRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */; };
@@ -87,7 +89,7 @@
 		69D8442228621E4400A651F1 /* GetMovieGenresUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8442128621E4400A651F1 /* GetMovieGenresUseCase.swift */; };
 		69D8442628621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D8442528621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift */; };
 		69D844292863188400A651F1 /* MoviesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D844282863188400A651F1 /* MoviesRepositoryProtocol.swift */; };
-		69F6239328763B590059307F /* ResponseDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F6239228763B590059307F /* ResponseDecoder.swift */; };
+		69F6239328763B590059307F /* ResponseDecoderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F6239228763B590059307F /* ResponseDecoderProtocol.swift */; };
 		69F6239528763E100059307F /* ResponseDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F6239428763E100059307F /* ResponseDecoderTests.swift */; };
 		69F62397287646470059307F /* NetworkLoggerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F62396287646470059307F /* NetworkLoggerMock.swift */; };
 		69F62399287648DA0059307F /* NetworkLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F62398287648DA0059307F /* NetworkLogger.swift */; };
@@ -148,6 +150,8 @@
 		69638E9828C3A266005D5E9D /* MoviesResponseDTOMock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MoviesResponseDTOMock.json; sourceTree = "<group>"; };
 		69638E9A28C3A4B2005D5E9D /* GenreResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreResponseDTO.swift; sourceTree = "<group>"; };
 		69638E9D28C3B03E005D5E9D /* MoviesDataTransferServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesDataTransferServiceMock.swift; sourceTree = "<group>"; };
+		69638E9F28C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesRepositoryProtocol.swift; sourceTree = "<group>"; };
+		69638EA128C3BE1A005D5E9D /* ImagesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesRepository.swift; sourceTree = "<group>"; };
 		6964BA2A2869EAD600844047 /* GetTopRatedMoviesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTopRatedMoviesUseCase.swift; sourceTree = "<group>"; };
 		6964BA2C2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTopRatedMoviesUseCaseTests.swift; sourceTree = "<group>"; };
 		6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -190,7 +194,7 @@
 		69D8442128621E4400A651F1 /* GetMovieGenresUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMovieGenresUseCase.swift; sourceTree = "<group>"; };
 		69D8442528621EAA00A651F1 /* GetMovieGenresUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMovieGenresUseCaseTests.swift; sourceTree = "<group>"; };
 		69D844282863188400A651F1 /* MoviesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesRepositoryProtocol.swift; sourceTree = "<group>"; };
-		69F6239228763B590059307F /* ResponseDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDecoder.swift; sourceTree = "<group>"; };
+		69F6239228763B590059307F /* ResponseDecoderProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDecoderProtocol.swift; sourceTree = "<group>"; };
 		69F6239428763E100059307F /* ResponseDecoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDecoderTests.swift; sourceTree = "<group>"; };
 		69F62396287646470059307F /* NetworkLoggerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLoggerMock.swift; sourceTree = "<group>"; };
 		69F62398287648DA0059307F /* NetworkLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLogger.swift; sourceTree = "<group>"; };
@@ -614,6 +618,7 @@
 			children = (
 				6964BA34286A0AE900844047 /* GenresRepository.swift */,
 				69638E7528C2C36B005D5E9D /* MoviesRepository.swift */,
+				69638EA128C3BE1A005D5E9D /* ImagesRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -661,7 +666,7 @@
 			isa = PBXGroup;
 			children = (
 				69AD7319286E02A4009C5F3E /* DataTransferService.swift */,
-				69F6239228763B590059307F /* ResponseDecoder.swift */,
+				69F6239228763B590059307F /* ResponseDecoderProtocol.swift */,
 			);
 			path = DataTransferService;
 			sourceTree = "<group>";
@@ -831,6 +836,7 @@
 			children = (
 				69D844282863188400A651F1 /* MoviesRepositoryProtocol.swift */,
 				6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */,
+				69638E9F28C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift */,
 			);
 			path = "Repository Protocols";
 			sourceTree = "<group>";
@@ -980,9 +986,10 @@
 				69CFF48B28A0247F00EA4C70 /* GenresRequest+CoreDataClass.swift in Sources */,
 				69D8441F2862158100A651F1 /* TMDBConfigurationResponseDTO+Mapping.swift in Sources */,
 				695D8EDE285641C2008B583A /* SearchCollectionViewController.swift in Sources */,
+				69638EA028C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift in Sources */,
 				69CFF48E28A0247F00EA4C70 /* GenresResponse+CoreDataProperties.swift in Sources */,
 				698EC3F12877B2FC008DCF21 /* NetworkLogPrinter.swift in Sources */,
-				69F6239328763B590059307F /* ResponseDecoder.swift in Sources */,
+				69F6239328763B590059307F /* ResponseDecoderProtocol.swift in Sources */,
 				69638E9B28C3A4B2005D5E9D /* GenreResponseDTO.swift in Sources */,
 				6964BA2F2869EC3100844047 /* GenresRepositoryProtocol.swift in Sources */,
 				698EC3FE2878E63E008DCF21 /* NetworkRequestPerformer.swift in Sources */,
@@ -1009,6 +1016,7 @@
 				69638E8028C2CEF0005D5E9D /* MoviesResponseDTO+Mapping.swift in Sources */,
 				699B15192880C3A500814187 /* GenresRequestDTO+Mapping.swift in Sources */,
 				69638E7B28C2CAD4005D5E9D /* SearchMoviesResponseStorageProtocol.swift in Sources */,
+				69638EA228C3BE1A005D5E9D /* ImagesRepository.swift in Sources */,
 				6964BA312869EC5F00844047 /* Genre.swift in Sources */,
 				699B15172880C24A00814187 /* CoreDataGenresResponseStorage.swift in Sources */,
 				69AD731A286E02A4009C5F3E /* DataTransferService.swift in Sources */,

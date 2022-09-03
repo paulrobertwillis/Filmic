@@ -27,7 +27,7 @@ class MoviesDataTransferServiceMock: DataTransferService<MoviesResponseDTO> {
     var requestCompletionReturnValue: ResultValue?
     var requestReceivedCompletion: CompletionHandler? = { _ in }
 
-    override func request(_ request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
+    override func request(_ request: URLRequest, decoder: ResponseDecoderProtocol, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         self.requestCallsCount += 1
         
         self.requestReceivedRequest = request

@@ -20,7 +20,7 @@ protocol DataTransferServiceProtocol {
     typealias CompletionHandler = (ResultValue) -> Void
 
     @discardableResult
-    func request(_ request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask?
+    func request(_ request: URLRequest, decoder: ResponseDecoderProtocol, completion: @escaping CompletionHandler) -> URLSessionTask?
 }
 
 class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProtocol {
@@ -28,7 +28,7 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     // MARK: - Private Properties
     
     private let networkService: NetworkServiceProtocol
-    private let decoder: ResponseDecoder = JSONResponseDecoder()
+    private let decoder: ResponseDecoderProtocol = JSONResponseDecoder()
     
     // MARK: - Lifecycle
     
@@ -37,14 +37,16 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     }
         
     @discardableResult
-    func request(_ request: URLRequest, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
+    func request(_ request: URLRequest, decoder: ResponseDecoderProtocol, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
         
         let dataSessionTask = self.networkService.request(request: request) { result in
             switch result {
             case .success(let data):
-                self.handleSuccessfulRequest(for: data, completion: completion)
+                let result: ResultValue = self.decode(data, decoder: decoder)
+                completion(result)
             case .failure(let error):
-                self.resolveAndHandleError(error, completion: completion)
+                let resolvedError = self.resolve(error)
+                completion(.failure(resolvedError))
             }
         }
                 
@@ -54,10 +56,10 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     // MARK: - Helpers
     
     // TODO: Consider how to migrate this decode function to the more appropriate ResponseDecoder object
-    private func decode<T: Decodable>(_ data: Data?) throws -> Result<T, DataTransferError> {
+    private func decode<T: Decodable>(_ data: Data?, decoder: ResponseDecoderProtocol) -> Result<T, DataTransferError> {
         do {
             guard let data = data else { return .failure(.missingData) }
-            let result: T = try self.decoder.decode(data)
+            let result: T = try decoder.decode(data)
             return .success(result)
         } catch {
             return .failure(.parsingFailure(error))
@@ -66,26 +68,6 @@ class DataTransferService<GenericDecodable: Decodable>: DataTransferServiceProto
     
     private func resolve(_ error: Error) -> DataTransferError {
         return DataTransferError.parsingFailure(error)
-    }
-    
-    private func handleSuccessfulRequest(for data: Data?, completion: CompletionHandler) {
-        do {
-            try self.decodeAndHandleResult(from: data, completion: completion)
-        } catch(let error) {
-            self.resolveAndHandleError(error, completion: completion)
-        }
-    }
-    
-    // TODO: Consider how to refactor this function to do only one thing
-    private func decodeAndHandleResult(from data: Data?, completion: CompletionHandler) throws {
-        let result: ResultValue = try self.decode(data)
-        completion(result)
-    }
-    
-    // TODO: Consider how to refactor this function to do only one thing
-    private func resolveAndHandleError(_ error: Error, completion: CompletionHandler) {
-        let resolvedError = self.resolve(error)
-        completion(.failure(resolvedError))
     }
 }
 

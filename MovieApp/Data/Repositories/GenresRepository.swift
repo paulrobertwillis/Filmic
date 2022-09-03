@@ -39,7 +39,7 @@ class GenresRepository: GenresRepositoryProtocol {
             if case let .success(responseDTO) = result {
                 completion(.success(responseDTO.genres.map { $0.toDomain() }))
             } else {
-                self.dataTransferService.request(request) { (result: Result<GenresResponseDTO, DataTransferError>) in
+                self.dataTransferService.request(request, decoder: JSONResponseDecoder()) { (result: Result<GenresResponseDTO, DataTransferError>) in
                     
                     // result.mapSuccess()
                     

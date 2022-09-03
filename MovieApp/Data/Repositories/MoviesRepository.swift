@@ -23,7 +23,7 @@ class MoviesRepository: MoviesRepositoryProtocol {
     
     @discardableResult
     func getMovies(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
-        self.dataTransferService.request(request) { (result: Result<MoviesResponseDTO, DataTransferError>) in
+        self.dataTransferService.request(request, decoder: JSONResponseDecoder()) { (result: Result<MoviesResponseDTO, DataTransferError>) in
             switch result {
             case .success(let responseDTO):
                 completion(.success(responseDTO.toDomain()))
