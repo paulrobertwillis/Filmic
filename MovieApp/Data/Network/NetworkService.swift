@@ -61,20 +61,8 @@ extension NetworkService: NetworkServiceProtocol {
     
     @discardableResult
     func request(request: URLRequest, completion: @escaping CompletionHandler) -> URLSessionTask? {
-//        let url = URL(string: "example.com")!
-//        let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-//            // Parse the data in the response and use it
-//        }
-//        task.resume()
-        
-//        let dataTaskCompletion: (Data?, URLResponse?, Error?) -> Void = { _,_,_  in }
-//        let dataRequest = URLRequest(url: URL(string: "www.example.com")!)
-//
-//        let task = URLSession.shared.dataTask(with: dataRequest, completionHandler: dataTaskCompletion)
-//        task.resume()
-//        return task
-        
-        _ = self.networkRequestPerformer.request(request: request) { data, response, error in
+
+        let task = self.networkRequestPerformer.request(request: request) { data, response, error in
             
             if let response = response as? HTTPURLResponse {
                 let networkResponse = NetworkResponse(urlResponse: response, requestName: .unknown, data: data)
@@ -92,12 +80,6 @@ extension NetworkService: NetworkServiceProtocol {
                 
                 completion (.failure(errorToBeReturned))
             } else {
-//                guard let data = data else { return }
-//                let genresResponseDTO = try? JSONDecoder().decode(GenresResponseDTO.self, from: data)
-//                let genres = genresResponseDTO?.genres.map { $0.toDomain() }
-//
-//                guard let genres = genres else { return }
-                
                 completion(.success(data))
             }
         }
@@ -105,6 +87,6 @@ extension NetworkService: NetworkServiceProtocol {
         let loggableRequest = NetworkRequest(urlRequest: request, requestName: .getMovieGenres)
         self.logger.log(loggableRequest)
         
-        return URLSessionTask()
+        return task
     }
 }
