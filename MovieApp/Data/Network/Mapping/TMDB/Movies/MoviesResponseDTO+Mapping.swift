@@ -7,29 +7,17 @@
 
 import Foundation
 
-public struct PaginatedResponseDTO<T: Decodable>: Decodable {
-    let page: Int
-    let results: [T]
-    let totalResults: Int
-    let totalPages: Int
-}
-
-public struct MoviesResponseDTO: Decodable, Equatable {
-    private enum CodingKeys: String, CodingKey {
-        case page
-        case movies = "results"
-        case totalResults
-        case totalPages
-    }
-
-    let page: Int
-    let movies: [MovieDTO]
-    let totalResults: Int
-    let totalPages: Int
+public struct MoviesResponseDTO: PaginatedResponseDTO {
+    public typealias T = MovieDTO
+    
+    public let page: Int
+    public let results: [MovieDTO]
+    public let totalResults: Int
+    public let totalPages: Int
 }
 
 extension MoviesResponseDTO {
-    struct MovieDTO: Decodable, Equatable {
+    public struct MovieDTO: Decodable, Equatable {
         let posterPath: String?
         let adult: Bool
         let overview: String
@@ -44,5 +32,27 @@ extension MoviesResponseDTO {
         let voteCount: Int
         let video: Bool
         let voteAverage: Double
+    }
+}
+
+extension MoviesResponseDTO {
+    func toDomain() -> MoviesPage {
+        return .init(
+            page: self.page,
+            totalPages: self.totalPages,
+            movies: self.results.map { $0.toDomain() }
+        )
+    }
+}
+
+extension MoviesResponseDTO.MovieDTO {
+    func toDomain() -> Movie {
+        return .init(
+            id: Movie.Identifier(id),
+            title: self.title,
+            posterPath: self.posterPath,
+            overview: self.overview,
+            releaseDate: self.releaseDate
+        )
     }
 }

@@ -8,9 +8,9 @@
 import CoreData
 
 protocol SearchMoviesResponseStorageProtocol {
-    typealias SearchMoviesResponseStorageResultValue = (Result<SearchMoviesResponseDTO, CoreDataStorageError>)
+    typealias SearchMoviesResponseStorageResultValue = (Result<MoviesResponseDTO, CoreDataStorageError>)
     typealias SearchMoviesResponseStorageCompletionHandler = (SearchMoviesResponseStorageResultValue) -> Void
     
     func getResponse(for requestDTO: SearchMoviesRequestDTO, completion: @escaping SearchMoviesResponseStorageCompletionHandler)
-    func save(responseDTO: SearchMoviesResponseDTO, for requestDTO: SearchMoviesRequestDTO)
+    func save(responseDTO: MoviesResponseDTO, for requestDTO: SearchMoviesRequestDTO)
 }
