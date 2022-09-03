@@ -9,7 +9,9 @@ import XCTest
 @testable import MovieApp
 
 class GenresRepositoryTests: XCTestCase {
-            
+    
+    // MARK: - Private Properties
+    
     private var dataTransferService: GenresDataTransferServiceMock?
     private var cache: GenresResponseStorageMock?
     private var sut: GenresRepository?
@@ -66,7 +68,7 @@ class GenresRepositoryTests: XCTestCase {
         self.givenExpectedSuccessfulRequestToDataTransferService()
         
         // when
-        self.whenRepositoryCalledToRequestGenres()
+        self.whenRepositoryCalled()
         
         // then
         self.thenEnsureExpectedObjectIsFetched()
@@ -85,7 +87,7 @@ class GenresRepositoryTests: XCTestCase {
         self.givenExpectedFailedRequestToDataTransferService()
 
         // when
-        self.whenRepositoryCalledToRequestGenres()
+        self.whenRepositoryCalled()
 
         // then
         self.thenEnsureFailureResultIsReturnedWithError()
@@ -101,7 +103,7 @@ class GenresRepositoryTests: XCTestCase {
         self.givenExpectedSuccessfulRequestToCache()
         
         // when
-        self.whenRepositoryCalledToRequestGenres()
+        self.whenRepositoryCalled()
         
         // then
         self.thenEnsureExpectedObjectIsFetched()
@@ -126,8 +128,8 @@ class GenresRepositoryTests: XCTestCase {
 //        self.sut?.cache.append(self.expectedGenresResponseDTO!)
 //
 //        // when
-//        whenRepositoryCalledToRequestGenres()
-//        whenRepositoryCalledToRequestGenres()
+//        whenRepositoryCalled()
+//        whenRepositoryCalled()
 //
 //        // then
 //        XCTAssertEqual(self.sut?.cache.count, 1)
@@ -159,7 +161,7 @@ class GenresRepositoryTests: XCTestCase {
         
     // MARK: - When
     
-    func whenRepositoryCalledToRequestGenres() {
+    func whenRepositoryCalled() {
         guard let request = self.request else {
             XCTFail("request must be non optional at this point of execution")
             return

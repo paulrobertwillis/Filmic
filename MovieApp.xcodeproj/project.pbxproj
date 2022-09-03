@@ -47,6 +47,8 @@
 		69638E9E28C3B03E005D5E9D /* MoviesDataTransferServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E9D28C3B03E005D5E9D /* MoviesDataTransferServiceMock.swift */; };
 		69638EA028C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E9F28C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift */; };
 		69638EA228C3BE1A005D5E9D /* ImagesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638EA128C3BE1A005D5E9D /* ImagesRepository.swift */; };
+		69638EA428C3C067005D5E9D /* ImagesRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638EA328C3C067005D5E9D /* ImagesRepositoryTests.swift */; };
+		69638EA728C3C490005D5E9D /* TestImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 69638EA628C3C490005D5E9D /* TestImage.png */; };
 		6964BA2B2869EAD600844047 /* GetTopRatedMoviesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2A2869EAD600844047 /* GetTopRatedMoviesUseCase.swift */; };
 		6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2C2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift */; };
 		6964BA2F2869EC3100844047 /* GenresRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */; };
@@ -152,6 +154,8 @@
 		69638E9D28C3B03E005D5E9D /* MoviesDataTransferServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesDataTransferServiceMock.swift; sourceTree = "<group>"; };
 		69638E9F28C3BDF5005D5E9D /* ImagesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		69638EA128C3BE1A005D5E9D /* ImagesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesRepository.swift; sourceTree = "<group>"; };
+		69638EA328C3C067005D5E9D /* ImagesRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesRepositoryTests.swift; sourceTree = "<group>"; };
+		69638EA628C3C490005D5E9D /* TestImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TestImage.png; sourceTree = "<group>"; };
 		6964BA2A2869EAD600844047 /* GetTopRatedMoviesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTopRatedMoviesUseCase.swift; sourceTree = "<group>"; };
 		6964BA2C2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTopRatedMoviesUseCaseTests.swift; sourceTree = "<group>"; };
 		6964BA2E2869EC3100844047 /* GenresRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -318,6 +322,7 @@
 		692F092D285A6E4100780F72 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				69638EA628C3C490005D5E9D /* TestImage.png */,
 				69638E8D28C399A2005D5E9D /* Utils */,
 				692F0932285A6F0F00780F72 /* JSONMocks */,
 				698EC3FF2878E894008DCF21 /* DataTransferService */,
@@ -609,6 +614,7 @@
 			children = (
 				6964BA32286A0AB800844047 /* GenresRepositoryTests.swift */,
 				69638E7728C2C404005D5E9D /* MoviesRepositoryTests.swift */,
+				69638EA328C3C067005D5E9D /* ImagesRepositoryTests.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -956,6 +962,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69638EA728C3C490005D5E9D /* TestImage.png in Resources */,
 				69638E9928C3A266005D5E9D /* MoviesResponseDTOMock.json in Resources */,
 				69638E9728C3A204005D5E9D /* MovieResponseDTOMock.json in Resources */,
 				69638E9128C39A31005D5E9D /* GenresResponseDTOMock.json in Resources */,
@@ -1038,6 +1045,7 @@
 				69638E5B28C2A0C2005D5E9D /* HomepageViewModelTests.swift in Sources */,
 				69F83F06286CADF7001A5FAF /* NetworkServiceMock.swift in Sources */,
 				69AD7327286F3723009C5F3E /* TMDBResponseMocks.swift in Sources */,
+				69638EA428C3C067005D5E9D /* ImagesRepositoryTests.swift in Sources */,
 				698EC425287E37CF008DCF21 /* GenresResponseStorageMock.swift in Sources */,
 				6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */,
 				69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */,

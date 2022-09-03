@@ -1,5 +1,5 @@
 //
-//  MoviesRepositoryTests.swift
+//  ImagesRepositoryTests.swift
 //  MovieAppTests
 //
 //  Created by Paul on 03/09/2022.
@@ -8,47 +8,42 @@
 import XCTest
 @testable import MovieApp
 
-class MoviesRepositoryTests: XCTestCase {
-
+class ImagesRepositoryTests: XCTestCase {
+    
     // MARK: - Private Properties
     
-    private var dataTransferService: MoviesDataTransferServiceMock!
-    private var sut: MoviesRepository!
+    private var dataTransferService: ImagesDataTransferServiceMock!
+    private var sut: ImagesRepository!
     
-    private var resultValue: Result<MoviesPage, Error>?
+    private var resultValue: Result<Data, Error>!
     private var task: URLSessionTask!
     private var request: URLRequest!
-
-    private var expectedMoviesResponseDTO: MoviesResponseDTO!
-    private var expectedMoviesPage: MoviesPage!
     
-    private var returnedMoviesResponseDTO: MoviesResponseDTO!
-    private var returnedMoviesPage: MoviesPage!
-
+    private var expectedImageData: Data!
+    private var returnedImageData: Data!
     
     // MARK: - Setup
     
     override func setUp() {
         super.setUp()
         
-        self.dataTransferService = MoviesDataTransferServiceMock()
-        
-        self.sut = MoviesRepository(dataTransferService: self.dataTransferService)
+        self.dataTransferService = ImagesDataTransferServiceMock()
+        self.sut = .init(dataTransferService: self.dataTransferService!)
         
         self.request = URLRequest(url: URL(string: "www.example.com")!)
     }
     
     override func tearDown() {
-        
         self.dataTransferService = nil
-
         self.sut = nil
         
+        self.resultValue = nil
+        self.task = nil
+        self.request = nil
+                
         super.tearDown()
     }
-    
-    // MARK: - Tests
-    
+
     func test_successfulRequestToDataTransferService() {
         // given
         self.givenExpectedSuccessfulRequestToDataTransferService()
@@ -79,27 +74,29 @@ class MoviesRepositoryTests: XCTestCase {
     // MARK: - Given
     
     private func givenExpectedSuccessfulRequestToDataTransferService() {
-        self.expectedMoviesResponseDTO = MoviesResponseDTO.createStub()
-        self.expectedMoviesPage = self.expectedMoviesResponseDTO.toDomain()
-        
-        self.dataTransferService.requestCompletionReturnValue = .success(self.expectedMoviesResponseDTO!)
+        guard let image = try? self.loadImage(named: "TestImage") else {
+            XCTFail("Image should be available for testing")
+            return
+        }
+        self.expectedImageData = image.pngData()
+        self.dataTransferService.requestCompletionReturnValue = .success(self.expectedImageData)
     }
     
     private func givenExpectedFailedRequestToDataTransferService() {
         self.dataTransferService.requestCompletionReturnValue = .failure(DataTransferError.missingData)
     }
-    
+
     // MARK: - When
     
-    private func whenRepositoryCalled() {
+    func whenRepositoryCalled() {
         guard let request = self.request else {
             XCTFail("request must be non optional at this point of execution")
             return
         }
         
-        self.task = self.sut.getMovies(request: request) { result in
+        self.task = self.sut?.getImage(request: request, decoder: RawDataResponseDecoder()) { result in
             self.resultValue = result
-            self.returnedMoviesPage = try? result.get()
+            self.returnedImageData = try? result.get()
         }
     }
     
@@ -111,7 +108,7 @@ class MoviesRepositoryTests: XCTestCase {
     
     private func thenEnsureExpectedObjectIsFetched() {
         let returnedValue = try? self.unwrapResult()
-        XCTAssertEqual(self.expectedMoviesPage, returnedValue)
+        XCTAssertEqual(self.expectedImageData, returnedValue)
     }
     
     private func thenEnsureFailureResultIsReturnedWithError() {
@@ -130,49 +127,54 @@ class MoviesRepositoryTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func unwrapResult() throws -> MoviesPage? {
-        return try self.resultValue?.get()
-    }
-}
-
-extension MoviesResponseDTO {
-    public static func createStub() -> MoviesResponseDTO {
-        MoviesResponseDTO(
-            page: 1,
-            results: MovieDTO.createStubs(),
-            totalResults: 100,
-            totalPages: 10
-        )
-    }
-}
-
-extension MoviesResponseDTO.MovieDTO {
-    public static func createStub() -> MoviesResponseDTO.MovieDTO {
-        MoviesResponseDTO.MovieDTO(
-            adult: Bool.random(),
-            backdropPath: String.random(),
-            genreIds: [Int.random(in: 1...10)],
-            id: Int.random(in: 1...5),
-            originalLanguage: "English",
-            originalTitle: "Title",
-            overview: "Overview",
-            popularity: 10,
-            posterPath: String.random(),
-            releaseDate: "2022-10-10",
-            title: "Film Title",
-            video: Bool.random(),
-            voteAverage: Double.random(in: 1...10),
-            voteCount: Int.random(in: 20...1000)
-        )
+    func loadImage(named name: String, ofType imageType: String = "png") throws -> UIImage {
+        let bundle = Bundle(for: type(of: self))
+        guard let path = bundle.path(forResource: name, ofType: imageType) else {
+            throw NSError(domain: "loadImage", code: 1, userInfo: nil)
+        }
+        guard let image = UIImage(contentsOfFile: path) else {
+            throw NSError(domain: "loadImage", code: 2, userInfo: nil)
+        }
+        return image
     }
     
-    public static func createStubs() -> [MoviesResponseDTO.MovieDTO] {
-        var genreDTOs: [MoviesResponseDTO.MovieDTO] = []
+    private func unwrapResult() throws -> Data? {
+        return try self.resultValue?.get()
+    }
 
-        for _ in Int.randomRange() {
-            genreDTOs.append(MoviesResponseDTO.MovieDTO.createStub())
-        }
+}
+
+
+class ImagesDataTransferServiceMock: DataTransferService<Data> {
+    
+    // MARK: - Lifecycle
+    
+    init() {
+        super.init(networkService: NetworkServiceMock())
+    }
+    
+    // MARK: - request(request, completion)
+    
+    var requestCallsCount = 0
+    
+    // request parameter
+    var requestReceivedRequest: URLRequest?
+    
+    // completion parameter
+    var requestCompletionReturnValue: ResultValue?
+    var requestReceivedCompletion: CompletionHandler? = { _ in }
+
+    override func request(_ request: URLRequest, decoder: ResponseDecoderProtocol, completion: @escaping (Result<GenericDecodable, DataTransferError>) -> Void) -> URLSessionTask? {
+        self.requestCallsCount += 1
         
-        return genreDTOs
+        self.requestReceivedRequest = request
+        self.requestReceivedCompletion = completion
+        
+        if let requestCompletionReturnValue = requestCompletionReturnValue {
+            completion(requestCompletionReturnValue)
+        }
+
+        return URLSessionTask()
     }
 }
+

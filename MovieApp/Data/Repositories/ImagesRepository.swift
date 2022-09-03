@@ -21,9 +21,14 @@ extension ImagesRepository: ImagesRepositoryProtocol {
         let decoder = RawDataResponseDecoder()
         
         return self.dataTransferService.request(request, decoder: decoder) { (result: Result<Data, DataTransferError>) in
-            
             let result = result.mapError { $0 as Error }
-            DispatchQueue.main.async { completion(result) }
+            
+            switch result {
+            case .success(let imageData):
+                completion(.success(imageData))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
 }
