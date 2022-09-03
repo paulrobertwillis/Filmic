@@ -49,7 +49,7 @@ class MoviesRepositoryTests: XCTestCase {
     
     // MARK: - Tests
     
-    func test_whenPerformsSuccessfulRequestToDataTransferService_shouldReturnMoviesPage() {
+    func test_successfulRequestToDataTransferService() {
         // given
         self.givenExpectedSuccessfulRequestToDataTransferService()
         
@@ -57,7 +57,23 @@ class MoviesRepositoryTests: XCTestCase {
         self.whenRepositoryCalledToRequestGenres()
         
         // then
-        self.thenEnsureCorrectMoviesPageIsReturned()
+        self.thenEnsureExpectedObjectIsFetched()
+        self.thenEnsureTaskIsReturned()
+        self.thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
+        self.thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
+    }
+    
+    func test_failedRequestToDataTransferService() {
+        // given
+        self.givenExpectedFailedRequestToDataTransferService()
+
+        // when
+        self.whenRepositoryCalledToRequestGenres()
+
+        // then
+        self.thenEnsureFailureResultIsReturnedWithError()
+        self.thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
+        self.thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
     }
     
     // MARK: - Given
@@ -88,9 +104,34 @@ class MoviesRepositoryTests: XCTestCase {
     }
     
     // MARK: - Then
-    private func thenEnsureCorrectMoviesPageIsReturned() {
-        let fetchedDomainObject = try? self.resultValue?.get()
-        XCTAssertNotNil(fetchedDomainObject)
+    
+    private func thenEnsureRepositoryCallsDataTransferServiceExactlyOnce() {
+        XCTAssertEqual(self.dataTransferService?.requestCallsCount, 1)
+    }
+    
+    private func thenEnsureExpectedObjectIsFetched() {
+        let returnedValue = try? self.unwrapResult()
+        XCTAssertEqual(self.expectedMoviesPage, returnedValue)
+    }
+    
+    private func thenEnsureFailureResultIsReturnedWithError() {
+        XCTAssertThrowsError(try unwrapResult(), "") { error in
+            XCTAssertNotNil(error)
+        }
+    }
+    
+    private func thenEnsureTaskIsReturned() {
+        XCTAssertNotNil(self.task)
+    }
+    
+    private func thenEnsureRepositoryPassesReceivedRequestToDataTransferService() {
+        XCTAssertEqual(self.dataTransferService?.requestReceivedRequest, self.request)
+    }
+    
+    // MARK: - Helpers
+    
+    private func unwrapResult() throws -> MoviesPage? {
+        return try self.resultValue?.get()
     }
 }
 

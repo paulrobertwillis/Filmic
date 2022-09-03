@@ -69,8 +69,7 @@ class GenresRepositoryTests: XCTestCase {
         self.whenRepositoryCalledToRequestGenres()
         
         // then
-        self.thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
-        self.thenEnsureGenresAreFetched()
+        self.thenEnsureExpectedObjectIsFetched()
         self.thenEnsureTaskIsReturned()
         self.thenEnsureResponseSavedToCache()
         self.thenEnsureRepositoryRequestsFromCacheExactlyOnce()
@@ -79,7 +78,7 @@ class GenresRepositoryTests: XCTestCase {
         self.thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
         self.thenEnsureRepositoryPassesReceivedRequestDTOToCache()
     }
-        
+    
     func test_failedRequestToDataTransferService() {
         // given
         self.givenExpectedFailedRequestToCache()
@@ -105,12 +104,12 @@ class GenresRepositoryTests: XCTestCase {
         self.whenRepositoryCalledToRequestGenres()
         
         // then
+        self.thenEnsureExpectedObjectIsFetched()
         self.thenEnsureRepositoryReturnsCorrectResponse()
         self.thenEnsureRepositoryDoesNotCallDataTransferService()
         self.thenEnsureRepositoryRequestsFromCacheExactlyOnce()
         self.thenEnsureRepositoryDoesNotAttemptToSaveToCache()
         self.thenEnsureRepositoryPassesReceivedRequestDTOToCache()
-        self.thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
     }
                     
     // TODO: Tests for:
@@ -178,9 +177,9 @@ class GenresRepositoryTests: XCTestCase {
         XCTAssertEqual(self.dataTransferService?.requestCallsCount, 1)
     }
     
-    private func thenEnsureGenresAreFetched() {
-        let returnedGenres = try? unwrapResult()
-        XCTAssertEqual(self.expectedGenres, returnedGenres)
+    private func thenEnsureExpectedObjectIsFetched() {
+        let returnedValue = try? self.unwrapResult()
+        XCTAssertEqual(self.expectedGenres, returnedValue)
     }
     
     private func thenEnsureFailureResultIsReturnedWithError() {
@@ -192,12 +191,7 @@ class GenresRepositoryTests: XCTestCase {
     private func thenEnsureTaskIsReturned() {
         XCTAssertNotNil(self.task)
     }
-    
-    private func thenEnsureSuccessResultReturnValueIsMappedToDomainObject() {
-        let fetchedDomainObject = try? self.resultValue?.get()
-        XCTAssertNotNil(fetchedDomainObject)
-    }
-    
+        
     private func thenEnsureResponseSavedToCache() {
         XCTAssertEqual(self.cache?.saveReceivedResponseDTO, self.expectedGenresResponseDTO)
     }
