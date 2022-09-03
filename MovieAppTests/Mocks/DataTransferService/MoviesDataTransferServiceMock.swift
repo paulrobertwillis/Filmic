@@ -1,14 +1,14 @@
 //
-//  DataTransferServiceMock.swift
+//  MoviesDataTransferServiceMock.swift
 //  MovieAppTests
 //
-//  Created by Paul on 01/07/2022.
+//  Created by Paul on 03/09/2022.
 //
 
 import Foundation
 @testable import MovieApp
 
-class GenresDataTransferMock: DataTransferService<GenresResponseDTO> {
+class MoviesDataTransferServiceMock: DataTransferService<MoviesResponseDTO> {
     
     // MARK: - Lifecycle
     

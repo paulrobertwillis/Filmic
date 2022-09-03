@@ -11,7 +11,7 @@ import XCTest
 class ResponseDTOTests: XCTestCase {
     
     // MARK: - Decoding
-        
+    
     func test_decoding_genresResponseDTO() {
         XCTAssertNotNil(GenresResponseDTO.from(file: "GenresResponseDTOMock"))
     }

@@ -32,7 +32,7 @@ class GenresResponseStorageTests: XCTestCase {
         self.coreDataStorage = CoreDataStorageMock()
         self.sut = CoreDataGenresResponseStorage(managedObjectContext: self.coreDataStorage.mainContext, coreDataStorage: self.coreDataStorage)
         
-        self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
+        self.expectedGenresResponseDTO = GenresResponseDTO.createStub()
         
         self.request = URLRequest(url: URL(string: "www.example.com")!)
         self.requestDTO = .init(type: .movie)

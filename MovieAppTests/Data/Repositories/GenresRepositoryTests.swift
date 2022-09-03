@@ -10,13 +10,14 @@ import XCTest
 
 class GenresRepositoryTests: XCTestCase {
             
-    private var dataTransferService: GenresDataTransferMock?
+    private var dataTransferService: GenresDataTransferServiceMock?
     private var cache: GenresResponseStorageMock?
     private var sut: GenresRepository?
+    
     private var resultValue: Result<[Genre], Error>?
     private var task: URLSessionTask?
-    
     private var request: URLRequest?
+    
     private var requestDTO: GenresRequestDTO!
     
     private var expectedGenresResponseDTO: GenresResponseDTO?
@@ -30,7 +31,7 @@ class GenresRepositoryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.dataTransferService = GenresDataTransferMock()
+        self.dataTransferService = GenresDataTransferServiceMock()
         self.cache = GenresResponseStorageMock()
         self.sut = .init(dataTransferService: self.dataTransferService!, cache: self.cache!)
         
@@ -59,264 +60,59 @@ class GenresRepositoryTests: XCTestCase {
     
     // MARK: - Tests
         
-    func test_Mapping_whenPerformsSuccessfulRequestToDataTransferService_shouldMapDTOToDomainObject() {
+    func test_successfulRequestToDataTransferService() {
         // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
+        self.givenExpectedFailedRequestToCache()
+        self.givenExpectedSuccessfulRequestToDataTransferService()
         
         // when
-        whenGenresRepositoryCalledToRequestGenres()
+        self.whenRepositoryCalledToRequestGenres()
         
         // then
-        thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
+        self.thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
+        self.thenEnsureGenresAreFetched()
+        self.thenEnsureTaskIsReturned()
+        self.thenEnsureResponseSavedToCache()
+        self.thenEnsureRepositoryRequestsFromCacheExactlyOnce()
+        self.thenEnsureRepositorySavesToCacheExactlyOnce()
+        self.thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
+        self.thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
+        self.thenEnsureRepositoryPassesReceivedRequestDTOToCache()
     }
-    
-    func test_ReturningGenres_whenPerformsSuccessfulRequestToDataTransferService_shouldReturnGenresInCompletionHandlerSuccessResult() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
         
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureGenresAreFetched()
-    }
-    
-    func test_ReturningFailure_whenPerformsFailedRequestToDataTransferService_shouldReturnErrorInCompletionHandlerFailureResult() {
+    func test_failedRequestToDataTransferService() {
         // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedFailedRequestToDataTransferService()
+        self.givenExpectedFailedRequestToCache()
+        self.givenExpectedFailedRequestToDataTransferService()
 
         // when
-        whenGenresRepositoryCalledToRequestGenres()
+        self.whenRepositoryCalledToRequestGenres()
 
         // then
-        thenEnsureFailureResultIsReturnedWithError()
+        self.thenEnsureFailureResultIsReturnedWithError()
+        self.thenEnsureRepositoryDoesNotAttemptToSaveToCache()
+        self.thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
+        self.thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
     }
     
-    func test_ReturningTask_whenPerformsSuccessfulRequestToDataTransferService_shouldReturnTask() {
-        // when
-        givenExpectedFailedRequestToCache()
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureTaskIsReturned()
-    }
+    // MARK: - Caching
     
-    // MARK: - Tests: Caching
-        
-    func test_Caching_whenPerformsSuccessfulRequestToDataTransferService_shouldSaveResponseToCache() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-        
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureResponseSavedToCache()
-    }
-    
-    func test_Caching_whenPerformsSuccessfulRequestToCache_shouldReturnCorrectResponse() {
+    func test_successfulRequestToCache() {
         // given
         givenExpectedSuccessfulRequestToCache()
         
         // when
-        whenGenresRepositoryCalledToRequestGenres()
+        whenRepositoryCalledToRequestGenres()
         
         // then
         thenEnsureRepositoryReturnsCorrectResponse()
-    }
-        
-    func test_DataTransferCallCount_whenPerformsSuccessfulRequestToCache_shouldNotCallDataTransferService() {
-        // given
-        givenExpectedSuccessfulRequestToCache()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
         thenEnsureRepositoryDoesNotCallDataTransferService()
-    }
-        
-    func test_CacheCallCount_whenPerformsFailedRequestToCache_shouldRequestFromCacheExactlyOnce() {
-        // given
-        givenExpectedFailedRequestToCache()
-        
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
         thenEnsureRepositoryRequestsFromCacheExactlyOnce()
-    }
-    
-    func test_CacheCallCount_whenPerformsSuccessfulRequestToCache_shouldRequestFromCacheExactlyOnce() {
-        // given
-        givenExpectedSuccessfulRequestToCache()
-        
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryRequestsFromCacheExactlyOnce()
-    }
-
-    func test_CacheSavingBehaviour_whenPerformsSuccessfulRequestToCache_shouldNotAttemptToSaveToCache() {
-        // given
-        givenExpectedSuccessfulRequestToCache()
-        
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
         thenEnsureRepositoryDoesNotAttemptToSaveToCache()
-    }
-    
-    func test_DataTransferServiceCallCount_whenPerformsFailedRequestToCache_shouldCallDataTransferServiceExactlyOnce() {
-        // given
-        givenExpectedFailedRequestToCache()
-        
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
-    }
-
-    func test_DataTransferServiceCallCount_whenPerformsSuccessfulRequestToCache_shouldNotCallDataTransferService() {
-        // given
-        givenExpectedSuccessfulRequestToCache()
-        
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryDoesNotCallDataTransferService()
-    }
-
-    func test_CacheSavingBehaviour_whenPerformsFailedRequestToDataTransferService_shouldNotSaveToCache() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedFailedRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryDoesNotAttemptToSaveToCache()
-    }
-
-    func test_CacheCallCount_whenPerformsSuccessfulRequestToDataTransferService_shouldRequestFromCacheExactlyOnce() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryRequestsFromCacheExactlyOnce()
-    }
-
-    func test_CacheSavingBehaviour_whenPerformsSuccessfulRequestToDataTransferService_shouldSaveToCacheExactlyOnce() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositorySavesToCacheExactlyOnce()
-    }
-
-    func test_DataTransferServiceCallCount_whenPerformsFailedRequestToDataTransferService_shouldCallDataTransferServiceExactlyOnce() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedFailedRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
-    }
-
-    func test_DataTransferServiceCallCount_whenPerformsSuccessfulRequestToDataTransferService_shouldCallDataTransferServiceExactlyOnce() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryCallsDataTransferServiceExactlyOnce()
-    }
-
-    // sends request to cache for failed request
-    func test_CacheRequesting_whenPerformsFailedRequestToCache_shouldPassCorrectRequestToCache() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-
-        // then
         thenEnsureRepositoryPassesReceivedRequestDTOToCache()
-    }
-    
-    // sends request to cache for successful request
-    func test_CacheRequesting_whenPerformsSuccessfulRequestToCache_shouldPassCorrectRequestToCache() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryPassesReceivedRequestDTOToCache()
-    }
-
-    func test_DataTransferServiceRequesting_whenPerformsFailedRequestToDataTransferService_shouldPassCorrectRequestToDataTransferService() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedFailedRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
-    }
-    
-    func test_DataTransferServiceRequesting_whenPerformsSuccessfulRequestToDataTransferService_shouldPassCorrectRequestToDataTransferService() {
-        // given
-        givenExpectedFailedRequestToCache()
-        givenExpectedSuccessfulRequestToDataTransferService()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
-        thenEnsureRepositoryPassesReceivedRequestToDataTransferService()
-    }
-
-    // successful cache response maps responseDTO to domain
-    func test_Mapping_whenPerformsSuccessfulRequestToCache_shouldMapSuccessResultToDomainObject() {
-        // given
-        givenExpectedSuccessfulRequestToCache()
-
-        // when
-        whenGenresRepositoryCalledToRequestGenres()
-        
-        // then
         thenEnsureSuccessResultReturnValueIsMappedToDomainObject()
     }
-    
+                    
     // TODO: Tests for:
     // tests around the task that is being returned
     
@@ -331,8 +127,8 @@ class GenresRepositoryTests: XCTestCase {
 //        self.sut?.cache.append(self.expectedGenresResponseDTO!)
 //
 //        // when
-//        whenGenresRepositoryCalledToRequestGenres()
-//        whenGenresRepositoryCalledToRequestGenres()
+//        whenRepositoryCalledToRequestGenres()
+//        whenRepositoryCalledToRequestGenres()
 //
 //        // then
 //        XCTAssertEqual(self.sut?.cache.count, 1)
@@ -345,14 +141,14 @@ class GenresRepositoryTests: XCTestCase {
     }
     
     private func givenExpectedSuccessfulRequestToCache() {
-        self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
+        self.expectedGenresResponseDTO = GenresResponseDTO.createStub()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
 
         self.cache?.getResponseCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
     }
 
     private func givenExpectedSuccessfulRequestToDataTransferService() {
-        self.expectedGenresResponseDTO = GenresResponseDTO.createStubGenresResponseDTO()
+        self.expectedGenresResponseDTO = GenresResponseDTO.createStub()
         self.expectedGenres = (self.expectedGenresResponseDTO?.genres.map { $0.toDomain() })!
         
         self.dataTransferService?.requestCompletionReturnValue = .success(self.expectedGenresResponseDTO!)
@@ -364,8 +160,8 @@ class GenresRepositoryTests: XCTestCase {
         
     // MARK: - When
     
-    func whenGenresRepositoryCalledToRequestGenres() {
-        guard let request = request else {
+    func whenRepositoryCalledToRequestGenres() {
+        guard let request = self.request else {
             XCTFail("request must be non optional at this point of execution")
             return
         }
@@ -456,7 +252,6 @@ extension String {
 }
 
 extension Int {
-    
     static func randomRange(upto endValue: Int = 10) -> ClosedRange<Int> {
         let randomInt = Int.random(in: 1...endValue)
         return 1...randomInt
@@ -464,27 +259,26 @@ extension Int {
 }
 
 extension GenresResponseDTO {
-    public static func createStubGenresResponseDTO() -> GenresResponseDTO {
-        GenresResponseDTO(genres: GenresResponseDTO.GenreDTO.createStubGenreDTOs())
+    public static func createStub() -> GenresResponseDTO {
+        GenresResponseDTO(genres: GenresResponseDTO.GenreDTO.createStubs())
     }
 }
 
 extension GenresResponseDTO.GenreDTO {
-    public static func createStubGenreDTO() -> GenresResponseDTO.GenreDTO {
+    public static func createStub() -> GenresResponseDTO.GenreDTO {
         let randomIdentifier = Int.random(in: 1...100)
         let randomString = String.random()
         
         return GenresResponseDTO.GenreDTO(id: randomIdentifier, name: randomString)
     }
     
-    public static func createStubGenreDTOs() -> [GenresResponseDTO.GenreDTO] {
+    public static func createStubs() -> [GenresResponseDTO.GenreDTO] {
         var genreDTOs: [GenresResponseDTO.GenreDTO] = []
 
         for _ in Int.randomRange() {
-            genreDTOs.append(GenresResponseDTO.GenreDTO.createStubGenreDTO())
+            genreDTOs.append(GenresResponseDTO.GenreDTO.createStub())
         }
         
         return genreDTOs
     }
-
 }

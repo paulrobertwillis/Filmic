@@ -56,13 +56,5 @@ extension MovieResponseDTO {
             voteAverage: self.voteAverage,
             voteCount: self.voteCount
         )
-        
-//        return .init(
-//            id: Movie.Identifier(id),
-//            title: self.title,
-//            posterPath: self.posterPath,
-//            overview: self.overview,
-//            releaseDate: self.releaseDate
-//        )
     }
 }
