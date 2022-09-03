@@ -16,24 +16,35 @@ class GetTopRatedMoviesUseCaseTests: XCTestCase {
     private var returnedMoviePage: MoviesPage?
     private var task: URLSessionTask?
     
-    private let moviesPage = MoviesPage(page: 1,
-                                        totalPages: 1,
-                                        movies: [
-                                            Movie(
-                                                id: Movie.Identifier(50),
-                                                title: "movie1",
-                                                posterPath: "/posterpath1.jpg",
-                                                overview: "movie1 overview",
-                                                releaseDate: "2001-01-01"
-                                            ),
-                                            Movie(
-                                                id: Movie.Identifier(100),
-                                                title: "movie2",
-                                                posterPath: "/posterpath2.jpg",
-                                                overview: "movie2 overview",
-                                                releaseDate: "2002-01-01"
+    private let moviesPage = MoviesPage(
+                                    page: 1,
+                                    totalPages: 1,
+                                    movies: [
+                                        Movie(
+                                            adult: false,
+                                            backdropPath: "/movieBackdropPath",
+                                            budget: 5000,
+                                            genres: [],
+                                            homepage: "/movieHomepage",
+                                            id: Movie.Identifier(50),
+                                            imdbId: "9",
+                                            originalLanguage: "French",
+                                            originalTitle: "LeMovie",
+                                            overview: "movie1 overview",
+                                            popularity: 50.99,
+                                            posterPath: "/posterpath1.jpg",
+                                            releaseDate: "2001-01-01",
+                                            revenue: 20,
+                                            runtime: 90,
+                                            status: "Released",
+                                            tagline: "Gonna Be Good",
+                                            title: "movie1",
+                                            video: false,
+                                            voteAverage: 3.3,
+                                            voteCount: 9008
                                             )
-                                        ])
+                                        ]
+                                    )
     
     // MARK: - Setup
     

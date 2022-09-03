@@ -18,20 +18,20 @@ public struct MoviesResponseDTO: PaginatedResponseDTO {
 
 extension MoviesResponseDTO {
     public struct MovieDTO: Decodable, Equatable {
-        let posterPath: String?
         let adult: Bool
-        let overview: String
-        let releaseDate: String
+        let backdropPath: String?
         let genreIds: [Int]
         let id: Int
-        let originalTitle: String
         let originalLanguage: String
-        let title: String
-        let backdropPath: String?
+        let originalTitle: String
+        let overview: String
         let popularity: Double
-        let voteCount: Int
+        let posterPath: String?
+        let releaseDate: String
+        let title: String
         let video: Bool
         let voteAverage: Double
+        let voteCount: Int
     }
 }
 
@@ -47,12 +47,28 @@ extension MoviesResponseDTO {
 
 extension MoviesResponseDTO.MovieDTO {
     func toDomain() -> Movie {
-        return .init(
+        return Movie.init(
+            adult: self.adult,
+            backdropPath: self.backdropPath,
+            budget: nil,
+            genres: [],
+            homepage: nil,
             id: Movie.Identifier(id),
-            title: self.title,
-            posterPath: self.posterPath,
+            imdbId: nil,
+            originalLanguage: self.originalLanguage,
+            originalTitle: self.originalTitle,
             overview: self.overview,
-            releaseDate: self.releaseDate
+            popularity: self.popularity,
+            posterPath: self.posterPath,
+            releaseDate: self.releaseDate,
+            revenue: nil,
+            runtime: nil,
+            status: nil,
+            tagline: nil,
+            title: self.title,
+            video: self.video,
+            voteAverage: self.voteAverage,
+            voteCount: self.voteCount
         )
     }
 }

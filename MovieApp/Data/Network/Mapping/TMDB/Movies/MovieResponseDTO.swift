@@ -33,12 +33,36 @@ public struct MovieResponseDTO: Decodable, Equatable {
 
 extension MovieResponseDTO {
     func toDomain() -> Movie {
-        return .init(
+        return Movie.init(
+            adult: self.adult,
+            backdropPath: self.backdropPath,
+            budget: self.budget,
+            genres: self.genres.map { $0.toDomain() },
+            homepage: self.homepage,
             id: Movie.Identifier(id),
-            title: self.title,
-            posterPath: self.posterPath,
+            imdbId: self.imdbId,
+            originalLanguage: self.originalLanguage,
+            originalTitle: self.originalTitle,
             overview: self.overview,
-            releaseDate: self.releaseDate
+            popularity: self.popularity,
+            posterPath: self.posterPath,
+            releaseDate: self.releaseDate,
+            revenue: self.revenue,
+            runtime: self.runtime,
+            status: self.status,
+            tagline: self.tagline,
+            title: self.title,
+            video: self.video,
+            voteAverage: self.voteAverage,
+            voteCount: self.voteCount
         )
+        
+//        return .init(
+//            id: Movie.Identifier(id),
+//            title: self.title,
+//            posterPath: self.posterPath,
+//            overview: self.overview,
+//            releaseDate: self.releaseDate
+//        )
     }
 }
