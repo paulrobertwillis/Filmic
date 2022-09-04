@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,22 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pv1-yM-HfA">
-                                <rect key="frame" x="0.0" y="56" width="414" height="300"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="E89-L2-zrw"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="Mma-fW-pPs" kind="embed" id="u5l-bg-I5l"/>
-                                </connections>
-                            </containerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Homepage" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TbY-VT-SgQ">
+                                <rect key="frame" x="165" y="144" width="84" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Pv1-yM-HfA" secondAttribute="trailing" id="7AR-jX-ETy"/>
-                            <constraint firstItem="Pv1-yM-HfA" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="12" id="EzQ-yj-KV1"/>
-                            <constraint firstItem="Pv1-yM-HfA" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Szg-V6-uCH"/>
+                            <constraint firstItem="TbY-VT-SgQ" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="100" id="NQH-Cf-9kn"/>
+                            <constraint firstItem="TbY-VT-SgQ" firstAttribute="centerX" secondItem="vDu-zF-Fre" secondAttribute="centerX" id="g6N-Gz-Xc9"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -40,51 +35,18 @@
             </objects>
             <point key="canvasLocation" x="139" y="63"/>
         </scene>
-        <!--Recommended Movies Collection View Controller-->
-        <scene sceneID="k4M-C5-8Ye">
+        <!--RecommendedMoviesCollectionViewController-->
+        <scene sceneID="Aeg-bO-2PW">
             <objects>
-                <collectionViewController id="Mma-fW-pPs" customClass="RecommendedMoviesCollectionViewController" customModule="MovieApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="8SZ-Vk-Xnk">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemCyanColor"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Fd3-za-ybB">
-                            <size key="itemSize" width="128" height="128"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="7Kf-of-gcf">
-                                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="xpU-3n-BDW">
-                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </collectionViewCellContentView>
-                                <color key="backgroundColor" systemColor="systemGreenColor"/>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="Mma-fW-pPs" id="9A8-Gc-joT"/>
-                            <outlet property="delegate" destination="Mma-fW-pPs" id="YZN-T4-4os"/>
-                        </connections>
-                    </collectionView>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Nhw-yR-rxD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="RecommendedMoviesCollectionViewController" id="rxc-0Y-ehO" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GOf-yf-HJL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="991" y="-121"/>
+            <point key="canvasLocation" x="1057" y="45"/>
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemCyanColor">
-            <color red="0.19607843137254902" green="0.67843137254901964" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

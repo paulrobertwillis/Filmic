@@ -13,11 +13,15 @@ protocol HomepageFlowCoordinatorDependencies {
     func makeHomepageViewController(actions: HomepageViewModelActions) -> HomepageViewController
 }
 
-class HomepageFlowCoordinator {
+class HomepageFlowCoordinator: CoordinatorProtocol {
+    
+    // MARK: - Public Properties
+    
+    var childCoordinators = [CoordinatorProtocol]()
+    let navigationController: UINavigationController
     
     // MARK: - Private Properties
-    
-    private weak var navigationController: UINavigationController?
+        
     private let dependencies: HomepageFlowCoordinatorDependencies
     
     private weak var homepageViewController: HomepageViewController?
@@ -35,7 +39,7 @@ class HomepageFlowCoordinator {
         let actions = HomepageViewModelActions()
         let viewController = self.dependencies.makeHomepageViewController(actions: actions)
         
-        self.navigationController?.pushViewController(viewController, animated: false)
+        self.navigationController.pushViewController(viewController, animated: false)
         self.homepageViewController = viewController
     }
 }

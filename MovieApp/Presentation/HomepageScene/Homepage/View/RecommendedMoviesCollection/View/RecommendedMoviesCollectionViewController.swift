@@ -9,6 +9,10 @@ import UIKit
 
 class RecommendedMoviesCollectionViewController: UICollectionViewController {
     
+    // MARK: - Private Properties
     
+    var viewModel: RecommendedMoviesCollectionViewModelProtocol!
+    
+
     
 }

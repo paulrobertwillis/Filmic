@@ -37,13 +37,21 @@ class HomepageSceneDependencyInjectionContainer {
         HomepageViewController.create(with: self.makeHomepageViewModel(actions: actions))
     }
     
-    func makeHomepageViewModel(actions: HomepageViewModelActions) -> HomepageViewModel {
+    private func makeHomepageViewModel(actions: HomepageViewModelActions) -> HomepageViewModel {
         HomepageViewModel(actions: actions)
     }
     
     // MARK: - RecommendedMoviesCollection
     
+    func makeHomepageViewController(actions: RecommendedMoviesCollectionViewModelActions) -> RecommendedMoviesCollectionViewController {
+//        RecommendedMoviesCollectionViewController.create(with: self.makeRecommendedMoviesCollectionViewModel(actions: actions))
+        RecommendedMoviesCollectionViewController()
+    }
     
+    private func makeRecommendedMoviesCollectionViewModel(actions: RecommendedMoviesCollectionViewModelActions) -> RecommendedMoviesCollectionViewModel {
+        RecommendedMoviesCollectionViewModel(actions: actions)
+    }
+
     
     // MARK: - Flow Coordinators
     

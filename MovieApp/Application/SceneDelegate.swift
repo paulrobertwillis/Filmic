@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: - Private Properties
     
     private let appDependencyInjectionContainer = AppDependencyInjectionContainer()
-    private var appFlowCoordinator: AppFlowCoordinator?
+    private var appFlowCoordinator: CoordinatorProtocol?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }

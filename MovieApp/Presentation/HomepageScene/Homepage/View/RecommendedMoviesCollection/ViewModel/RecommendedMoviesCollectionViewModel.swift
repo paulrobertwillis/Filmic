@@ -6,3 +6,25 @@
 //
 
 import Foundation
+
+struct RecommendedMoviesCollectionViewModelActions {
+    
+}
+
+protocol RecommendedMoviesCollectionViewModelProtocol {
+    
+}
+
+class RecommendedMoviesCollectionViewModel: RecommendedMoviesCollectionViewModelProtocol {
+    
+    // MARK: - Private Properties
+    
+    private let actions: RecommendedMoviesCollectionViewModelActions
+    
+    // MARK: - Init
+    
+    init(actions: RecommendedMoviesCollectionViewModelActions) {
+        self.actions = actions
+    }
+    
+}

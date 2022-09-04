@@ -9,6 +9,8 @@ import Foundation
 
 protocol AppDependencyInjectionContainerProtocol {
     var genresDataTransferService: DataTransferService<GenresResponseDTO> { get }
+    
+    func makeHomepageSceneDependencyInjectionContainer() -> HomepageSceneDependencyInjectionContainer
 }
 
 class AppDependencyInjectionContainer: AppDependencyInjectionContainerProtocol {
