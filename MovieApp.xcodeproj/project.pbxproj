@@ -13,7 +13,6 @@
 		695D8EAA28562032008B583A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8EA928562032008B583A /* SceneDelegate.swift */; };
 		695D8EB128562034008B583A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 695D8EB028562034008B583A /* Assets.xcassets */; };
 		695D8EB428562034008B583A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 695D8EB228562034008B583A /* LaunchScreen.storyboard */; };
-		695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D8EBE28562034008B583A /* MovieAppTests.swift */; };
 		69638E4928C28982005D5E9D /* AppFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E4828C28982005D5E9D /* AppFlowCoordinator.swift */; };
 		69638E4C28C29813005D5E9D /* AppDependencyInjectionContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E4B28C29813005D5E9D /* AppDependencyInjectionContainer.swift */; };
 		69638E4F28C29F89005D5E9D /* StoryboardInstantiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E4E28C29F89005D5E9D /* StoryboardInstantiable.swift */; };
@@ -117,7 +116,6 @@
 		695D8EB328562034008B583A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		695D8EB528562034008B583A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		695D8EBA28562034008B583A /* MovieAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		695D8EBE28562034008B583A /* MovieAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAppTests.swift; sourceTree = "<group>"; };
 		69638E4828C28982005D5E9D /* AppFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlowCoordinator.swift; sourceTree = "<group>"; };
 		69638E4B28C29813005D5E9D /* AppDependencyInjectionContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyInjectionContainer.swift; sourceTree = "<group>"; };
 		69638E4E28C29F89005D5E9D /* StoryboardInstantiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstantiable.swift; sourceTree = "<group>"; };
@@ -375,7 +373,6 @@
 				692F0928285A6CFA00780F72 /* Presentation */,
 				692F092A285A6D0400780F72 /* Domain */,
 				692F0929285A6D0000780F72 /* Data */,
-				695D8EBE28562034008B583A /* MovieAppTests.swift */,
 			);
 			path = MovieAppTests;
 			sourceTree = "<group>";
@@ -1038,7 +1035,6 @@
 				699B15132880B21B00814187 /* CoreDataGenresResponseStorageTests.swift in Sources */,
 				69638E7128C2A896005D5E9D /* RecommendedMoviesCollectionViewModelTests.swift in Sources */,
 				698EC3EF2877B2D0008DCF21 /* NetworkLogPrinterMock.swift in Sources */,
-				695D8EBF28562034008B583A /* MovieAppTests.swift in Sources */,
 				69CFF42128919BE000EA4C70 /* CoreDataStorageMock.swift in Sources */,
 				69AD731E286F1B58009C5F3E /* GenresRepositoryMock.swift in Sources */,
 				692F0939285A7DEB00780F72 /* NetworkServiceTests.swift in Sources */,
@@ -1191,7 +1187,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VNRW7375YF;
+				DEVELOPMENT_TEAM = L64SLY6QL8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MovieApp//Resources/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1220,7 +1216,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VNRW7375YF;
+				DEVELOPMENT_TEAM = L64SLY6QL8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MovieApp//Resources/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
