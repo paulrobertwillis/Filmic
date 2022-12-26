@@ -32,7 +32,6 @@
 		69638E7D28C2CB30005D5E9D /* SearchMoviesRequestDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E7C28C2CB30005D5E9D /* SearchMoviesRequestDTO+Mapping.swift */; };
 		69638E8028C2CEF0005D5E9D /* MoviesResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E7F28C2CEF0005D5E9D /* MoviesResponseDTO+Mapping.swift */; };
 		69638E8228C2D03E005D5E9D /* PaginatedRequestDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E8128C2D03E005D5E9D /* PaginatedRequestDTO+Mapping.swift */; };
-		69638E8828C38AF5005D5E9D /* ResponseDTO+MappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E8528C382DE005D5E9D /* ResponseDTO+MappingTests.swift */; };
 		69638E8F28C399B1005D5E9D /* DecodingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E8E28C399B1005D5E9D /* DecodingUtils.swift */; };
 		69638E9128C39A31005D5E9D /* GenresResponseDTOMock.json in Resources */ = {isa = PBXBuildFile; fileRef = 69638E9028C39A31005D5E9D /* GenresResponseDTOMock.json */; };
 		69638E9328C39FF6005D5E9D /* MovieResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69638E9228C39FF6005D5E9D /* MovieResponseDTO.swift */; };
@@ -137,7 +136,6 @@
 		69638E7C28C2CB30005D5E9D /* SearchMoviesRequestDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchMoviesRequestDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69638E7F28C2CEF0005D5E9D /* MoviesResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MoviesResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
 		69638E8128C2D03E005D5E9D /* PaginatedRequestDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaginatedRequestDTO+Mapping.swift"; sourceTree = "<group>"; };
-		69638E8528C382DE005D5E9D /* ResponseDTO+MappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ResponseDTO+MappingTests.swift"; path = "../../../../Users/pualw/Developer/MovieApp/MovieApp/Data/Network/Mapping/TMDB/Movies/ResponseDTO+MappingTests.swift"; sourceTree = DEVELOPER_DIR; };
 		69638E8E28C399B1005D5E9D /* DecodingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingUtils.swift; sourceTree = "<group>"; };
 		69638E9028C39A31005D5E9D /* GenresResponseDTOMock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GenresResponseDTOMock.json; sourceTree = "<group>"; };
 		69638E9228C39FF6005D5E9D /* MovieResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieResponseDTO.swift; sourceTree = "<group>"; };
@@ -323,19 +321,10 @@
 				692F0932285A6F0F00780F72 /* JSONMocks */,
 				698EC3FF2878E894008DCF21 /* DataTransferService */,
 				698EC3F52877B348008DCF21 /* Logging */,
-				692F092E285A6E5C00780F72 /* Mapping */,
 				692F0938285A7DEB00780F72 /* NetworkServiceTests.swift */,
 				698EC4002878E8B9008DCF21 /* NetworkRequestPerformerTests.swift */,
 			);
 			path = Network;
-			sourceTree = "<group>";
-		};
-		692F092E285A6E5C00780F72 /* Mapping */ = {
-			isa = PBXGroup;
-			children = (
-				69638E8528C382DE005D5E9D /* ResponseDTO+MappingTests.swift */,
-			);
-			path = Mapping;
 			sourceTree = "<group>";
 		};
 		692F0932285A6F0F00780F72 /* JSONMocks */ = {
@@ -1041,7 +1030,6 @@
 				698EC425287E37CF008DCF21 /* GenresResponseStorageMock.swift in Sources */,
 				6964BA33286A0AB800844047 /* GenresRepositoryTests.swift in Sources */,
 				69AD731C286E02C1009C5F3E /* DataTransferServiceTests.swift in Sources */,
-				69638E8828C38AF5005D5E9D /* ResponseDTO+MappingTests.swift in Sources */,
 				6964BA2D2869EAE400844047 /* GetTopRatedMoviesUseCaseTests.swift in Sources */,
 				69F6239528763E100059307F /* ResponseDecoderTests.swift in Sources */,
 				69AD7320286F1B8C009C5F3E /* GenresDataTransferServiceMock.swift in Sources */,
